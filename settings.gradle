@@ -1,0 +1,2 @@
+include ':app', ':circualreveal', ':library'
+rootProject.name='ClassPortal'
