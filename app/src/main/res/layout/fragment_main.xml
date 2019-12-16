@@ -14,8 +14,9 @@
             android:layout_height="match_parent">
             <com.smarteist.autoimageslider.SliderView
                 android:id="@+id/imageSlider"
+                android:layout_marginTop="?actionBarSize"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="200dp"
                 app:sliderAnimationDuration="600"
                 app:sliderAutoCycleDirection="back_and_forth"
                 app:sliderAutoCycleEnabled="true"

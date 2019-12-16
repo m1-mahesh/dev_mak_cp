@@ -3,8 +3,12 @@ package com.mak.classportal;
 import android.animation.Animator;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -81,12 +85,20 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     void initFragment(String menuId){
         switch (menuId){
             case Constant.TAKE_ATTENDENCE:
-                getSupportActionBar().setTitle("Attendance");
+                SpannableString s = new SpannableString("Select Class");
+                s.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (getSupportActionBar()!=null)
+                    getSupportActionBar().setTitle(s);
                 contentFragment = ClassFragment.newInstance(R.drawable.content_music);
                 ClassFragment.menuClickListener = this;
                 break;
             default:
-                getSupportActionBar().setTitle("Home");
+                SpannableString s1 = new SpannableString("Home");
+                s1.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s1.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (getSupportActionBar()!=null)
+                    getSupportActionBar().setTitle(s1);
                 contentFragment = ContentFragment.newInstance(R.drawable.content_music);
                 ContentFragment.menuClickListener = this;
                 break;
@@ -109,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     }
 
     private void createMenuList() {
-        SlideMenuItem menuItem0 = new SlideMenuItem(Constant.CLOSE, R.drawable.icn_close);
+        SlideMenuItem menuItem0 = new SlideMenuItem("", R.drawable.icn_close);
         list.add(menuItem0);
         SlideMenuItem menuItem = new SlideMenuItem(Constant.BUILDING, R.drawable.icn_1);
         list.add(menuItem);
@@ -210,17 +222,18 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
         return (ScreenShotable) contentFragment;
     }
-    public ScreenShotable replaceFragmentFromOut(ScreenShotable screenShotable, String menuId) {
+    public ScreenShotable replaceFragmentFromOut(ScreenShotable screenShotable, String menuId, boolean isStack) {
         findViewById(R.id.content_overlay).setBackground(new BitmapDrawable(getResources(), screenShotable.getBitmap()));
         initFragment(menuId);
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
-        screenStack.push(menuId);
+        if (!isStack)
+            screenStack.push(menuId);
         return (ScreenShotable) contentFragment;
     }
 
     @Override
     public void onMenuClick(ScreenShotable screenShotable, String menuId) {
-        replaceFragmentFromOut(screenShotable, menuId);
+        replaceFragmentFromOut(screenShotable, menuId, false);
 
     }
 
@@ -255,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     @Override
     public void onBackPressed() {
         if (!screenStack.isEmpty()){
-            replaceFragmentFromOut((ScreenShotable) contentFragment, screenStack.pop());
+            replaceFragmentFromOut((ScreenShotable) contentFragment, screenStack.pop(), true);
         }else {
             super.onBackPressed();
         }

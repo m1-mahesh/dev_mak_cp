@@ -3,12 +3,13 @@ package com.mak.classportal.modales;
 public class StudentClass {
     public String name;
     public String url;
-    public String[] devisions = new String[3];
+    public String[] devisions = new String[4];
 
     public StudentClass(){
         devisions[0] = "A";
         devisions[1] = "B";
         devisions[2] = "C";
+        devisions[3] = "D";
     }
     public String getName() {
         return name;

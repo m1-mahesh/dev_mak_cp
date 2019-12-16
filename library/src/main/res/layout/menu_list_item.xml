@@ -17,7 +17,6 @@
         android:id="@+id/nameText"
         android:layout_centerHorizontal="true"
         android:textSize="10sp"
-        android:text="Helllo"
         android:textColor="#FFF"
         android:fontFamily="sans-serif-condensed-light"
         android:layout_below="@+id/menu_item_image"

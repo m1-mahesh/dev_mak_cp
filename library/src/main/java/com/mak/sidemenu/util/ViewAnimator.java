@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -65,6 +66,7 @@ public class ViewAnimator<T extends Resourceble> {
                 }
             });
             ((ImageView) viewMenu.findViewById(R.id.menu_item_image)).setImageResource(list.get(i).getImageRes());
+            ((TextView)viewMenu.findViewById(R.id.nameText)).setText(list.get(i).getName());
             viewMenu.setVisibility(View.GONE);
             viewMenu.setEnabled(false);
             viewList.add(viewMenu);

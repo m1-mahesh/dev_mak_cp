@@ -1,7 +1,12 @@
 <resources>
-    <string name="app_name">ClassPortal</string>
+    <string name="app_name">Unknown</string>
     <string name="action_settings">Settings</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="divisionsString">Divisions</string>
+
+    <string name="title_activity_take_attendance">TakeAttendance</string>
+    <string name="dummy_button">Save</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

@@ -15,50 +15,48 @@
         android:background="?android:selectableItemBackground"
         android:orientation="horizontal">
 
+        <com.mak.classportal.utilities.CircularImageView
+            android:id="@+id/studentIcon"
+            android:layout_width="50dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/student"
+            android:layout_height="50dp"/>
 
         <TextView
             android:id="@+id/tvTitle"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/studentIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:fontFamily="@font/opensansregular"
+            android:fontFamily="serif-monospace"
             android:text="Sample title"
             android:textColor="@android:color/black"
-            android:textSize="20sp" />
-
-
+            android:textSize="10sp" />
         <LinearLayout
-            android:id="@+id/divisions"
-            android:layout_alignParentBottom="true"
+            android:id="@+id/checkLayout"
+            android:layout_below="@+id/tvTitle"
             android:layout_marginTop="10dp"
-            android:layout_below="@id/tvTitle"
             android:layout_width="match_parent"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="horizontal"
             android:layout_height="wrap_content">
-            <View
-                android:id="@+id/hrView"
-                android:background="@color/light_grey"
-                android:layout_width="150dp"
-                android:layout_height="1dp"/>
-            <TextView
-                android:layout_marginTop="10dp"
-                android:id="@+id/divisionText"
+            <CheckBox
+                android:text="Present"
+                android:textSize="8sp"
                 android:fontFamily="serif-monospace"
-                android:textSize="15sp"
-                android:text="@string/divisionsString"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <LinearLayout
-                android:id="@+id/divisionsView"
-                android:padding="10dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="wrap_content">
+                android:layout_height="40dp"/>
+            <CheckBox
+                android:text="Absent"
+                android:textSize="8sp"
 
-            </LinearLayout>
+                android:fontFamily="serif-monospace"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"/>
         </LinearLayout>
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

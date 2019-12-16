@@ -32,17 +32,22 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
         switch (position) {
             case 0:
                 Glide.with(viewHolder.itemView)
-                        .load("https://images.pexels.com/photos/218983/pexels-photo-218983.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260")
+                        .load("https://d1m6qo1ndegqmm.cloudfront.net/uploadimages/sales_offer_mainpic_20110622120613Impart_Banner.jpg")
                         .into(viewHolder.imageViewBackground);
                 break;
             case 1:
                 Glide.with(viewHolder.itemView)
-                        .load("https://images.pexels.com/photos/747964/pexels-photo-747964.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260")
+                        .load("https://www.ivytech.edu/images/January2020Start_Webslider.jpg")
                         .into(viewHolder.imageViewBackground);
                 break;
             case 2:
                 Glide.with(viewHolder.itemView)
-                        .load("https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260")
+                        .load("https://d1m6qo1ndegqmm.cloudfront.net/uploadimages/coupons/11128-Flipclass_Banner.jpg")
+                        .into(viewHolder.imageViewBackground);
+                break;
+            case 3:
+                Glide.with(viewHolder.itemView)
+                        .load("https://www.hindujahospital.com/images/courses-banner.jpg")
                         .into(viewHolder.imageViewBackground);
                 break;
 
