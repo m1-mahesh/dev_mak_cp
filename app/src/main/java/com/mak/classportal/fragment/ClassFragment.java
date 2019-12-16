@@ -62,10 +62,23 @@ public class ClassFragment extends Fragment implements ScreenShotable {
         allClassData = new ArrayList<>();
         StudentClass aClass=new StudentClass();
         aClass.setName("1st");
+
+        StudentClass aClass1=new StudentClass();
+        aClass1.setName("2nd");
+        StudentClass aClass2=new StudentClass();
+        aClass2.setName("3rd");
+        StudentClass aClass3=new StudentClass();
+        aClass3.setName("4th");
+        StudentClass aClass4=new StudentClass();
+        aClass4.setName("5th");
+        StudentClass aClass5=new StudentClass();
+        aClass5.setName("6th");
         allClassData.add(aClass);
-        allClassData.add(aClass);
-        allClassData.add(aClass);
-        allClassData.add(aClass);
+        allClassData.add(aClass1);
+        allClassData.add(aClass2);
+        allClassData.add(aClass3);
+        allClassData.add(aClass4);
+        allClassData.add(aClass5);
 
     }
 

@@ -1,10 +1,12 @@
 package com.mak.classportal.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,15 +43,29 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
 
         final StudentClass singleItem = itemsList.get(i);
 
-        holder.tvTitle.setText(singleItem.getName());
+        holder.tvTitle.setText("Class: "+singleItem.getName());
+        holder.divisionsView.removeAllViews();
+        for(int j=0;j<singleItem.devisions.length;j++){
+            TextView textView = new TextView(mContext);
+            textView.setPadding(5,5,5,5);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            textView.setTypeface(Typeface.create("serif-monospace", Typeface.NORMAL));
+            params.setMarginStart(30);
+            textView.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border));
+            textView.setText(singleItem.devisions[j]);
+            textView.setTextSize(25);
+            textView.setLayoutParams(params);
+            holder.divisionsView.addView(textView);
+        }
+
         //holder.itemImage.setImageResource(singleItem.getResourceId());
 
-        holder.itemImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ContentFragment.menuClickListener.onMenuClick(screenShotable, singleItem.getName());
-            }
-        });
+//        holder.itemImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ContentFragment.menuClickListener.onMenuClick(screenShotable, singleItem.getName());
+//            }
+//        });
        /* Glide.with(mContext)
                 .load(feedItem.getImageURL())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -68,13 +84,15 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
         protected TextView tvTitle;
 
         protected ImageView itemImage;
+        protected LinearLayout divisionsView;
 
 
         public SingleItemRowHolder(View view) {
             super(view);
 
             this.tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
+//            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
+            this.divisionsView = view.findViewById(R.id.divisionsView);
 
         }
 
