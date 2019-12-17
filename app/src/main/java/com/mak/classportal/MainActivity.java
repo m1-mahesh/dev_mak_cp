@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import com.mak.circualreveal.animation.ViewAnimationUtils;
 import com.mak.classportal.fragment.ClassFragment;
 import com.mak.classportal.fragment.ContentFragment;
+import com.mak.classportal.fragment.SubjectFragment;
 import com.mak.classportal.utilities.OnMenuClickListener;
 import com.mak.classportal.utilities.ScreenStack;
 import com.mak.sidemenu.interfaces.Resourceble;
@@ -83,34 +84,45 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
         viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
     }
     void initFragment(String menuId){
-        switch (menuId){
-            case Constant.TAKE_ATTENDENCE:
+            if(menuId.equals(Constant.TAKE_ATTENDENCE)) {
                 SpannableString s = new SpannableString("Select Class");
                 s.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s.length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                if (getSupportActionBar()!=null)
+                if (getSupportActionBar() != null)
                     getSupportActionBar().setTitle(s);
-                contentFragment = ClassFragment.newInstance(R.drawable.content_music);
+                contentFragment = ClassFragment.newInstance(menuId);
                 ClassFragment.menuClickListener = this;
-                break;
-            default:
+            }else if(menuId.equals(Constant.TAKE_TEST)) {
+                SpannableString s2 = new SpannableString("Select Class");
+                s2.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s2.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (getSupportActionBar() != null)
+                    getSupportActionBar().setTitle(s2);
+                contentFragment = ClassFragment.newInstance(menuId);
+                ClassFragment.menuClickListener = this;
+            }else if(menuId.equals(Constant.SELECT_SUBJECT)) {
+                SpannableString s2 = new SpannableString("Select Subject");
+                s2.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s2.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (getSupportActionBar() != null)
+                    getSupportActionBar().setTitle(s2);
+                contentFragment = SubjectFragment.newInstance(menuId);
+            }else {
                 SpannableString s1 = new SpannableString("Home");
                 s1.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s1.length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                if (getSupportActionBar()!=null)
+                if (getSupportActionBar() != null)
                     getSupportActionBar().setTitle(s1);
                 contentFragment = ContentFragment.newInstance(R.drawable.content_music);
                 ContentFragment.menuClickListener = this;
-                break;
-
-        }
+            }
 
     }
     void showToast(){
         inflater = getLayoutInflater();
         tostLayout = inflater.inflate(R.layout.toast_layout_file,
                 (ViewGroup) findViewById(R.id.toast_layout_root));
-        customToast = (TextView) tostLayout.findViewById(R.id.text);
+        customToast = tostLayout.findViewById(R.id.text);
         Toast toast = new Toast(getApplicationContext());
         customToast.setText("Hello");
         customToast.setTypeface(ResourcesCompat.getFont(this, R.font.opensansregular));

@@ -10,8 +10,11 @@ public class Constant {
     public static final String PARTY = "Info";
     public static final String MOVIE = "Video";
     public static final String TAKE_ATTENDENCE = "Take Attendance";
-    public static final String TAKE_TEST = "Take Test";
+    public static final String TAKE_TEST = "Schedule Test";
     public static final String TEST_RESULT = "Test Result";
+    public static final String SELECT_SUBJECT = "Select Subject";
+    public static final String SELECT_CHAPTER = "Select Chapter";
+    public static final String SELECT_QUESTION = "Select Question";
 
 
 }

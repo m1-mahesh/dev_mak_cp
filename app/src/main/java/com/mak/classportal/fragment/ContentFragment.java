@@ -18,6 +18,7 @@ import com.mak.classportal.adapter.SectionAdapter;
 import com.mak.classportal.adapter.SliderAdapter;
 import com.mak.classportal.modales.HomeMenu;
 import com.mak.classportal.modales.SectionDataModel;
+import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.OnMenuClickListener;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -105,15 +106,15 @@ public class ContentFragment extends Fragment implements ScreenShotable {
 
             ArrayList<HomeMenu> singleItem = new ArrayList<HomeMenu>();
             HomeMenu m=new HomeMenu();
-            m.setName("Take Attendance");
+            m.setName(Constant.TAKE_ATTENDENCE);
             m.setResourceId(R.drawable.checklist);
             singleItem.add(m);
             HomeMenu m1=new HomeMenu();
-            m1.setName("Take Test");
+            m1.setName(Constant.TAKE_TEST);
             m1.setResourceId(R.drawable.plan);
             singleItem.add(m1);
             HomeMenu m2=new HomeMenu();
-            m2.setName("Test Result");
+            m2.setName(Constant.TEST_RESULT);
             m2.setResourceId(R.drawable.result);
             singleItem.add(m2);
             SectionDataModel dm1 = new SectionDataModel();
