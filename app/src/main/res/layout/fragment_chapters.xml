@@ -17,11 +17,38 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_below="@id/tvTitle"
+            android:layout_above="@id/saveButton"
             android:id="@+id/chapterList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:padding="20dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/twitter"
+            android:layout_height="wrap_content"
+                >
+                <TextView
+                    android:id="@+id/questionText"
+                    android:text="Total Questions: 30"
+                    android:textColor="@color/white"
+                    android:fontFamily="serif-monospace"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
+                <TextView
+                    android:id="@+id/viewText"
+                    android:layout_alignParentRight="true"
+                    android:text="View"
+                    android:onClick="viewQuestion"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/opensansbold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
 
 </RelativeLayout>

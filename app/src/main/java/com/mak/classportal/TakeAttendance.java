@@ -4,15 +4,22 @@ import android.annotation.SuppressLint;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mak.classportal.adapter.ClassListAdapter;
 import com.mak.classportal.adapter.StudentListAdapter;
@@ -98,6 +105,10 @@ public class TakeAttendance extends AppCompatActivity {
 
     ArrayList<StudentData> students = new ArrayList<>();
     TextView topTitle;
+    TextView customToast;
+    LayoutInflater inflater;
+    View tostLayout;
+    Fragment contentFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,5 +198,24 @@ public class TakeAttendance extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    public void submitAttendance(View view){
+        showToast("Data Saved Successfully");
+        finish();
+        startActivity(new Intent(this, MainActivity.class));
+    }
+    void showToast(String toastText){
+        inflater = getLayoutInflater();
+        tostLayout = inflater.inflate(R.layout.toast_layout_file,
+                (ViewGroup) findViewById(R.id.toast_layout_root));
+        customToast = tostLayout.findViewById(R.id.text);
+        Toast toast = new Toast(getApplicationContext());
+        customToast.setText(toastText);
+        customToast.setTypeface(ResourcesCompat.getFont(this, R.font.opensansregular));
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(tostLayout);
+        toast.show();
     }
 }

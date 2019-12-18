@@ -7,6 +7,8 @@
 
     <string name="title_activity_take_attendance">TakeAttendance</string>
     <string name="dummy_button">Save</string>
+    <string name="proceed_button">Proceed</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="final_q">Questions</string>
 
 </resources>
