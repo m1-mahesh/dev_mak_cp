@@ -88,18 +88,18 @@ public class SelectQuestionsActivity extends AppCompatActivity {
     void prepareData(){
         allClassData = new ArrayList<>();
         HomeMenu aClass=new HomeMenu();
-        aClass.setName("Marathi");
+        aClass.setName("Chapter 1 - Real Numbers");
 
         HomeMenu aClass1=new HomeMenu();
-        aClass1.setName("English");
+        aClass1.setName("Chapter 2 - Polynomials.");
         HomeMenu aClass2=new HomeMenu();
-        aClass2.setName("Maths");
+        aClass2.setName("Chapter 3 - Pair of Linear Equations in Two Variables.");
         HomeMenu aClass3=new HomeMenu();
-        aClass3.setName("History");
+        aClass3.setName("Chapter 4 - Quadratic Equations.");
         HomeMenu aClass4=new HomeMenu();
-        aClass4.setName("Science");
+        aClass4.setName("Chapter 5 - Arithmetic Progressions.");
         HomeMenu aClass5=new HomeMenu();
-        aClass5.setName("Hindi");
+        aClass5.setName("Chapter 6 - Triangles.");
         allClassData.add(aClass);
         allClassData.add(aClass1);
         allClassData.add(aClass2);
@@ -109,17 +109,17 @@ public class SelectQuestionsActivity extends AppCompatActivity {
     }
     void prepareQData(){
         Question aClass=new Question();
-        aClass.setQuestion("Question 1");
+        aClass.setQuestion("What are the Variance and Standard Deviation?");
         Question aClass1=new Question();
-        aClass1.setQuestion("Question 2");
+        aClass1.setQuestion("How Standard Deviation is Calculated?");
         Question aClass2=new Question();
-        aClass2.setQuestion("Question 3");
+        aClass2.setQuestion("Find the mean price in each city and then state which city has the lower mean.");
         Question aClass3=new Question();
-        aClass3.setQuestion("Question 4");
+        aClass3.setQuestion("The times for 8 athletes who ran a 100 m sprint on the same track are shown below. All times are in seconds.");
         Question aClass4=new Question();
-        aClass4.setQuestion("Question 5");
+        aClass4.setQuestion("State whether each of the following data sets are symmetric, skewed right or skewed left.");
         Question aClass5=new Question();
-        aClass5.setQuestion("Question 6");
+        aClass5.setQuestion("Two data sets have the same range and interquartile range, but one is skewed right and the other is skewed left. Sketch the box and whisker plot for each of these data sets. Then, invent data (6 points in each data set) that matches the descriptions of the two data sets.");
         questions.add(aClass);
         questions.add(aClass1);
         questions.add(aClass2);
@@ -153,15 +153,16 @@ public class SelectQuestionsActivity extends AppCompatActivity {
         if (selectedQ.size()>0) {
             isShow = true;
             setContentView(R.layout.activity_select_questions);
+
             ((TextView) findViewById(R.id.tvTitle)).setText(R.string.final_q);
             mRecyclerView = findViewById(R.id.questionList);
-            ((TextView) findViewById(R.id.tvTitle)).setText(Constant.SELECT_QUESTION);
             mRecyclerView.setHasFixedSize(true);
             QuestionListAdapter adapter1 = new QuestionListAdapter(this, selectedQ, true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
             mRecyclerView.setAdapter(adapter1);
             ((Button) findViewById(R.id.saveButton)).setText("Proceed");
+            overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
         }
     }
     boolean isShow = false;
@@ -171,6 +172,7 @@ public class SelectQuestionsActivity extends AppCompatActivity {
             SelectQuestionsActivity.INDEX = 0;
             startActivity(new Intent(this, SelectQuestionsActivity.class));
             isShow = false;
+            overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
         }
     }
 }

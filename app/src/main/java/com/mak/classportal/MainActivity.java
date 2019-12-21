@@ -1,6 +1,7 @@
 package com.mak.classportal;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -107,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                 if (getSupportActionBar() != null)
                     getSupportActionBar().setTitle(s2);
                 contentFragment = SubjectFragment.newInstance(menuId);
+            }else if(menuId.equals(Constant.TEST_RESULT)) {
+                startActivity(new Intent(this, FinaliseTest.class));
+                overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
             }else {
                 SpannableString s1 = new SpannableString("Home");
                 s1.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s1.length(),

@@ -18,7 +18,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SelectQuestionsActivity"></activity>
+        <activity android:name=".FinaliseTest"></activity>
+        <activity android:name=".ViewTests" />
+        <activity android:name=".SelectQuestionsActivity" />
         <activity
             android:name=".TakeAttendance"
             android:configChanges="orientation|keyboardHidden|screenSize"

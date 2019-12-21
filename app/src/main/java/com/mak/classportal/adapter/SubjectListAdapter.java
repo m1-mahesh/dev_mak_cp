@@ -59,6 +59,7 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
                     SelectQuestionsActivity.SUBJECT_ID = singleItem.getName();
                     SelectQuestionsActivity.INDEX = 0;
                     ((Activity) mContext).startActivity(new Intent(mContext, SelectQuestionsActivity.class));
+                    ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
             });
         }else {
@@ -70,6 +71,7 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
                     SelectQuestionsActivity.SUBJECT_ID = singleItem.getName();
                     SelectQuestionsActivity.INDEX = 1;
                     ((Activity) mContext).startActivity(new Intent(mContext, SelectQuestionsActivity.class));
+                    ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
             });
         }
