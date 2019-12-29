@@ -79,6 +79,7 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
                         TakeAttendance.CLASS_ID = singleItem.getName();
                         TakeAttendance.DIVISION = className;
                         ((Activity) mContext).startActivity(new Intent(mContext, TakeAttendance.class));
+                        ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
 
                     }
                 });

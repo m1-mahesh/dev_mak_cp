@@ -6,10 +6,10 @@
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:textStyle="bold"
             android:fontFamily="serif-monospace"
             android:textColor="@android:color/black"
@@ -17,7 +17,6 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_below="@id/tvTitle"
-            android:layout_above="@id/saveButton"
             android:id="@+id/chapterList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

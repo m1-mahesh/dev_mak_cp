@@ -1,14 +1,13 @@
 package com.mak.classportal;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.TypefaceSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,7 +39,6 @@ import com.mak.sidemenu.util.ViewAnimator;
 import com.mak.classportal.utilities.Constant;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        contentFragment = ContentFragment.newInstance(R.drawable.content_music);
+        contentFragment = ContentFragment.newInstance(R.drawable.bg_overlay);
         ContentFragment.menuClickListener = this;
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, contentFragment)
@@ -78,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
             }
         });
 
-        showToast();
         setActionBar();
         createMenuList();
         viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
@@ -92,28 +89,32 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                     getSupportActionBar().setTitle(s);
                 contentFragment = ClassFragment.newInstance(menuId);
                 ClassFragment.menuClickListener = this;
-            }else if(menuId.equals(Constant.TAKE_TEST)) {
-                SpannableString s2 = new SpannableString("Select Class");
-                s2.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s2.length(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                if (getSupportActionBar() != null)
-                    getSupportActionBar().setTitle(s2);
-                contentFragment = ClassFragment.newInstance(menuId);
-                ClassFragment.menuClickListener = this;
-            }else if(menuId.equals(Constant.SELECT_SUBJECT)) {
+            }else if(menuId.equals(Constant.TAKE_TEST)||menuId.equals(Constant.CASE)) {
+                startActivity(new Intent(this, TestsList.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+            }else if(menuId.equals(Constant.BOOK)) {
                 SpannableString s2 = new SpannableString("Select Subject");
                 s2.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s2.length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if (getSupportActionBar() != null)
                     getSupportActionBar().setTitle(s2);
                 contentFragment = SubjectFragment.newInstance(menuId);
+            }else if(menuId.equals(Constant.TEST_RESULT)||menuId.equals(Constant.SHOP)) {
+                startActivity(new Intent(this, TestResultStepOne.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+            }else if(menuId.equals(Constant.NOTICE)) {
+                startActivity(new Intent(this, NoticeListActivity.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+            }else if(menuId.equals(Constant.HOMEWORK)) {
+                startActivity(new Intent(this, HomeWorkListActivity.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
             }else {
                 SpannableString s1 = new SpannableString("Home");
                 s1.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s1.length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if (getSupportActionBar() != null)
                     getSupportActionBar().setTitle(s1);
-                contentFragment = ContentFragment.newInstance(R.drawable.content_music);
+                contentFragment = ContentFragment.newInstance(R.drawable.bg_overlay);
                 ContentFragment.menuClickListener = this;
             }
 
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
         list.add(menuItem4);
         SlideMenuItem menuItem5 = new SlideMenuItem(Constant.SHOP, R.drawable.icn_5);
         list.add(menuItem5);
-        SlideMenuItem menuItem6 = new SlideMenuItem(Constant.PARTY, R.drawable.icn_6);
+        SlideMenuItem menuItem6 = new SlideMenuItem(Constant.NOTICE, R.drawable.notice);
         list.add(menuItem6);
         SlideMenuItem menuItem7 = new SlideMenuItem(Constant.MOVIE, R.drawable.icn_7);
         list.add(menuItem7);

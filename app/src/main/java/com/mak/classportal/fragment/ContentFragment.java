@@ -105,6 +105,7 @@ public class ContentFragment extends Fragment implements ScreenShotable {
             dm.setHeaderTitle("Daily Activities ");
 
             ArrayList<HomeMenu> singleItem = new ArrayList<HomeMenu>();
+            ArrayList<HomeMenu> singleItem1 = new ArrayList<HomeMenu>();
             HomeMenu m=new HomeMenu();
             m.setName(Constant.TAKE_ATTENDENCE);
             m.setResourceId(R.drawable.checklist);
@@ -119,7 +120,21 @@ public class ContentFragment extends Fragment implements ScreenShotable {
             singleItem.add(m2);
             SectionDataModel dm1 = new SectionDataModel();
             dm.setAllItemsInSection(singleItem);
-            dm1.setAllItemsInSection(singleItem);
+
+            HomeMenu m4=new HomeMenu();
+            m4.setName(Constant.HOMEWORK);
+            m4.setResourceId(R.drawable.checklist);
+            singleItem1.add(m4);
+            HomeMenu m3=new HomeMenu();
+            m3.setName(Constant.TIME_TABLE);
+            m3.setResourceId(R.drawable.plan);
+            singleItem1.add(m3);
+            HomeMenu m5=new HomeMenu();
+            m5.setName(Constant.TEST_RESULT);
+            m5.setResourceId(R.drawable.result);
+            singleItem1.add(m5);
+
+            dm1.setAllItemsInSection(singleItem1);
             dm1.setHeaderTitle("Other");
             allSampleData.add(dm);
             allSampleData.add(dm1);

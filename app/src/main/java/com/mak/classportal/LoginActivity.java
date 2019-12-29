@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     public void loginOn(View view){
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
         finish();
     }
 }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".SelectQuestionsActivity">
+    tools:context=".NewTestActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -25,25 +25,54 @@
             android:fontFamily="serif-monospace"
             android:textColor="@android:color/black"
             android:textSize="20sp" />
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/questionList"
-            android:layout_below="@id/tvTitle"
-            android:layout_above="@id/saveButton"
-            android:layout_centerHorizontal="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none" />
 
+        <LinearLayout
+            android:layout_below="@id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:padding="20dp"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/selectClass"
+                android:background="@drawable/layout_border"
+                android:prompt="@string/select_class_prompt"
+                android:entries="@array/class_arrays"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/selectDiv"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/layout_border"
+                android:prompt="@string/select_division_prompt"
+                android:entries="@array/division_arrays"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/selectSubject"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/layout_border"
+                android:prompt="@string/select_division_prompt"
+                android:entries="@array/subject_arrays"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+        </LinearLayout>
         <Button
             android:id="@+id/saveButton"
             android:layout_alignParentBottom="true"
             android:background="@color/twitter"
             android:textColor="@color/white"
             android:textStyle="bold"
+            android:onClick="next"
             android:fontFamily="@font/opensansbold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_button" />
+            android:text="@string/dummy_button" />
+
 
     </RelativeLayout>
 

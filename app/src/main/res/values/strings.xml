@@ -4,11 +4,46 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="divisionsString">Divisions</string>
+    <string name="notice_description">Description</string>
 
     <string name="title_activity_take_attendance">TakeAttendance</string>
     <string name="dummy_button">Save</string>
+    <string name="add_button">Add</string>
     <string name="proceed_button">Proceed</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="final_q">Questions</string>
+    <string name="new_test">New Test</string>
+    <string name="finalise_test">Finalise Test</string>
+    <string name="new_notice">New Notice</string>
+    <string name="new_homework">Homework</string>
+    <string name="title_activity_tests_list">Scheduled Tests</string>
+    <string name="select_class_prompt">Select Class</string>
+
+    <string-array name="class_arrays">
+        <item>Select Class</item>
+        <item>All</item>
+        <item>8th Std</item>
+        <item>9th Std</item>
+        <item>10th Std</item>
+        <item>11th Std</item>
+        <item>12th Std</item>
+    </string-array>
+    <string name="select_division_prompt">Select Class Division</string>
+    <string-array name="division_arrays">
+        <item>Select Division</item>
+        <item>ALL</item>
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+    </string-array>
+    <string-array name="subject_arrays">
+        <item>Select Subject</item>
+        <item>English</item>
+        <item>Marathi</item>
+        <item>Maths</item>
+        <item>Chemistry</item>
+        <item>Biology</item>
+    </string-array>
 
 </resources>

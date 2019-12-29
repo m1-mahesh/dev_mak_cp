@@ -18,7 +18,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SelectQuestionsActivity"></activity>
+        <activity
+            android:name=".TestsList"
+            android:label="@string/title_activity_tests_list"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".TestResultStepOne"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".NoticeListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".NewNoticeActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".HomeWorkListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".NewHomeworkActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".TestResultActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".FinaliseTest" />
+        <activity android:name=".NewTestActivity" />
+        <activity android:name=".SelectQuestionsActivity" />
         <activity
             android:name=".TakeAttendance"
             android:configChanges="orientation|keyboardHidden|screenSize"
