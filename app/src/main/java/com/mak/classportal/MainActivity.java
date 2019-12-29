@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     LayoutInflater inflater;
     View tostLayout;
     Fragment contentFragment;
-//    HashMap<String, String> fragmentStack = new HashMap<>();
+//    HashMap<String, String> fragmen tStack = new HashMap<>();
     ArrayList<String> fragmentsStack = new ArrayList<>();
     ScreenStack screenStack = new ScreenStack();
 
