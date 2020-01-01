@@ -84,7 +84,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/antique_white"
+            android:background="@color/colorPrimary"
             android:orientation="horizontal"
             android:weightSum="1">
 

@@ -178,16 +178,4 @@ public class SelectQuestionsActivity extends AppCompatActivity {
         }
     }
     boolean isShow = false;
-    @Override
-    public void onBackPressed() {
-
-        if (isShow){
-            SelectQuestionsActivity.INDEX = 0;
-            startActivity(new Intent(this, SelectQuestionsActivity.class));
-            isShow = false;
-            overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
-        }else {
-
-        }
-    }
 }

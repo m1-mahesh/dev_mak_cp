@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    tools:context=".RunTest">
+
+
+    <TextView
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/opensansbold"
+        android:textSize="15sp"
+        android:text="05/26"
+        android:layout_height="wrap_content"/>
+    <com.mak.classportal.swap_plugin.SwipeStack
+        android:id="@+id/swipeStack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="40dp"
+        app:stack_rotation="0"
+        app:stack_size="30"/>
+    <Button
+        android:id="@+id/buttonSwipeLeft"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/layout_border"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/swipe_left"/>
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:text="01:20:00"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/buttonSwipeRight"
+        android:background="@drawable/layout_border"
+        android:padding="10dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/swipe_right"/>
+
+</RelativeLayout>

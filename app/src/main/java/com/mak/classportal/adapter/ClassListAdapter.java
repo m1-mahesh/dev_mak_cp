@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
 import com.mak.classportal.TakeAttendance;
+import com.mak.classportal.TestsList;
 import com.mak.classportal.modales.StudentClass;
 import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.OnClassClick;
@@ -44,21 +45,21 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
     }
     String className = "";
     @Override
-    public void onBindViewHolder(SingleItemRowHolder holder, int i) {
+    public void onBindViewHolder(final SingleItemRowHolder holder, int i) {
 
         final StudentClass singleItem = itemsList.get(i);
 
         holder.tvTitle.setText("Class: "+singleItem.getName());
         holder.divisionsView.removeAllViews();
-        if (menuId.equals(Constant.TAKE_TEST)){
+        if (menuId.equals(Constant.TAKE_TEST)||this.menuId.equals(Constant.CASE)){
             holder.divisionsView.setVisibility(View.GONE);
             holder.devisionText.setVisibility(View.GONE);
             holder.hrView.setVisibility(View.GONE);
             holder.tvTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (onClassClick!=null)
-                        onClassClick.onClassClick(Constant.SELECT_SUBJECT);
+                    mContext.startActivity(new Intent(mContext, TestsList.class));
+                    ((Activity)mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
             });
         }else {

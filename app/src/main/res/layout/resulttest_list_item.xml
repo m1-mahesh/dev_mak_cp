@@ -19,7 +19,7 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ongoing"
+            android:text="Compleetd"
             android:fontFamily="sans-serif-condensed"
             android:textSize="15sp" />
 
@@ -78,7 +78,7 @@
             <TextView
                 android:id="@+id/testExpiry"
                 android:layout_alignParentRight="true"
-                android:text="Expire On Tomorrow"
+                android:text="45 Students Attempted"
                 android:textSize="10sp"
                 android:fontFamily="serif-monospace"
                 android:layout_width="wrap_content"

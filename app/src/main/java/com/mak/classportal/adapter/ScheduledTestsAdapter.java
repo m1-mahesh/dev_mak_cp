@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
+import com.mak.classportal.TestIntroActivity;
 import com.mak.classportal.TestResultActivity;
 import com.mak.classportal.modales.TestData;
 import com.mak.classportal.utilities.OnClassClick;
@@ -35,9 +36,10 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
 
     @Override
     public SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.test_list_item, null);
-        SingleItemRowHolder mh = new SingleItemRowHolder(v);
+
         if (isStep){
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.resulttest_list_item, null);
+            SingleItemRowHolder mh = new SingleItemRowHolder(v);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -48,8 +50,23 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
                     ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
             });
+            return mh;
+        }else {
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.test_list_item, null);
+            SingleItemRowHolder mh = new SingleItemRowHolder(v);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TestResultActivity.CLASS_ID = "10th";
+                    TestResultActivity.DIVISION = "A";
+
+                    ((Activity)mContext).startActivity(new Intent(mContext, TestIntroActivity.class));
+                    ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                }
+            });
+            return mh;
         }
-        return mh;
+
     }
 
     @Override
@@ -74,8 +91,6 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
 
         public SingleItemRowHolder(View view) {
             super(view);
-            this.devisionText = view.findViewById(R.id.divisionText);
-            this.hrView = view.findViewById(R.id.hrView);
             this.tvTitle = view.findViewById(R.id.tvTitle);
 
         }

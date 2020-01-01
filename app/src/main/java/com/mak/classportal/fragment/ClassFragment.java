@@ -1,5 +1,6 @@
 package com.mak.classportal.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
+import com.mak.classportal.TestsList;
 import com.mak.classportal.adapter.ClassListAdapter;
 import com.mak.classportal.adapter.SectionAdapter;
 import com.mak.classportal.adapter.SliderAdapter;
@@ -90,12 +92,14 @@ public class ClassFragment extends Fragment implements ScreenShotable, OnClassCl
         RecyclerView classList = rootView.findViewById(R.id.classList);
 
         classList.setHasFixedSize(true);
-        ClassListAdapter.menuId = this.menuId;
         ClassListAdapter.onClassClick = this;
         ClassListAdapter adapter1 = new ClassListAdapter(getContext(), this,allClassData);
-        if (this.menuId.endsWith(Constant.TAKE_TEST)){
+        if (this.menuId.equals(Constant.TAKE_TEST)||this.menuId.equals(Constant.CASE)){
+            ClassListAdapter.menuId = this.menuId;
             classList.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
         }else{
+            ClassListAdapter.menuId = this.menuId;
             classList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         }
 

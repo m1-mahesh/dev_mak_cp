@@ -90,8 +90,15 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                 contentFragment = ClassFragment.newInstance(menuId);
                 ClassFragment.menuClickListener = this;
             }else if(menuId.equals(Constant.TAKE_TEST)||menuId.equals(Constant.CASE)) {
-                startActivity(new Intent(this, TestsList.class));
-                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                SpannableString s = new SpannableString("Select Class");
+                s.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (getSupportActionBar() != null)
+                    getSupportActionBar().setTitle(s);
+                contentFragment = ClassFragment.newInstance(menuId);
+                ClassFragment.menuClickListener = this;
+                //startActivity(new Intent(this, TestsList.class));
+                //overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
             }else if(menuId.equals(Constant.BOOK)) {
                 SpannableString s2 = new SpannableString("Select Subject");
                 s2.setSpan(ResourcesCompat.getFont(this, R.font.opensansbold), 0, s2.length(),

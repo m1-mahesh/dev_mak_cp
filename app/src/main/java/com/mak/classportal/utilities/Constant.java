@@ -19,4 +19,8 @@ public class Constant {
     public static final String TIME_TABLE = "TimeTable";
 
 
+    public static final String ROLE_STUDENT = "Student";
+    public static final String ROLE_TEACHER = "Teacher";
+    public static final String ROLE_ADMIN = "Admin";
+
 }
