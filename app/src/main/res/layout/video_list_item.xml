@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="?android:selectableItemBackground"
+        >
+        <LinearLayout
+            android:id="@+id/topView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="10th STD"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="Maths"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <com.mak.classportal.video_player.AndExoPlayerView
+
+            android:id="@+id/andExoPlayerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:andexo_aspect_ratio="aspect_16_9"
+            app:andexo_full_screen="true"
+            app:andexo_play_when_ready="true"
+            app:andexo_resize_mode="Fit"
+            app:andexo_show_controller="true" />
+
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

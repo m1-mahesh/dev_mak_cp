@@ -30,6 +30,7 @@ import com.mak.circualreveal.animation.ViewAnimationUtils;
 import com.mak.classportal.fragment.ClassFragment;
 import com.mak.classportal.fragment.ContentFragment;
 import com.mak.classportal.fragment.SubjectFragment;
+import com.mak.classportal.modales.BoardData;
 import com.mak.classportal.utilities.OnMenuClickListener;
 import com.mak.classportal.utilities.ScreenStack;
 import com.mak.sidemenu.interfaces.Resourceble;
@@ -114,6 +115,15 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                 overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
             }else if(menuId.equals(Constant.HOMEWORK)) {
                 startActivity(new Intent(this, HomeWorkListActivity.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+            }else if(menuId.equals(Constant.TIME_TABLE)) {
+                startActivity(new Intent(this, TimetableActivity.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+            }else if(menuId.equals(Constant.PAPER)|| menuId.equals(Constant.PAINT)) {
+                startActivity(new Intent(this, PaperListActivity.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+            }else if(menuId.equals(Constant.MOVIE)) {
+                startActivity(new Intent(this, VideosActivity.class));
                 overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
             }else {
                 SpannableString s1 = new SpannableString("Home");

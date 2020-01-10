@@ -130,7 +130,7 @@ public class ContentFragment extends Fragment implements ScreenShotable {
             m3.setResourceId(R.drawable.plan);
             singleItem1.add(m3);
             HomeMenu m5=new HomeMenu();
-            m5.setName(Constant.TEST_RESULT);
+            m5.setName(Constant.PAPER);
             m5.setResourceId(R.drawable.result);
             singleItem1.add(m5);
 

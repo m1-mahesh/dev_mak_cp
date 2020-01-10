@@ -17,6 +17,7 @@ public class Constant {
     public static final String SELECT_QUESTION = "Select Question";
     public static final String HOMEWORK = "Homwork";
     public static final String TIME_TABLE = "TimeTable";
+    public static final String PAPER = "Generate Papers";
 
 
     public static final String ROLE_STUDENT = "Student";

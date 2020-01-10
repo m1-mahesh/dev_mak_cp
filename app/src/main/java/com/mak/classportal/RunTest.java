@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,8 +53,8 @@ public class RunTest extends AppCompatActivity implements SwipeStack.SwipeStackL
     }
 
     private void fillWithTestData() {
-        for (int x = 0; x < 25; x++) {
-            mData.add(getString(R.string.dummy_text) + " " + (x + 1));
+        for (int x = 1; x < 25; x++) {
+            mData.add("Q"+x+". "+getString(R.string.dummy_text));
         }
     }
 
@@ -122,16 +124,52 @@ public class RunTest extends AppCompatActivity implements SwipeStack.SwipeStackL
             return position;
         }
 
+        View view;
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.question_card, parent, false);
+                view = getLayoutInflater().inflate(R.layout.question_card, parent, false);
             }
-
-            TextView textViewCard = convertView.findViewById(R.id.textViewCard);
+            TextView textViewCard = view.findViewById(R.id.textViewCard);
             textViewCard.setText(mData.get(position));
+            final RadioButton one = view.findViewById(R.id.one);
+            final RadioButton two = view.findViewById(R.id.two);
+            final RadioButton three = view.findViewById(R.id.three);
+            final RadioButton four = view.findViewById(R.id.four);
+            RadioGroup optionGroup = view.findViewById(R.id.optionView);
+            optionGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    switch (checkedId){
+                        case R.id.one:
+                            one.setBackgroundResource(R.drawable.redio_selected);
+                            two.setBackgroundResource(R.drawable.layout_border);
+                            three.setBackgroundResource(R.drawable.layout_border);
+                            four.setBackgroundResource(R.drawable.layout_border);
+                            break;
+                        case R.id.two:
+                            one.setBackgroundResource(R.drawable.layout_border);
+                            two.setBackgroundResource(R.drawable.redio_selected);
+                            three.setBackgroundResource(R.drawable.layout_border);
+                            four.setBackgroundResource(R.drawable.layout_border);
+                            break;
+                        case R.id.three:
+                            one.setBackgroundResource(R.drawable.layout_border);
+                            two.setBackgroundResource(R.drawable.layout_border);
+                            three.setBackgroundResource(R.drawable.redio_selected);
+                            four.setBackgroundResource(R.drawable.layout_border);
+                            break;
+                        case R.id.four:
+                            one.setBackgroundResource(R.drawable.layout_border);
+                            two.setBackgroundResource(R.drawable.layout_border);
+                            three.setBackgroundResource(R.drawable.layout_border);
+                            four.setBackgroundResource(R.drawable.redio_selected);
+                            break;
+                    }
+                }
+            });
 
-            return convertView;
+            return view;
         }
     }
 }

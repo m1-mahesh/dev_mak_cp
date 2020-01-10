@@ -18,7 +18,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FinishTestActivity"></activity>
+        <activity android:name=".VideosActivity"></activity>
+        <activity android:name=".PaperListActivity" />
+        <activity android:name=".BoardSelectActivity" />
+        <activity android:name=".TimetableActivity" />
+        <activity android:name=".FinishTestActivity" />
         <activity android:name=".RunTest" />
         <activity
             android:name=".TestsList"

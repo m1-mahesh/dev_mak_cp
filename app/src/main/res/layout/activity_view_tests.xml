@@ -60,6 +60,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"/>
 
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/selectLevel"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/layout_border"
+                android:prompt="@string/select_division_prompt"
+                android:entries="@array/level_arrays"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
         </LinearLayout>
         <Button
             android:id="@+id/saveButton"

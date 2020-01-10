@@ -1,6 +1,7 @@
 package com.mak.classportal;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,18 +23,33 @@ import java.util.ArrayList;
 
 public class NewTestActivity extends AppCompatActivity {
 
+    public static boolean isTest = false;
     TextView customToast;
     LayoutInflater inflater;
     View tostLayout;
     Fragment contentFragment;
     RecyclerView mRecyclerView;
     ArrayList<HomeMenu> allClassData = new ArrayList<>();
+    AppCompatSpinner selectClass, selectSubject, selectDiv, selectLevel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_tests);
-        ((TextView) findViewById(R.id.tvTitle)).setText(R.string.new_test);
+        if (isTest)
+            ((TextView) findViewById(R.id.tvTitle)).setText(R.string.new_test);
+        else
+            ((TextView) findViewById(R.id.tvTitle)).setText(R.string.new_paper);
         ((Button) findViewById(R.id.saveButton)).setText("Next");
+
+        selectClass = findViewById(R.id.selectClass);
+        selectDiv = findViewById(R.id.selectDiv);
+        selectSubject = findViewById(R.id.selectSubject);
+        selectLevel = findViewById(R.id.selectLevel);
+        if (isTest){
+            selectLevel.setVisibility(View.GONE);
+        }else {
+            selectDiv.setVisibility(View.GONE);
+        }
     }
     void showToast(String toastText){
         inflater = getLayoutInflater();

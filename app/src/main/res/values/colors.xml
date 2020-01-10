@@ -155,4 +155,8 @@
     <color name="tabBackground_selected">#3199ff</color>
 
     <color name="black_overlay">#66000000</color>
+
+    <color name="blackTransparent">#07DDDDDD</color>
+    <color name="toolbarTransparent">#95000000</color>
+    <color name="divider">#C0BEBE</color>
 </resources>

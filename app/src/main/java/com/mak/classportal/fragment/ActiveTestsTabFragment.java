@@ -50,6 +50,7 @@ public class ActiveTestsTabFragment extends Fragment {
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
+                NewTestActivity.isTest = true;
                 getActivity().startActivity(new Intent(getContext(), NewTestActivity.class));
                 getActivity().overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
             }

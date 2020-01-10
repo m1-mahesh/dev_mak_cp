@@ -14,6 +14,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="final_q">Questions</string>
     <string name="new_test">New Test</string>
+    <string name="new_paper">New Paper</string>
     <string name="finalise_test">Finalise Test</string>
     <string name="new_notice">New Notice</string>
     <string name="new_homework">Homework</string>
@@ -45,6 +46,12 @@
         <item>Maths</item>
         <item>Chemistry</item>
         <item>Biology</item>
+    </string-array>
+    <string-array name="level_arrays">
+        <item>Select Difficulty Level</item>
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
     </string-array>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="large_text">
@@ -143,11 +150,12 @@
     <string name="finish_test">Finish</string>
     <string name="view_swiped_left">%1$s swiped to left!</string>
     <string name="view_swiped_right">%1$s swiped to right!</string>
-    <string name="dummy_text">Question Content (under construction)</string>
+    <string name="dummy_text">Who is making the Web Standards?</string>
     <string name="dummy_fab">Fab Test</string>
 
     <string name="reset">Reset stack</string>
     <string name="stack_reset">Stack reset!</string>
     <string name="stack_empty">Card stack empty!</string>
+    <string name="title_retry">Try Again!</string>
 
 </resources>
