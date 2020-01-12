@@ -18,8 +18,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".VideosActivity"></activity>
-        <activity android:name=".PaperListActivity" />
+        <activity android:name=".FinalisePaperActivity"/>
+        <activity android:name=".RootActivity" />
+        <activity android:name=".permission.PermissionsActivity" />
         <activity android:name=".BoardSelectActivity" />
         <activity android:name=".TimetableActivity" />
         <activity android:name=".FinishTestActivity" />
@@ -32,16 +33,7 @@
             android:name=".TestIntroActivity"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".TestResultStepOne"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".NoticeListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".NewNoticeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".HomeWorkListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewHomeworkActivity"
@@ -57,15 +49,25 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_take_attendance"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.mak.classportal.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

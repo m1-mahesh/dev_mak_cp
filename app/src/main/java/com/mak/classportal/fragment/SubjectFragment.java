@@ -10,32 +10,25 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
-import com.mak.classportal.adapter.ClassListAdapter;
 import com.mak.classportal.adapter.SubjectListAdapter;
 import com.mak.classportal.modales.HomeMenu;
-import com.mak.classportal.modales.StudentClass;
-import com.mak.classportal.utilities.Constant;
-import com.mak.classportal.utilities.OnMenuClickListener;
-import com.mak.sidemenu.interfaces.ScreenShotable;
 
 import java.util.ArrayList;
 
 /**
  * Created by Konstantin on 22.12.2014.
  */
-public class SubjectFragment extends Fragment implements ScreenShotable {
+public class SubjectFragment extends Fragment {
 
-    private View containerView;
+    static String menuId = "";
     protected ImageView mImageView;
     protected int res;
-    private Bitmap bitmap;
-    static String menuId = "";
-    public static OnMenuClickListener menuClickListener;
     ArrayList<HomeMenu> allClassData;
+    private View containerView;
+    private Bitmap bitmap;
 
     public static SubjectFragment newInstance(String menuID) {
         SubjectFragment contentFragment = new SubjectFragment();
@@ -54,18 +47,18 @@ public class SubjectFragment extends Fragment implements ScreenShotable {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         allClassData = new ArrayList<>();
-        HomeMenu aClass=new HomeMenu();
+        HomeMenu aClass = new HomeMenu();
         aClass.setName("Marathi");
 
-        HomeMenu aClass1=new HomeMenu();
+        HomeMenu aClass1 = new HomeMenu();
         aClass1.setName("English");
-        HomeMenu aClass2=new HomeMenu();
+        HomeMenu aClass2 = new HomeMenu();
         aClass2.setName("Maths");
-        HomeMenu aClass3=new HomeMenu();
+        HomeMenu aClass3 = new HomeMenu();
         aClass3.setName("History");
-        HomeMenu aClass4=new HomeMenu();
+        HomeMenu aClass4 = new HomeMenu();
         aClass4.setName("Science");
-        HomeMenu aClass5=new HomeMenu();
+        HomeMenu aClass5 = new HomeMenu();
         aClass5.setName("Hindi");
         allClassData.add(aClass);
         allClassData.add(aClass1);
@@ -83,8 +76,8 @@ public class SubjectFragment extends Fragment implements ScreenShotable {
         RecyclerView subjectList = rootView.findViewById(R.id.subjectList);
 
         subjectList.setHasFixedSize(true);
-        SubjectListAdapter.menuId = this.menuId;
-        SubjectListAdapter adapter1 = new SubjectListAdapter(getContext(), this,allClassData);
+        SubjectListAdapter.menuId = menuId;
+        SubjectListAdapter adapter1 = new SubjectListAdapter(getContext(), allClassData);
         subjectList.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
 
@@ -93,14 +86,5 @@ public class SubjectFragment extends Fragment implements ScreenShotable {
         return rootView;
     }
 
-    @Override
-    public void takeScreenShot() {
-
-    }
-
-    @Override
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
 }
 

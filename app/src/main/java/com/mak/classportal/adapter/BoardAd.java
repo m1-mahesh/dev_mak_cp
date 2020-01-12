@@ -17,7 +17,6 @@ import com.mak.classportal.SelectQuestionsActivity;
 import com.mak.classportal.modales.BoardData;
 import com.mak.classportal.modales.HomeMenu;
 import com.mak.classportal.utilities.Constant;
-import com.mak.sidemenu.interfaces.ScreenShotable;
 
 import java.util.ArrayList;
 
@@ -25,16 +24,11 @@ public class BoardAd extends RecyclerView.Adapter<BoardAd.SingleItemRowHolder> {
 
     private ArrayList<BoardData> itemsList;
     private Context mContext;
-    ScreenShotable screenShotable;
     public static String menuId = "";
+
     public BoardAd(Context context, ArrayList<BoardData> itemsList) {
         this.itemsList = itemsList;
         this.mContext = context;
-    }
-    public BoardAd(Context context, ScreenShotable screenShotable, ArrayList<BoardData> itemsList) {
-        this.itemsList = itemsList;
-        this.mContext = context;
-        this.screenShotable = screenShotable;
     }
 
     @Override
@@ -47,6 +41,7 @@ public class BoardAd extends RecyclerView.Adapter<BoardAd.SingleItemRowHolder> {
                 NewTestActivity.isTest = false;
                 mContext.startActivity(new Intent(mContext, NewTestActivity.class));
                 ((Activity)mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                ((Activity) mContext).finish();
             }
         });
         return mh;

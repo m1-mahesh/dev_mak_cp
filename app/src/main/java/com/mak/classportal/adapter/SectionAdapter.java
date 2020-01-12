@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
 import com.mak.classportal.modales.SectionDataModel;
-import com.mak.sidemenu.interfaces.ScreenShotable;
 
 import java.util.ArrayList;
 
@@ -22,12 +21,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ItemRowH
 
     private ArrayList<SectionDataModel> dataList;
     private Context mContext;
-    ScreenShotable screenShotable;
 
-    public SectionAdapter(Context context, ScreenShotable screenShotable, ArrayList<SectionDataModel> dataList) {
+    public SectionAdapter(Context context, ArrayList<SectionDataModel> dataList) {
         this.dataList = dataList;
         this.mContext = context;
-        this.screenShotable = screenShotable;
     }
 
     @Override
@@ -46,7 +43,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ItemRowH
 
         itemRowHolder.itemTitle.setText(sectionName);
 
-        SectionItemAdapter itemListDataAdapter = new SectionItemAdapter(mContext,screenShotable, singleSectionItems);
+        SectionItemAdapter itemListDataAdapter = new SectionItemAdapter(mContext, singleSectionItems);
 
         itemRowHolder.sectionItemList.setHasFixedSize(true);
         itemRowHolder.sectionItemList.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
@@ -57,18 +54,11 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ItemRowH
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(v.getContext(), "click event on more, "+sectionName , Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "click event on more, " + sectionName, Toast.LENGTH_SHORT).show();
 
             }
         });
 
-
-       /* Glide.with(mContext)
-                .load(feedItem.getImageURL())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
-                .error(R.drawable.bg)
-                .into(feedListRowHolder.thumbView);*/
     }
 
     @Override
@@ -85,13 +75,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ItemRowH
         protected Button btnMore;
 
 
-
         public ItemRowHolder(View view) {
             super(view);
 
-            this.itemTitle = (TextView) view.findViewById(R.id.itemTitle);
-            this.sectionItemList = (RecyclerView) view.findViewById(R.id.recycler_view_list);
-            this.btnMore= (Button) view.findViewById(R.id.btnMore);
+            this.itemTitle = view.findViewById(R.id.itemTitle);
+            this.sectionItemList = view.findViewById(R.id.recycler_view_list);
+            this.btnMore = view.findViewById(R.id.btnMore);
 
         }
 

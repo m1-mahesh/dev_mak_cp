@@ -161,7 +161,10 @@ public class SelectQuestionsActivity extends AppCompatActivity {
             findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(SelectQuestionsActivity.this, FinaliseTest.class));
+                    if (Constant.IS_PAPER)
+                        startActivity(new Intent(SelectQuestionsActivity.this, FinalisePaperActivity.class));
+                    else
+                        startActivity(new Intent(SelectQuestionsActivity.this, FinaliseTest.class));
                     overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                     finish();
                 }

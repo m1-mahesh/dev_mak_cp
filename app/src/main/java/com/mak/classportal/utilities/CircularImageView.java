@@ -84,7 +84,7 @@ public class CircularImageView extends ImageView {
     public void onDraw(Canvas canvas)
     {
         // load the bitmap
-        loadBitmap();
+        //loadBitmap();
 
         // init shader
         if (image != null)

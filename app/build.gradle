@@ -43,7 +43,6 @@ dependencies {
     implementation 'com.android.support:design:29.0.1'
     implementation 'com.google.android.exoplayer:exoplayer:2.10.3'
 
-    implementation project(':library')
-    implementation project(':circualreveal')
+    implementation 'com.itextpdf:itextg:5.5.10'
 
 }

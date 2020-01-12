@@ -1,8 +1,6 @@
 package com.mak.classportal.fragment;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,34 +14,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
-import com.mak.classportal.TestsList;
 import com.mak.classportal.adapter.ClassListAdapter;
-import com.mak.classportal.adapter.SectionAdapter;
-import com.mak.classportal.adapter.SliderAdapter;
-import com.mak.classportal.modales.HomeMenu;
-import com.mak.classportal.modales.SectionDataModel;
 import com.mak.classportal.modales.StudentClass;
 import com.mak.classportal.utilities.Constant;
-import com.mak.classportal.utilities.OnClassClick;
-import com.mak.classportal.utilities.OnMenuClickListener;
-import com.mak.sidemenu.interfaces.ScreenShotable;
-import com.smarteist.autoimageslider.IndicatorAnimations;
-import com.smarteist.autoimageslider.SliderAnimations;
-import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
 
 /**
  * Created by Konstantin on 22.12.2014.
  */
-public class ClassFragment extends Fragment implements ScreenShotable, OnClassClick {
+public class ClassFragment extends Fragment  {
 
     private View containerView;
     protected ImageView mImageView;
     protected int res;
     private Bitmap bitmap;
-    static String menuId = "";
-    public static OnMenuClickListener menuClickListener;
+    public static String menuId = "";
     ArrayList<StudentClass> allClassData;
 
     public static ClassFragment newInstance(String menuID) {
@@ -92,8 +78,7 @@ public class ClassFragment extends Fragment implements ScreenShotable, OnClassCl
         RecyclerView classList = rootView.findViewById(R.id.classList);
 
         classList.setHasFixedSize(true);
-        ClassListAdapter.onClassClick = this;
-        ClassListAdapter adapter1 = new ClassListAdapter(getContext(), this,allClassData);
+        ClassListAdapter adapter1 = new ClassListAdapter(getContext(),allClassData);
         if (this.menuId.equals(Constant.TAKE_TEST)||this.menuId.equals(Constant.CASE)){
             ClassListAdapter.menuId = this.menuId;
             classList.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -107,21 +92,6 @@ public class ClassFragment extends Fragment implements ScreenShotable, OnClassCl
         classList.setAdapter(adapter1);
 
         return rootView;
-    }
-
-    @Override
-    public void takeScreenShot() {
-
-    }
-
-    @Override
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    @Override
-    public void onClassClick(String screenId) {
-        menuClickListener.onMenuClick(this, screenId);
     }
 
 }

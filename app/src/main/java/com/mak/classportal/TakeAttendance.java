@@ -203,7 +203,6 @@ public class TakeAttendance extends AppCompatActivity {
     public void submitAttendance(View view){
         showToast("Data Saved Successfully");
         finish();
-        startActivity(new Intent(this, MainActivity.class));
     }
     void showToast(String toastText){
         inflater = getLayoutInflater();

@@ -19,26 +19,21 @@ import com.mak.classportal.adapter.SliderAdapter;
 import com.mak.classportal.modales.HomeMenu;
 import com.mak.classportal.modales.SectionDataModel;
 import com.mak.classportal.utilities.Constant;
-import com.mak.classportal.utilities.OnMenuClickListener;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
-
-
-import com.mak.sidemenu.interfaces.ScreenShotable;
 
 import java.util.ArrayList;
 
 /**
  * Created by Konstantin on 22.12.2014.
  */
-public class ContentFragment extends Fragment implements ScreenShotable {
-    protected int res;
-    private Bitmap bitmap;
-    private View containerView;
+public class ContentFragment extends Fragment {
     protected ImageView mImageView;
     ArrayList<SectionDataModel> allSampleData;
-    public static OnMenuClickListener menuClickListener;
+    private Bitmap bitmap;
+    private View containerView;
+
     public static ContentFragment newInstance(int resId) {
         ContentFragment contentFragment = new ContentFragment();
         Bundle bundle = new Bundle();
@@ -57,7 +52,6 @@ public class ContentFragment extends Fragment implements ScreenShotable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        res = getArguments().getInt(Integer.class.getName());
         allSampleData = new ArrayList<SectionDataModel>();
     }
 
@@ -85,7 +79,7 @@ public class ContentFragment extends Fragment implements ScreenShotable {
 
         sectionList.setHasFixedSize(true);
 
-        SectionAdapter adapter1 = new SectionAdapter(getContext(), this,allSampleData);
+        SectionAdapter adapter1 = new SectionAdapter(getContext(), allSampleData);
 
         sectionList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
@@ -93,10 +87,7 @@ public class ContentFragment extends Fragment implements ScreenShotable {
         return rootView;
     }
 
-    @Override
-    public void takeScreenShot() {
 
-    }
     public void createDummyData() {
         for (int i = 1; i <= 1; i++) {
 
@@ -106,30 +97,30 @@ public class ContentFragment extends Fragment implements ScreenShotable {
 
             ArrayList<HomeMenu> singleItem = new ArrayList<HomeMenu>();
             ArrayList<HomeMenu> singleItem1 = new ArrayList<HomeMenu>();
-            HomeMenu m=new HomeMenu();
+            HomeMenu m = new HomeMenu();
             m.setName(Constant.TAKE_ATTENDENCE);
             m.setResourceId(R.drawable.checklist);
             singleItem.add(m);
-            HomeMenu m1=new HomeMenu();
+            HomeMenu m1 = new HomeMenu();
             m1.setName(Constant.TAKE_TEST);
             m1.setResourceId(R.drawable.plan);
             singleItem.add(m1);
-            HomeMenu m2=new HomeMenu();
+            HomeMenu m2 = new HomeMenu();
             m2.setName(Constant.TEST_RESULT);
             m2.setResourceId(R.drawable.result);
             singleItem.add(m2);
             SectionDataModel dm1 = new SectionDataModel();
             dm.setAllItemsInSection(singleItem);
 
-            HomeMenu m4=new HomeMenu();
+            HomeMenu m4 = new HomeMenu();
             m4.setName(Constant.HOMEWORK);
             m4.setResourceId(R.drawable.checklist);
             singleItem1.add(m4);
-            HomeMenu m3=new HomeMenu();
+            HomeMenu m3 = new HomeMenu();
             m3.setName(Constant.TIME_TABLE);
             m3.setResourceId(R.drawable.plan);
             singleItem1.add(m3);
-            HomeMenu m5=new HomeMenu();
+            HomeMenu m5 = new HomeMenu();
             m5.setName(Constant.PAPER);
             m5.setResourceId(R.drawable.result);
             singleItem1.add(m5);
@@ -142,9 +133,5 @@ public class ContentFragment extends Fragment implements ScreenShotable {
         }
     }
 
-    @Override
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
 }
 

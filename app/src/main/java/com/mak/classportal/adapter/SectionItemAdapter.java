@@ -10,9 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
-import com.mak.classportal.fragment.ContentFragment;
 import com.mak.classportal.modales.HomeMenu;
-import com.mak.sidemenu.interfaces.ScreenShotable;
 
 import java.util.ArrayList;
 
@@ -20,12 +18,10 @@ public class SectionItemAdapter extends RecyclerView.Adapter<SectionItemAdapter.
 
     private ArrayList<HomeMenu> itemsList;
     private Context mContext;
-    ScreenShotable screenShotable;
 
-    public SectionItemAdapter(Context context, ScreenShotable screenShotable, ArrayList<HomeMenu> itemsList) {
+    public SectionItemAdapter(Context context, ArrayList<HomeMenu> itemsList) {
         this.itemsList = itemsList;
         this.mContext = context;
-        this.screenShotable = screenShotable;
     }
 
     @Override
@@ -43,18 +39,6 @@ public class SectionItemAdapter extends RecyclerView.Adapter<SectionItemAdapter.
         holder.tvTitle.setText(singleItem.getName());
         holder.itemImage.setImageResource(singleItem.getResourceId());
 
-        holder.itemImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ContentFragment.menuClickListener.onMenuClick(screenShotable, singleItem.getName());
-            }
-        });
-       /* Glide.with(mContext)
-                .load(feedItem.getImageURL())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
-                .error(R.drawable.bg)
-                .into(feedListRowHolder.thumbView);*/
     }
 
     @Override
@@ -72,8 +56,8 @@ public class SectionItemAdapter extends RecyclerView.Adapter<SectionItemAdapter.
         public SingleItemRowHolder(View view) {
             super(view);
 
-            this.tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
+            this.tvTitle = view.findViewById(R.id.tvTitle);
+            this.itemImage = view.findViewById(R.id.itemImage);
 
         }
 

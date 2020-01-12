@@ -3,6 +3,7 @@ package com.mak.classportal.utilities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -10,17 +11,35 @@ import android.content.pm.PackageManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
+import com.mak.classportal.R;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static androidx.core.app.ActivityCompat.requestPermissions;
+import static com.mak.classportal.utilities.LogUtils.LOGE;
 
 
 /**
@@ -153,6 +172,112 @@ public class AppSingleTone {
                 .show();
     }
 
-    public void getPatientAccount() {
+    public void createPdf(String dest) {
+
+        if (new File(dest).exists()) {
+            new File(dest).delete();
+        }
+
+        try {
+            /**
+             * Creating Document
+             */
+            Document document = new Document();
+
+            // Location to save
+            PdfWriter.getInstance(document, new FileOutputStream(dest));
+
+            // Open to write
+            document.open();
+
+            // Document Settings
+            document.setPageSize(PageSize.A4);
+            document.addCreationDate();
+            document.addAuthor("MAK LTD");
+            document.addCreator("Mahesh Kharat");
+
+            /***
+             * Variables for further use....
+             */
+            BaseColor mColorAccent = new BaseColor(0, 153, 204, 255);
+            float mHeadingFontSize = 20.0f;
+            float mValueFontSize = 26.0f;
+
+            /**
+             * How to USE FONT....
+             */
+            BaseFont urName = BaseFont.createFont("res/font/opensanssemibold.ttf", "UTF-8", BaseFont.EMBEDDED);
+            // LINE SEPARATOR
+            LineSeparator lineSeparator = new LineSeparator();
+            lineSeparator.setLineColor(new BaseColor(0, 0, 0, 68));
+
+            // Title Order Details...
+            // Adding Title....
+            Font mOrderDetailsTitleFont = new Font(urName, 36.0f, Font.NORMAL, BaseColor.BLACK);
+            Chunk mOrderDetailsTitleChunk = new Chunk("Class Portal", mOrderDetailsTitleFont);
+            Paragraph mOrderDetailsTitleParagraph = new Paragraph(mOrderDetailsTitleChunk);
+            mOrderDetailsTitleParagraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(mOrderDetailsTitleParagraph);
+
+            // Fields of Order Details...
+            // Adding Chunks for Title and value
+            Font mOrderIdFont = new Font(urName, mHeadingFontSize, Font.NORMAL, mColorAccent);
+            Chunk mOrderIdChunk = new Chunk("Class: 10 SDT", mOrderIdFont);
+            Paragraph mOrderIdParagraph = new Paragraph(mOrderIdChunk);
+            document.add(mOrderIdParagraph);
+
+            Font marks = new Font(urName, mHeadingFontSize, Font.NORMAL, mColorAccent);
+            Chunk marksChunk = new Chunk("Marks: 100", marks);
+            Paragraph marksIdParagraph = new Paragraph(marksChunk);
+            marksIdParagraph.setAlignment(Element.ALIGN_RIGHT);
+            document.add(marksIdParagraph);
+            document.add(new Paragraph(""));
+            Chunk date = new Chunk("Date: 12-01-2020", marks);
+            Paragraph dateP = new Paragraph(date);
+            dateP.setAlignment(Element.ALIGN_RIGHT);
+            document.add(dateP);
+            document.add(new Paragraph(""));
+            Chunk time = new Chunk("Time: 3 Hour", marks);
+            Paragraph timeP = new Paragraph(time);
+            timeP.setAlignment(Element.ALIGN_RIGHT);
+            document.add(timeP);
+
+
+            // Adding Line Breakable Space....
+            document.add(new Paragraph(""));
+            // Adding Horizontal Line...
+            document.add(new Chunk(lineSeparator));
+            // Adding Line Breakable Space....
+            document.add(new Paragraph(""));
+
+            // Fields of Order Details...
+
+            Font mOrderDateValueFont = new Font(urName, mValueFontSize, Font.NORMAL, BaseColor.BLACK);
+            Chunk mOrderDateValueChunk = new Chunk("1. Who is making the web standards?", mOrderDateValueFont);
+            Paragraph mOrderDateValueParagraph = new Paragraph(mOrderDateValueChunk);
+            document.add(mOrderDateValueParagraph);
+
+            document.add(new Paragraph(""));
+            document.add(new Paragraph(""));
+            Font mOrderDateFont = new Font(urName, mHeadingFontSize, Font.NORMAL, mColorAccent);
+            Chunk mOrderDateChunk = new Chunk("  1. Google", mOrderDateFont);
+            Paragraph mOrderDateParagraph = new Paragraph(mOrderDateChunk);
+            document.add(mOrderDateParagraph);
+            document.add(new Paragraph(""));
+            Chunk o2 = new Chunk("  2. Microsoft", mOrderDateFont);
+            document.add(new Paragraph(o2));
+            Chunk o3 = new Chunk("  3. Facebook", mOrderDateFont);
+            document.add(new Paragraph(o3));
+            Chunk o4 = new Chunk("  4. Amazon", mOrderDateFont);
+            document.add(new Paragraph(o4));
+            document.close();
+
+            FileUtils.openFile(context, new File(dest));
+
+        } catch (IOException | DocumentException ie) {
+            LOGE("createPdf: Error " + ie.getLocalizedMessage());
+        } catch (ActivityNotFoundException ae) {
+            Toast.makeText(context, "No application found to open this file.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

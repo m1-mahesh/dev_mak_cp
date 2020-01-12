@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         relativeLayout.startAnimation(animation);
     }
     public void loginOn(View view){
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, RootActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
         finish();

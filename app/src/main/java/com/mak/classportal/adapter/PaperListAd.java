@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
 import com.mak.classportal.modales.NoticeData;
+import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
+import com.mak.classportal.utilities.FileUtils;
 import com.mak.classportal.utilities.OnClassClick;
 
 import java.util.ArrayList;
@@ -30,15 +32,24 @@ public class PaperListAd extends RecyclerView.Adapter<PaperListAd.SingleItemRowH
     LayoutInflater inflater;
     View tostLayout;
 
+    AppSingleTone appSingleTone;
     public PaperListAd(Context context, ArrayList<NoticeData> itemsList) {
         this.itemsList = itemsList;
         this.mContext = context;
+        appSingleTone = new AppSingleTone(mContext);
     }
 
     @Override
     public SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.paper_list_item, null);
         SingleItemRowHolder mh = new SingleItemRowHolder(v);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Downloading...");
+                appSingleTone.createPdf(FileUtils.getAppPath(mContext) + "paper.pdf");
+            }
+        });
         return mh;
     }
     String className = "";
@@ -50,12 +61,6 @@ public class PaperListAd extends RecyclerView.Adapter<PaperListAd.SingleItemRowH
             holder.tvTitle.setText("SSC 10th");
         else
             holder.tvTitle.setText("CBSC 12 th");
-        holder.downloadView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToast("Downloading...");
-            }
-        });
 
     }
     void showToast(String toastText){

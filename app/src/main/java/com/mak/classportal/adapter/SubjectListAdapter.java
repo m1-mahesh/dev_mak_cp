@@ -3,7 +3,6 @@ package com.mak.classportal.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,28 +13,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
 import com.mak.classportal.SelectQuestionsActivity;
-import com.mak.classportal.TakeAttendance;
 import com.mak.classportal.modales.HomeMenu;
-import com.mak.classportal.modales.StudentClass;
 import com.mak.classportal.utilities.Constant;
-import com.mak.sidemenu.interfaces.ScreenShotable;
 
 import java.util.ArrayList;
 
 public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.SingleItemRowHolder> {
 
+    public static String menuId = "";
+    String className = "";
     private ArrayList<HomeMenu> itemsList;
     private Context mContext;
-    ScreenShotable screenShotable;
-    public static String menuId = "";
+
     public SubjectListAdapter(Context context, ArrayList<HomeMenu> itemsList) {
         this.itemsList = itemsList;
         this.mContext = context;
-    }
-    public SubjectListAdapter(Context context, ScreenShotable screenShotable, ArrayList<HomeMenu> itemsList) {
-        this.itemsList = itemsList;
-        this.mContext = context;
-        this.screenShotable = screenShotable;
     }
 
     @Override
@@ -44,7 +36,7 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
         SingleItemRowHolder mh = new SingleItemRowHolder(v);
         return mh;
     }
-    String className = "";
+
     @Override
     public void onBindViewHolder(SingleItemRowHolder holder, int i) {
 
@@ -53,7 +45,7 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
         holder.tvTitle.setText(singleItem.getName());
         if (menuId.equals(Constant.BOOK)) {
 
-        }else {
+        } else {
             holder.tvTitle.setTextSize(10);
             holder.tvTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -61,7 +53,7 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
                     SelectQuestionsActivity.CLASS_ID = "";
                     SelectQuestionsActivity.SUBJECT_ID = singleItem.getName();
                     SelectQuestionsActivity.INDEX = 1;
-                    ((Activity) mContext).startActivity(new Intent(mContext, SelectQuestionsActivity.class));
+                    mContext.startActivity(new Intent(mContext, SelectQuestionsActivity.class));
                     ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
             });
@@ -84,7 +76,7 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
 
         public SingleItemRowHolder(View view) {
             super(view);
-            this.tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+            this.tvTitle = view.findViewById(R.id.tvTitle);
 
         }
 

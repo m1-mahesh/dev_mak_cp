@@ -14,6 +14,7 @@ import com.mak.classportal.adapter.ScheduledTestsAdapter;
 import com.mak.classportal.fragment.ActiveTestsTabFragment;
 import com.mak.classportal.modales.HomeMenu;
 import com.mak.classportal.modales.TestData;
+import com.mak.classportal.utilities.Constant;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -47,7 +48,7 @@ public class TestsList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tests);
         setupToolbar();
-
+        Constant.IS_PAPER = false;
         setupViewPager();
 
         setupCollapsingToolbar();

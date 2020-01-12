@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,22 +18,20 @@ import com.mak.classportal.TestsList;
 import com.mak.classportal.modales.StudentClass;
 import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.OnClassClick;
-import com.mak.sidemenu.interfaces.ScreenShotable;
 
 import java.util.ArrayList;
 
 public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.SingleItemRowHolder> {
 
-    private ArrayList<StudentClass> itemsList;
-    private Context mContext;
-    ScreenShotable screenShotable;
     public static OnClassClick onClassClick;
     public static String menuId = "";
+    String className = "";
+    private ArrayList<StudentClass> itemsList;
+    private Context mContext;
 
-    public ClassListAdapter(Context context, ScreenShotable screenShotable, ArrayList<StudentClass> itemsList) {
+    public ClassListAdapter(Context context, ArrayList<StudentClass> itemsList) {
         this.itemsList = itemsList;
         this.mContext = context;
-        this.screenShotable = screenShotable;
     }
 
     @Override
@@ -43,15 +40,15 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
         SingleItemRowHolder mh = new SingleItemRowHolder(v);
         return mh;
     }
-    String className = "";
+
     @Override
     public void onBindViewHolder(final SingleItemRowHolder holder, int i) {
 
         final StudentClass singleItem = itemsList.get(i);
 
-        holder.tvTitle.setText("Class: "+singleItem.getName());
+        holder.tvTitle.setText("Class: " + singleItem.getName());
         holder.divisionsView.removeAllViews();
-        if (menuId.equals(Constant.TAKE_TEST)||this.menuId.equals(Constant.CASE)){
+        if (menuId.equals(Constant.TAKE_TEST) || menuId.equals(Constant.CASE)) {
             holder.divisionsView.setVisibility(View.GONE);
             holder.devisionText.setVisibility(View.GONE);
             holder.hrView.setVisibility(View.GONE);
@@ -59,11 +56,11 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
                 @Override
                 public void onClick(View v) {
                     mContext.startActivity(new Intent(mContext, TestsList.class));
-                    ((Activity)mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                    ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
             });
-        }else {
-            for(int j=0;j<singleItem.devisions.length;j++) {
+        } else {
+            for (int j = 0; j < singleItem.devisions.length; j++) {
                 TextView textView = new TextView(mContext);
                 textView.setPadding(5, 5, 5, 5);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -79,7 +76,7 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
                     public void onClick(View v) {
                         TakeAttendance.CLASS_ID = singleItem.getName();
                         TakeAttendance.DIVISION = className;
-                        ((Activity) mContext).startActivity(new Intent(mContext, TakeAttendance.class));
+                        mContext.startActivity(new Intent(mContext, TakeAttendance.class));
                         ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
 
                     }
@@ -121,7 +118,7 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
             super(view);
             this.devisionText = view.findViewById(R.id.divisionText);
             this.hrView = view.findViewById(R.id.hrView);
-            this.tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+            this.tvTitle = view.findViewById(R.id.tvTitle);
 //            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
             this.divisionsView = view.findViewById(R.id.divisionsView);
 

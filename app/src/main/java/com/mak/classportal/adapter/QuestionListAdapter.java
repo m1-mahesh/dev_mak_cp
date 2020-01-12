@@ -1,8 +1,6 @@
 package com.mak.classportal.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
 import com.mak.classportal.SelectQuestionsActivity;
-import com.mak.classportal.modales.HomeMenu;
 import com.mak.classportal.modales.Question;
-import com.mak.classportal.utilities.Constant;
-import com.mak.sidemenu.interfaces.ScreenShotable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapter.SingleItemRowHolder> {
 
-    private Context mContext;
-    ScreenShotable screenShotable;
     public static String menuId = "";
-    boolean isView= false;
+    boolean isView = false;
+    String className = "";
+    private Context mContext;
+
     public QuestionListAdapter(Context context, ArrayList<Question> itemsList, boolean isView) {
         this.mContext = context;
         this.isView = isView;
@@ -40,9 +35,9 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
         SingleItemRowHolder mh = new SingleItemRowHolder(v);
         return mh;
     }
-    String className = "";
+
     @Override
-    public void onBindViewHolder(SingleItemRowHolder holder,final int i) {
+    public void onBindViewHolder(SingleItemRowHolder holder, final int i) {
 
         final Question singleItem = SelectQuestionsActivity.questions.get(i);
 
@@ -58,7 +53,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
                     notifyItemChanged(i);
                 }
             });
-        }else {
+        } else {
             holder.checkBox.setVisibility(View.GONE);
             holder.tvTitle.setVisibility(View.VISIBLE);
             holder.tvTitle.setText(singleItem.getQuestion());
