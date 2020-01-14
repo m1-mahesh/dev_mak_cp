@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="180dp"
         android:background="@color/colorPrimary" />
 
     <!--Top Header Layout-->
@@ -46,7 +46,7 @@
                         android:layout_width="150dp"
                         android:layout_height="90dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/student" />
+                        android:src="@drawable/user_placeholder" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -66,6 +66,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/userType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/proximanovaregular"
@@ -75,9 +76,40 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/qualificationView"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingBottom="10dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Marathi,English,Maths"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Specifications"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/scoreView"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:paddingBottom="10dp">

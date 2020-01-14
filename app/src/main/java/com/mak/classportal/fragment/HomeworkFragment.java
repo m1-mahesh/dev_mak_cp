@@ -1,5 +1,7 @@
 package com.mak.classportal.fragment;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.mak.classportal.NewHomeworkActivity;
 import com.mak.classportal.R;
+import com.mak.classportal.RootActivity;
 import com.mak.classportal.adapter.HomeworkAd;
 import com.mak.classportal.modales.NoticeData;
 
@@ -51,6 +56,7 @@ public class HomeworkFragment extends Fragment {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,6 +67,16 @@ public class HomeworkFragment extends Fragment {
         HomeworkAd adapter1 = new HomeworkAd(getContext(), allClassData);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(adapter1);
+        FloatingActionButton fab = rootView.findViewById(R.id.fab);
+        if (!RootActivity.hasPermissionToCreate)
+            fab.setVisibility(View.GONE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), NewHomeworkActivity.class));
+                getActivity().overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+            }
+        });
 
         return rootView;
     }

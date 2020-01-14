@@ -24,7 +24,7 @@ public class SplashScreen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         sharedPreferences = getSharedPreferences("User",MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
-        userSession.setAttribute("userRole", "");
+        userSession.setAttribute("userRole", "Teacher");
         /*Simple hold animation to hold ImageView in the centre of the screen at a slightly larger
         scale than the ImageView's original one.*/
         Animation hold = AnimationUtils.loadAnimation(this, R.anim.hold);

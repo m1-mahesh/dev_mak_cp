@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mak.classportal.BoardSelectActivity;
 import com.mak.classportal.R;
+import com.mak.classportal.RootActivity;
 import com.mak.classportal.adapter.PaperListAd;
 import com.mak.classportal.modales.NoticeData;
 import com.mak.classportal.permission.PermissionsActivity;
@@ -76,6 +77,8 @@ public class PaperListFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(adapter1);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
+        if (!RootActivity.hasPermissionToCreate)
+            fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

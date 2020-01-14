@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,18 +22,18 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.mak.classportal.fragment.ClassFragment;
-import com.mak.classportal.fragment.ContentFragment;
+import com.mak.classportal.fragment.CompactCalendarFragment;
 import com.mak.classportal.fragment.HomeworkFragment;
 import com.mak.classportal.fragment.NoticeFragment;
 import com.mak.classportal.fragment.PaperListFragment;
 import com.mak.classportal.fragment.ProfileFragment;
-import com.mak.classportal.fragment.SubjectFragment;
 import com.mak.classportal.fragment.TestResultFragment;
 import com.mak.classportal.fragment.TimeTableFragment;
 import com.mak.classportal.fragment.VideosFragment;
 import com.mak.classportal.permission.PermissionsActivity;
 import com.mak.classportal.permission.PermissionsChecker;
 import com.mak.classportal.utilities.Constant;
+import com.mak.classportal.utilities.UserSession;
 
 import static com.mak.classportal.permission.PermissionsActivity.PERMISSION_REQUEST_CODE;
 import static com.mak.classportal.permission.PermissionsChecker.REQUIRED_PERMISSION;
@@ -47,17 +48,27 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private FrameLayout frameLayout;
     private NavigationView navigationView;
     PermissionsChecker checker;
+    SharedPreferences sharedPreferences;
+    UserSession userSession;
+    public static boolean hasPermissionToCreate = false;
+    public static boolean hasPermissionToView= false;
+    public static boolean hasPermissionToDelete= false;
+    public static boolean isTeacher= false;
+    public static boolean isStudent= false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root);
         checker = new PermissionsChecker(this);
+        sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
+        userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         if (checker.lacksPermissions(REQUIRED_PERMISSION)) {
             PermissionsActivity.startActivityForResult(this, PERMISSION_REQUEST_CODE, REQUIRED_PERMISSION);
         }
         initializeViews();
         toggleDrawer();
         initializeDefaultFragment(savedInstanceState,0);
+        initiatePermissions();
     }
      /* Initialize all widgets
      */
@@ -70,10 +81,11 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.navigationview_id);
         navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
-        /*
-        navigationView.getMenu().clear();
-        navigationView.inflateMenu(R.menu.menu_view);
-        */
+        navigationView.removeHeaderView(navigationView.getHeaderView(0));
+        if (userSession.isTeacher())
+            navigationView.inflateHeaderView(R.layout.teacher_header_layout);
+        else if (userSession.isStudent())
+            navigationView.inflateHeaderView(R.layout.nav_header_layout);
     }
 
     /**
@@ -114,17 +126,34 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
+    private void initiatePermissions(){
+        if (userSession.isStudent()){
+            hasPermissionToCreate = false;
+            hasPermissionToView = false;
+        }else if (userSession.isTeacher()){
+            hasPermissionToCreate = true;
+            hasPermissionToView = true;
+        }
+
+        isStudent = userSession.isStudent();
+        isTeacher = userSession.isTeacher();
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.attendance:
                 ClassFragment.menuId = "";
-                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new ClassFragment())
-                        .commit();
+                if (userSession.isStudent())
+                    getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new CompactCalendarFragment())
+                            .commit();
+                else if (userSession.isTeacher())
+                    getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new ClassFragment())
+                            .commit();
                 closeDrawer();
                 break;
             case R.id.homework:
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new HomeworkFragment())
                         .commit();
                 closeDrawer();

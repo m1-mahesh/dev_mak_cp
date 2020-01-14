@@ -1,5 +1,6 @@
 package com.mak.classportal.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mak.classportal.NewNoticeActivity;
 import com.mak.classportal.R;
+import com.mak.classportal.RootActivity;
 import com.mak.classportal.adapter.NoticeListAd;
 import com.mak.classportal.modales.NoticeData;
 
@@ -54,6 +56,7 @@ public class NoticeFragment extends Fragment {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,6 +68,8 @@ public class NoticeFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(adapter1);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
+        if (!RootActivity.hasPermissionToCreate)
+            fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

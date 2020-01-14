@@ -168,6 +168,6 @@
     <string name="contact">Contact</string>
     <string name="skills">Skills</string>
     <string name="ratings">Marks</string>
-    <string name="job_success">Completed Test</string>
+    <string name="job_success">Test Completed</string>
     <string name="samplereview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium bibendum sapien, ut euismod massa. Duis convallis sem sed turpis elementum auctor.</string>
 </resources>

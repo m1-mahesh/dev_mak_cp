@@ -1,5 +1,6 @@
 package com.mak.classportal.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mak.classportal.NewTestActivity;
 import com.mak.classportal.R;
+import com.mak.classportal.RootActivity;
 import com.mak.classportal.TestsList;
 import com.mak.classportal.adapter.ScheduledTestsAdapter;
 import com.mak.classportal.modales.TestData;
@@ -32,6 +34,7 @@ public class ActiveTestsTabFragment extends Fragment {
     private String mItemData = "Lorem Ipsum is simply dummy text of the printing and "
             + "typesetting industry Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
+    @SuppressLint("RestrictedApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,6 +48,8 @@ public class ActiveTestsTabFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter1);
         FloatingActionButton fab = view.findViewById(R.id.fab);
+        if (!RootActivity.hasPermissionToCreate)
+            fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

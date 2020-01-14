@@ -1,6 +1,8 @@
 package com.mak.classportal.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mak.classportal.HomeWorkDetails;
 import com.mak.classportal.R;
 import com.mak.classportal.modales.NoticeData;
 import com.mak.classportal.utilities.Constant;
@@ -31,6 +34,13 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
     public SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.homework_list_item, null);
         SingleItemRowHolder mh = new SingleItemRowHolder(v);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, HomeWorkDetails.class));
+                ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+            }
+        });
         return mh;
     }
     String className = "";

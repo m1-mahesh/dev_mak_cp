@@ -1,5 +1,6 @@
 package com.mak.classportal.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mak.classportal.R;
+import com.mak.classportal.RootActivity;
 import com.mak.classportal.modales.NoticeData;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class TimeTableFragment extends Fragment {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,6 +53,8 @@ public class TimeTableFragment extends Fragment {
 
 
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
+        if (!RootActivity.hasPermissionToCreate)
+            fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

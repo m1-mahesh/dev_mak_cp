@@ -2,11 +2,18 @@ package com.mak.classportal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.mak.classportal.utilities.ExecuteAPI;
+
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,5 +39,30 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
         finish();
+        try {
+            String url = "http://nikvay.com/demo/schoolApp/ws-login";
+            JSONObject object = new JSONObject();
+            object.put("user_name", "student1");
+            object.put("password", "123456");
+            ExecuteAPI executeAPI = new ExecuteAPI(this, url, object);
+            executeAPI.addHeader("appToken", "eyJ1bmlxAiOiJKV1QiLCJZVN0YW1wIjoiMjAyMC");
+            executeAPI.addHeader("role_id", "Student");
+            executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                @Override
+                public void onResponse(JSONObject result) {
+                    Log.d("Result", result.toString());
+
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                    Log.d("Result", errorResponse.toString());
+                }
+            });
+            executeAPI.showProcessBar(true);
+            executeAPI.execute(Request.Method.POST);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
