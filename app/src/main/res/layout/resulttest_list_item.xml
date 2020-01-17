@@ -33,6 +33,7 @@
             android:background="@drawable/test_item_layout_border"
             android:layout_height="40dp">
             <TextView
+                android:id="@+id/monthText"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight=".5"
@@ -43,6 +44,7 @@
                 android:background="@drawable/test_title_radius"
                 />
             <TextView
+                android:id="@+id/dateText"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight=".5"

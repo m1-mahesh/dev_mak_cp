@@ -8,6 +8,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,7 +33,9 @@ import com.mak.classportal.fragment.TimeTableFragment;
 import com.mak.classportal.fragment.VideosFragment;
 import com.mak.classportal.permission.PermissionsActivity;
 import com.mak.classportal.permission.PermissionsChecker;
+import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
+import com.mak.classportal.utilities.FileUtils;
 import com.mak.classportal.utilities.UserSession;
 
 import static com.mak.classportal.permission.PermissionsActivity.PERMISSION_REQUEST_CODE;
@@ -50,6 +53,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     PermissionsChecker checker;
     SharedPreferences sharedPreferences;
     UserSession userSession;
+    AppSingleTone appSingleTone;
     public static boolean hasPermissionToCreate = false;
     public static boolean hasPermissionToView= false;
     public static boolean hasPermissionToDelete= false;
@@ -62,6 +66,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         checker = new PermissionsChecker(this);
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
+        appSingleTone = new AppSingleTone(this);
         if (checker.lacksPermissions(REQUIRED_PERMISSION)) {
             PermissionsActivity.startActivityForResult(this, PERMISSION_REQUEST_CODE, REQUIRED_PERMISSION);
         }
@@ -69,6 +74,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         toggleDrawer();
         initializeDefaultFragment(savedInstanceState,0);
         initiatePermissions();
+        //appSingleTone.createMyPdf(FileUtils.getAppPath(this) + "medata.pdf");
     }
      /* Initialize all widgets
      */
@@ -169,9 +175,16 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 closeDrawer();
                 break;
             case R.id.testSchedule:
-                ClassFragment.menuId = Constant.TAKE_TEST;
-                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new ClassFragment())
-                        .commit();
+                if (userSession.isStudent()){
+                    TestsList.CLASS_ID = userSession.getAttribute("class_id");
+                    TestsList.CLASS_NAME = userSession.getAttribute("class_name");
+                    startActivity(new Intent(RootActivity.this, TestsList.class));
+                    overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                }else {
+                    ClassFragment.menuId = Constant.TAKE_TEST;
+                    getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new ClassFragment())
+                            .commit();
+                }
                 closeDrawer();
                 break;
             case R.id.testResult:

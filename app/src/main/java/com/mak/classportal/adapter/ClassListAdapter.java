@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,8 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
             holder.tvTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    TestsList.CLASS_ID = singleItem.getId();
+                    TestsList.CLASS_NAME = singleItem.getName();
                     mContext.startActivity(new Intent(mContext, TestsList.class));
                     ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }

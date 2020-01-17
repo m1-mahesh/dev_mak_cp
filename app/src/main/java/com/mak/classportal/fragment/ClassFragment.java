@@ -1,7 +1,11 @@
 package com.mak.classportal.fragment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,32 +17,39 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.mak.classportal.LoginActivity;
 import com.mak.classportal.R;
+import com.mak.classportal.RootActivity;
 import com.mak.classportal.adapter.ClassListAdapter;
 import com.mak.classportal.modales.StudentClass;
+import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
+import com.mak.classportal.utilities.ExecuteAPI;
+import com.mak.classportal.utilities.UserSession;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 /**
  * Created by Konstantin on 22.12.2014.
  */
-public class ClassFragment extends Fragment  {
+public class ClassFragment extends Fragment {
 
-    private View containerView;
+    public static String menuId = "";
     protected ImageView mImageView;
     protected int res;
-    private Bitmap bitmap;
-    public static String menuId = "";
+    AppSingleTone appSingleTone;
     ArrayList<StudentClass> allClassData;
-
-    public static ClassFragment newInstance(String menuID) {
-        ClassFragment contentFragment = new ClassFragment();
-        menuId = menuID;
-        return contentFragment;
-    }
-
-
+    private View containerView;
+    private Bitmap bitmap;
+    UserSession userSession;
+    SharedPreferences sharedPreferences;
+    RecyclerView classList;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -48,26 +59,11 @@ public class ClassFragment extends Fragment  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appSingleTone = new AppSingleTone(getContext());
+        sharedPreferences = getActivity().getSharedPreferences("User", Context.MODE_PRIVATE);
+        userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         allClassData = new ArrayList<>();
-        StudentClass aClass=new StudentClass();
-        aClass.setName("1st");
-
-        StudentClass aClass1=new StudentClass();
-        aClass1.setName("2nd");
-        StudentClass aClass2=new StudentClass();
-        aClass2.setName("3rd");
-        StudentClass aClass3=new StudentClass();
-        aClass3.setName("4th");
-        StudentClass aClass4=new StudentClass();
-        aClass4.setName("5th");
-        StudentClass aClass5=new StudentClass();
-        aClass5.setName("6th");
-        allClassData.add(aClass);
-        allClassData.add(aClass1);
-        allClassData.add(aClass2);
-        allClassData.add(aClass3);
-        allClassData.add(aClass4);
-        allClassData.add(aClass5);
+        getClassList();
 
     }
 
@@ -75,23 +71,66 @@ public class ClassFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_classes, container, false);
-        RecyclerView classList = rootView.findViewById(R.id.classList);
+        classList = rootView.findViewById(R.id.classList);
 
         classList.setHasFixedSize(true);
-        ClassListAdapter adapter1 = new ClassListAdapter(getContext(),allClassData);
-        if (this.menuId.equals(Constant.TAKE_TEST)||this.menuId.equals(Constant.CASE)){
-            ClassListAdapter.menuId = this.menuId;
-            classList.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-        }else{
-            ClassListAdapter.menuId = this.menuId;
-            classList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        }
-
-
-        classList.setAdapter(adapter1);
 
         return rootView;
+    }
+    void parseClassList(JSONObject jsonObject){
+        try {
+            allClassData.clear();
+            Log.e("", jsonObject.toString());
+            JSONArray jsonArray = jsonObject.getJSONArray("class_list");
+            for(int i = 0;i<jsonArray.length();i++){
+                JSONObject object = jsonArray.getJSONObject(i);
+                StudentClass aClass = new StudentClass();
+                aClass.setName(object.getString("class_name"));
+                aClass.setId(object.getString("class_id"));
+                allClassData.add(aClass);
+            }
+            ClassListAdapter adapter1 = new ClassListAdapter(getContext(), allClassData);
+            if (menuId.equals(Constant.TAKE_TEST) || menuId.equals(Constant.CASE)) {
+                ClassListAdapter.menuId = menuId;
+                classList.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+            } else {
+                ClassListAdapter.menuId = menuId;
+                classList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+            }
+            classList.setAdapter(adapter1);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void getClassList() {
+
+
+        try {
+            String url = appSingleTone.classList;
+            ExecuteAPI executeAPI = new ExecuteAPI(getContext(), url, null);
+            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
+            Log.e("Org id", ""+userSession.getInt("org_id"));
+            executeAPI.addPostParam("org_id", ""+userSession.getInt("org_id"));
+            executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                @Override
+                public void onResponse(JSONObject result) {
+                    Log.d("Result", result.toString());
+                    parseClassList(result);
+
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                    Log.d("Result", errorResponse.toString());
+                }
+            });
+            executeAPI.showProcessBar(true);
+            executeAPI.executeStringRequest(Request.Method.POST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

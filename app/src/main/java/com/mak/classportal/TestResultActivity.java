@@ -43,6 +43,7 @@ public class TestResultActivity extends AppCompatActivity {
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     public static String CLASS_ID = "";
     public static String DIVISION = "";
+    public static String TEST_TITLE = "";
 
 
     /**
@@ -113,7 +114,7 @@ public class TestResultActivity extends AppCompatActivity {
 
         setContentView(R.layout.test_result);
         topTitle = findViewById(R.id.tvTitle);
-        topTitle.setText("Class - "+ CLASS_ID+ " ("+DIVISION+")");
+        topTitle.setText(TEST_TITLE);
         mVisible = true;
         mContentView = findViewById(R.id.fullscreen_content);
         for (int i=101;i<125;i++){

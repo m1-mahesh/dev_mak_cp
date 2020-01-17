@@ -59,6 +59,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
+                            android:id="@+id/questionText"
                             android:text="60"
                             android:fontFamily="@font/opensansbold"
                             android:textSize="18sp"
@@ -89,6 +90,7 @@
                         android:layout_height="wrap_content">
                         <TextView
                             android:text="60 Mins"
+                            android:id="@+id/durationText"
                             android:fontFamily="@font/opensansbold"
                             android:textSize="18sp"
                             android:layout_width="wrap_content"
@@ -118,6 +120,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
+                            android:id="@+id/totalMarks"
                             android:text="120"
                             android:fontFamily="@font/opensansbold"
                             android:textSize="18sp"
@@ -135,15 +138,59 @@
 
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
+        <ScrollView
             android:layout_below="@+id/cardView"
-            android:text="SYLLABUS"
-            android:textSize="15sp"
-            android:fontFamily="serif-monospace"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/descriptionT"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@+id/cardView"
+                    android:text="DESCRIPTION"
+                    android:textSize="15sp"
+                    android:fontFamily="serif-monospace"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/descriptionText"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_below="@+id/descriptionT"
+                    android:text="INSTRUCTION"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/proximanovaregular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/instructionT"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@+id/descriptionText"
+                    android:text="INSTRUCTION"
+                    android:textSize="15sp"
+                    android:fontFamily="serif-monospace"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/instructionText"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_below="@+id/instructionT"
+                    android:text="INSTRUCTION"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/proximanovaregular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </ScrollView>
+
         <Button
             android:id="@+id/saveButton"
             android:layout_alignParentBottom="true"

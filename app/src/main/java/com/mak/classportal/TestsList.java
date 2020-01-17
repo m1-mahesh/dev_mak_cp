@@ -42,11 +42,15 @@ public class TestsList extends AppCompatActivity {
     RecyclerView mRecyclerView;
     ArrayList<TestData> allClassData = new ArrayList<>();
     Toolbar toolbar;
+    public static String CLASS_ID ="";
+    public static String CLASS_NAME ="";
+    public static String DIVISION_ID ="1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tests);
+        ((TextView)findViewById(R.id.tvTitle)).setText(CLASS_NAME);
         setupToolbar();
         Constant.IS_PAPER = false;
         setupViewPager();

@@ -22,6 +22,15 @@
             android:text="Ongoing"
             android:fontFamily="sans-serif-condensed"
             android:textSize="15sp" />
+        <TextView
+            android:id="@+id/timeTxt"
+            android:text="Time: 12:00PM"
+            android:layout_marginLeft="20dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="10sp"
+            android:fontFamily="@font/proximanovaregular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:layout_below="@id/tvTitle"
@@ -33,6 +42,7 @@
             android:background="@drawable/test_item_layout_border"
             android:layout_height="40dp">
             <TextView
+                android:id="@+id/monthText"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight=".5"
@@ -43,6 +53,7 @@
                 android:background="@drawable/test_title_radius"
                 />
             <TextView
+                android:id="@+id/dateText"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight=".5"
@@ -85,10 +96,12 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     <ImageView
+        android:id="@+id/eyeIcon"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_remove_red_eye_black_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

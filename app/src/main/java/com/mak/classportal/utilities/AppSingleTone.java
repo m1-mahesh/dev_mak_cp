@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -23,16 +26,25 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.ListItem;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.ZapfDingbatsList;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.codec.Base64;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.mak.classportal.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -49,12 +61,17 @@ import static com.mak.classportal.utilities.LogUtils.LOGE;
 public class AppSingleTone {
 
     //    https://github.com/wasabeef/awesome-android-ui
-    public String baseUrl = "https://dev.api.patients.migenesys.com/";
-    public String signIn = "https://dev.api.common.migenesys.com/iam/authenticate";
-    public String getPatientAccount = baseUrl + "accounts/";
-    public String getPatientConsent = baseUrl + "accounts/%s/consents";
-    public String getCountryLookups = "https://dev.api.common.migenesys.com/metadata/country_lookups";
-    public String getProviderOrg = "https://dev.api.providers.migenesys.com/orgs/%s";
+    //public String baseUrl = "https://dev.api.patients.migenesys.com/";
+
+    public String signIn = "http://nikvay.com/demo/schoolApp/ws-login";
+    public String classList = "http://nikvay.com/demo/schoolApp/ws-class-list";
+    public String testList = "http://nikvay.com/demo/schoolApp/ws-online-test-list";
+    public String questionList = "http://nikvay.com/demo/schoolApp/ws-online-test-question-list";
+
+    //public String getPatientAccount = baseUrl + "accounts/";
+    //public String getPatientConsent = baseUrl + "accounts/%s/consents";
+    //public String getCountryLookups = "https://dev.api.common.migenesys.com/metadata/country_lookups";
+    //public String getProviderOrg = "https://dev.api.providers.migenesys.com/orgs/%s";
     Context context;
     UserSession userSession;
     SharedPreferences sharedPreferences;
@@ -270,6 +287,211 @@ public class AppSingleTone {
             document.add(new Paragraph(o3));
             Chunk o4 = new Chunk("  4. Amazon", mOrderDateFont);
             document.add(new Paragraph(o4));
+            document.close();
+
+            FileUtils.openFile(context, new File(dest));
+
+        } catch (IOException | DocumentException ie) {
+            LOGE("createPdf: Error " + ie.getLocalizedMessage());
+        } catch (ActivityNotFoundException ae) {
+            Toast.makeText(context, "No application found to open this file.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void createMyPdf(String dest) {
+
+        if (new File(dest).exists()) {
+            new File(dest).delete();
+        }
+
+        try {
+            /**
+             * Creating Document
+             */
+            Document document = new Document();
+
+            // Location to save
+            PdfWriter.getInstance(document, new FileOutputStream(dest));
+
+            // Open to write
+            document.open();
+
+            // Document Settings
+            document.setPageSize(PageSize.A4);
+            document.addCreationDate();
+            document.addAuthor("MAK LTD");
+            document.addCreator("Mahesh Kharat");
+
+            /***
+             * Variables for further use....
+             */
+            BaseColor mColorAccent = new BaseColor(0, 153, 204, 255);
+            float mHeadingFontSize = 20.0f;
+            float mValueFontSize = 26.0f;
+
+            /**
+             * How to USE FONT....
+             */
+            BaseFont urName = BaseFont.createFont("res/font/opensanssemibold.ttf", "UTF-8", BaseFont.EMBEDDED);
+            BaseFont title = BaseFont.createFont("res/font/proximanovaregular.otf", "UTF-8", BaseFont.EMBEDDED);
+            // LINE SEPARATOR
+            LineSeparator lineSeparator = new LineSeparator();
+            lineSeparator.setLineColor(new BaseColor(0, 0, 0, 68));
+
+            // Title Order Details...
+            // Adding Title....
+            Font mOrderDetailsTitleFont = new Font(title, 20.0f, Font.BOLD, BaseColor.BLACK);
+            Chunk mOrderDetailsTitleChunk = new Chunk("|| Shree Ganesh ||", mOrderDetailsTitleFont);
+            Paragraph mOrderDetailsTitleParagraph = new Paragraph(mOrderDetailsTitleChunk);
+            mOrderDetailsTitleParagraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(mOrderDetailsTitleParagraph);
+
+            document.add(new Paragraph(""));
+            document.add(new Paragraph(""));
+            document.add(new Paragraph(""));
+            document.add(new Chunk(lineSeparator));
+            // Fields of Order Details...
+            // Adding Chunks for Title and value
+
+            Font font = FontFactory.getFont(FontFactory.HELVETICA, 26, Font.BOLD);
+            ZapfDingbatsList zapfDingbatsList2 =
+                    new ZapfDingbatsList(43, 30);
+
+            zapfDingbatsList2.add(new ListItem("Personal Details", font));
+            document.add(zapfDingbatsList2);
+
+            // Adding Line Breakable Space....
+            document.add(new Paragraph(""));
+            // Adding Horizontal Line...
+
+            // Adding Line Breakable Space....
+            document.add(new Paragraph(""));
+
+            // Fields of Order Details...
+
+            Font valueFont = new Font(urName, 20, Font.BOLD, mColorAccent);
+            Font keyFont = new Font(urName, 20, Font.BOLD, BaseColor.BLACK);
+            Paragraph mOrderDateValueParagraph = new Paragraph();
+            mOrderDateValueParagraph.setSpacingBefore(30);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Name: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" Mr. Mahesh Ashok Kharat", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("DOB: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" 13-08-1995", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Birth Place: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" Gursale, Tal. Pandharpur.", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Rashi: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" Lion", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Height: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" 5.10 Ft", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Blood Group: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" O+", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Color: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" Savala", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            document.add(new Paragraph(""));
+            document.add(new Paragraph(""));
+            document.add(new Paragraph(""));
+            document.add(new Chunk(lineSeparator));
+
+            com.itextpdf.text.List education = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            education.add(new ListItem("Eduction", font));
+            education.setIndentationLeft(20);
+            document.add(education);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Education: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" BCA(Bachelor Computer Application)", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            Font valueFontSub = new Font(urName, 15, Font.BOLD, mColorAccent);
+            Font keyFontSub = new Font(urName, 15, Font.BOLD, BaseColor.BLACK);
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(35);
+            mOrderDateValueParagraph.add(new Chunk("College: ", keyFontSub));
+            mOrderDateValueParagraph.add(new Chunk(" Sangola Collage, Sangola (Yr 2013-2016)", valueFontSub));
+            document.add(mOrderDateValueParagraph);
+
+            com.itextpdf.text.List job = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            job.add(new ListItem("Occupation", font));
+            job.setIndentationLeft(20);
+            document.add(job);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Name: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" Software Engineer", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(35);
+            mOrderDateValueParagraph.add(new Chunk("Company: ", keyFontSub));
+            mOrderDateValueParagraph.add(new Chunk(" Ambrosial Techoffring PVT. LTD.(Magarpatta City, Pune)", valueFontSub));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setSpacingAfter(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Annual Income: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" 000000.00", valueFont));
+            document.add(mOrderDateValueParagraph);
+            document.add(new Chunk(lineSeparator));
+
+            Paragraph p = new Paragraph();
+            Chunk c = new Chunk("The MAK Image ");
+            p.add(c);
+            try {
+                InputStream ims = context.getAssets().open("mak.jpg");
+                Bitmap bmp = BitmapFactory.decodeStream(ims);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                Image i = Image.getInstance(stream.toByteArray());
+                i.scaleToFit(300f, 400f);
+                p.add(i);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            document.add(p);
+
             document.close();
 
             FileUtils.openFile(context, new File(dest));

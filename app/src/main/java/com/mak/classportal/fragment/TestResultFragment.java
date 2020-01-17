@@ -1,5 +1,7 @@
 package com.mak.classportal.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mak.classportal.R;
 import com.mak.classportal.adapter.ScheduledTestsAdapter;
 import com.mak.classportal.modales.TestData;
+import com.mak.classportal.utilities.UserSession;
 
 import java.util.ArrayList;
 
@@ -25,6 +28,8 @@ public class TestResultFragment extends Fragment {
     RecyclerView mRecyclerView;
     ArrayList<TestData> allClassData = new ArrayList<>();
 
+    SharedPreferences sharedPreferences;
+    UserSession userSession;
     public static TestResultFragment newInstance(String menuID) {
         TestResultFragment contentFragment = new TestResultFragment();
         return contentFragment;
@@ -39,6 +44,8 @@ public class TestResultFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+        userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
 
 
     }
@@ -60,7 +67,7 @@ public class TestResultFragment extends Fragment {
 
         mRecyclerView = rootView.findViewById(R.id.scheduledTest);
         getTestList();
-        ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, true);
+        ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, true, userSession);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(adapter1);
 

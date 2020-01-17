@@ -12,6 +12,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.mak.classportal.AppController;
 
 import org.json.JSONArray;
@@ -20,7 +21,6 @@ import org.json.JSONTokener;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 import static com.android.volley.VolleyLog.TAG;
 
@@ -49,7 +49,8 @@ public class ExecuteAPI {
         pDialog = new ProgressDialog(context);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
-        headers = new HashMap<String, String>();
+        headers = new HashMap<>();
+        params = new HashMap<>();
     }
 
     public void showProcessBar(boolean isShowPrcess) {
@@ -64,6 +65,11 @@ public class ExecuteAPI {
 
     public void addHeader(final String name, final String value) {
         headers.put(name, value);
+
+    }
+
+    public void addPostParam(final String name, final String value) {
+        params.put(name, value);
 
     }
 
@@ -112,8 +118,8 @@ public class ExecuteAPI {
                                     Object json = new JSONTokener(jsonError).nextValue();
                                     if (jsonError.length() > 0) {
                                         if (json instanceof JSONArray) {
-                                            JSONArray array=new JSONArray(jsonError);
-                                            JSONObject jsonObject=new JSONObject();
+                                            JSONArray array = new JSONArray(jsonError);
+                                            JSONObject jsonObject = new JSONObject();
                                             jsonObject.put("code", mStatusCode);
                                             jsonObject.put("data", array);
                                             onTaskCompleted.onResponse(jsonObject);
@@ -148,10 +154,7 @@ public class ExecuteAPI {
                     }
                 }
             }
-        })
-
-
-        {
+        }) {
 
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
@@ -201,9 +204,65 @@ public class ExecuteAPI {
         return "";
     }
 
+    public String executeStringRequest(int METHOD) {
+        StringRequest stringRequest = new StringRequest(METHOD, requestUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, response);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            object.put("code", mStatusCode);
+                            Log.e("response", "response" + response);
+                            if (pDialog != null)
+                                pDialog.dismiss();
+                            onTaskCompleted.onResponse(object);
+                            // msgResponse.setText(response.toString());
+
+                        } catch (Exception e) {
+                            if (pDialog != null)
+                                pDialog.dismiss();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Response", error.toString());
+                        if (pDialog != null)
+                            pDialog.dismiss();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return headers;
+            }
+
+        };
+
+       /* jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));*/
+        RetryPolicy mRetryPolicy = new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(mRetryPolicy);
+        AppController.getInstance().addToRequestQueue(stringRequest);
+
+        return "";
+    }
+
 
     public interface OnTaskCompleted {
         void onResponse(JSONObject result);
+
         void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse);
     }
 

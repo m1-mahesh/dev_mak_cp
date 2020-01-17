@@ -2,6 +2,7 @@ package com.mak.classportal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,16 +34,32 @@ public class TestIntroActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     ArrayList<TestData> allClassData = new ArrayList<>();
     Toolbar toolbar;
+    public static String CLASS_ID = "";
+    public static String DIVISION = "";
+    public static TestData testData;
+    TextView questionText, durationText, marksText, instructionText, descriptionText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_intro);
-        ((TextView) findViewById(R.id.tvTitle)).setText("Class 10Std- Full test 1");
+        ((TextView) findViewById(R.id.tvTitle)).setText(testData.getTestTitle());
+        questionText = findViewById(R.id.questionText);
+        durationText = findViewById(R.id.durationText);
+        marksText = findViewById(R.id.totalMarks);
+        instructionText = findViewById(R.id.instructionText);
+        descriptionText = findViewById(R.id.descriptionText);
+
+        instructionText.setText(Html.fromHtml(testData.getInstruction()));
+        marksText.setText("120");
+        questionText.setText("50");
+        durationText.setText(testData.getDuration()+" Mins");
+        descriptionText.setText(testData.getDescription());
         ((Button) findViewById(R.id.saveButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(TestIntroActivity.this, RunTest.class));
                 overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                finish();
 
             }
         });

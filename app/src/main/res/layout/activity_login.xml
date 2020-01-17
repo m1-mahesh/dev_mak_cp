@@ -44,6 +44,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username_edit_text"
+                    android:singleLine="true"
                     style="@style/RegistrationEditTextStyle"
                     android:layout_gravity="center_horizontal"
                     android:hint="Username" />
@@ -60,6 +61,7 @@
                     android:id="@+id/password_edit_text"
                     style="@style/RegistrationEditTextStyle"
                     android:layout_gravity="center_horizontal"
+                    android:singleLine="true"
                     android:hint="Password"
                     android:inputType="textPassword" />
 
@@ -71,7 +73,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="@dimen/login_button_margin"
                 android:layout_marginRight="@dimen/login_button_margin"
-                android:onClick="loginOn"
+                android:onClick="loginView"
                 android:layout_marginTop="@dimen/image_header_top_margin"
                 android:background="@color/twitter"
                 android:textColor="@color/white"

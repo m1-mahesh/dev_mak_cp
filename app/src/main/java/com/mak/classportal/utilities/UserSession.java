@@ -57,6 +57,11 @@ public class UserSession {
             return true;
         else return false;
     }
+    public boolean isLogin(){
+        if (!this.getAttribute("auth_token").equals(""))
+            return true;
+        else return false;
+    }
     public boolean isTeacher(){
         if (this.getAttribute("userRole").equals(TEACHER_ROLE))
             return true;
