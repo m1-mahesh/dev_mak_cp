@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import com.mak.classportal.fragment.ClassFragment;
 import com.mak.classportal.fragment.CompactCalendarFragment;
+import com.mak.classportal.fragment.DashboardFragment;
 import com.mak.classportal.fragment.HomeworkFragment;
 import com.mak.classportal.fragment.NoticeFragment;
 import com.mak.classportal.fragment.PaperListFragment;
@@ -204,6 +205,11 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.profile:
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new ProfileFragment())
+                        .commit();
+                closeDrawer();
+                break;
+            case R.id.dashboard:
+                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new DashboardFragment())
                         .commit();
                 closeDrawer();
                 break;

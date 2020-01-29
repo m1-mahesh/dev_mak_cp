@@ -25,4 +25,7 @@ public class Constant {
     public static final String ROLE_ADMIN = "Admin";
     public static boolean IS_PAPER = false;
 
+    public static int RESULT_LOAD_IMAGE = 100;
+    public static int CAMERA_REQUEST = 200;
+
 }
