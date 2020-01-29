@@ -63,7 +63,7 @@ public class ClassFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("User", Context.MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         allClassData = new ArrayList<>();
-        getClassList();
+        getClassDivision();
 
     }
 
@@ -77,16 +77,19 @@ public class ClassFragment extends Fragment {
 
         return rootView;
     }
-    void parseClassList(JSONObject jsonObject){
+    void prepareClassData(JSONArray apiResponse){
         try {
             allClassData.clear();
-            Log.e("", jsonObject.toString());
-            JSONArray jsonArray = jsonObject.getJSONArray("class_list");
-            for(int i = 0;i<jsonArray.length();i++){
-                JSONObject object = jsonArray.getJSONObject(i);
+
+            for (int i = 0; i < apiResponse.length(); i++) {
+                JSONObject classObj = apiResponse.getJSONObject(i);
                 StudentClass aClass = new StudentClass();
-                aClass.setName(object.getString("class_name"));
-                aClass.setId(object.getString("class_id"));
+                aClass.setId(classObj.getString("class_id"));
+                aClass.setName(classObj.getString("class_name"));
+                for (int j =0; j< classObj.getJSONArray("division_list").length(); j++) {
+                    JSONObject obj = classObj.getJSONArray("division_list").getJSONObject(j);
+                    aClass.addDivision(obj.getString("division_id"), obj.getString("division_name"));
+                }
                 allClassData.add(aClass);
             }
             ClassListAdapter adapter1 = new ClassListAdapter(getContext(), allClassData);
@@ -104,20 +107,29 @@ public class ClassFragment extends Fragment {
         }
     }
 
-    public void getClassList() {
-
+    public void getClassDivision() {
 
         try {
-            String url = appSingleTone.classList;
+            String url = appSingleTone.classDivisionList;
+
             ExecuteAPI executeAPI = new ExecuteAPI(getContext(), url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
-            Log.e("Org id", ""+userSession.getInt("org_id"));
-            executeAPI.addPostParam("org_id", ""+userSession.getInt("org_id"));
+            executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
+            executeAPI.addPostParam("teacher_id", userSession.getAttribute("user_id"));
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override
                 public void onResponse(JSONObject result) {
                     Log.d("Result", result.toString());
-                    parseClassList(result);
+                    try {
+                        if (result.has("class_list")) {
+                            JSONArray object = result.getJSONArray("class_list");
+                            prepareClassData(object);
+                        } else {
+                            //showToast("Something went wrong, Please try again later");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                 }
 

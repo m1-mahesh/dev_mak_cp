@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:cardCornerRadius="1dp"
+    app:cardUseCompatPadding="true"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp"
+        android:background="?android:selectableItemBackground"
+        >
+
+        <ImageView
+            android:id="@+id/ansStatus"
+            android:src="@drawable/ic_correct_ans_24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/ansStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Compleetd"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="15sp" />
+        <LinearLayout
+            android:layout_below="@id/tvTitle"
+            android:id="@+id/wrongAnsView"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="25dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/yourAns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Ans: "
+                android:fontFamily="@font/opensansbold"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/yourAnsV"
+                android:layout_alignParentRight="true"
+                android:text="60 min *60 Questions"
+                android:textSize="15sp"
+                android:fontFamily="@font/proximanovaregular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_below="@id/wrongAnsView"
+            android:id="@+id/correctAnsView"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="25dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/testTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Correct Ans: "
+                android:fontFamily="@font/opensansbold"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/correctAns"
+                android:layout_alignParentRight="true"
+                android:text="60 min *60 Questions"
+                android:textSize="15sp"
+                android:fontFamily="@font/proximanovaregular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/marksTxt"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:text="2"
+            android:fontFamily="sans-serif-thin"
+            android:textSize="15sp"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

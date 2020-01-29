@@ -1,6 +1,8 @@
 package com.mak.classportal.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.mak.classportal.R;
+import com.mak.classportal.RootActivity;
+import com.mak.classportal.TestsList;
 import com.mak.classportal.modales.HomeMenu;
+import com.mak.classportal.utilities.UserSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +26,12 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     List<HomeMenu> popularCatList = new ArrayList<>();
     Context mContext;
     private int selectedItem = -1;
+    UserSession userSession;
 
-    public MenuAdapter(Context mContext, List<HomeMenu> list) {
+    public MenuAdapter(Context mContext, List<HomeMenu> list, UserSession userSession) {
         this.popularCatList = list;
         this.mContext = mContext;
+        this.userSession = userSession;
 
     }
 
@@ -50,16 +57,23 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-
+        HomeMenu homeMenu =  popularCatList.get(position);
         holder.cat_layout.setVisibility(View.VISIBLE);
-        holder.List_name.setText(popularCatList.get(position).getName());
-
-//        holder.cat_image.setImageResource(R.drawable.student);
+        holder.List_name.setText(homeMenu.getName());
+        holder.cat_image.setImageResource(homeMenu.getResourceId());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (homeMenu.getMenuId() == 5) {
+                    TestsList.CLASS_ID = userSession.getAttribute("class_id");
+                    TestsList.CLASS_NAME = userSession.getAttribute("class_name");
+                    ((Activity) mContext).startActivity(new Intent(mContext, TestsList.class));
+                }else {
+                    RootActivity.defaultMenu = homeMenu.getMenuId();
+                    ((Activity) mContext).startActivity(new Intent(mContext, RootActivity.class));
+                }
+                ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
 
             }
         });

@@ -33,19 +33,9 @@
     <string name="select_division_prompt">Select Class Division</string>
     <string-array name="division_arrays">
         <item>Select Division</item>
-        <item>ALL</item>
-        <item>A</item>
-        <item>B</item>
-        <item>C</item>
-        <item>D</item>
     </string-array>
     <string-array name="subject_arrays">
         <item>Select Subject</item>
-        <item>English</item>
-        <item>Marathi</item>
-        <item>Maths</item>
-        <item>Chemistry</item>
-        <item>Biology</item>
     </string-array>
     <string-array name="level_arrays">
         <item>Select Difficulty Level</item>
@@ -147,7 +137,7 @@
 
     <string name="swipe_left">Previous Q</string>
     <string name="swipe_right">Next Q</string>
-    <string name="finish_test">Finish</string>
+    <string name="finish_test">View Result</string>
     <string name="view_swiped_left">%1$s swiped to left!</string>
     <string name="view_swiped_right">%1$s swiped to right!</string>
     <string name="dummy_text">Who is making the Web Standards?</string>
@@ -170,4 +160,8 @@
     <string name="ratings">Marks</string>
     <string name="job_success">Test Completed</string>
     <string name="samplereview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium bibendum sapien, ut euismod massa. Duis convallis sem sed turpis elementum auctor.</string>
+
+    <string name="red">RED</string>
+    <string name="blue">BLUE</string>
+    <string name="green">GREEN</string>
 </resources>

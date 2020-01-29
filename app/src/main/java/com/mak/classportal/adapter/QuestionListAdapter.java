@@ -19,10 +19,11 @@ import java.util.ArrayList;
 
 public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapter.SingleItemRowHolder> {
 
-    public static String menuId = "";
+    public static String CHAPTER_ID = "";
     boolean isView = false;
     String className = "";
     private Context mContext;
+
 
     public QuestionListAdapter(Context context, ArrayList<Question> itemsList, boolean isView) {
         this.mContext = context;
@@ -39,18 +40,20 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
     @Override
     public void onBindViewHolder(SingleItemRowHolder holder, final int i) {
 
-        final Question singleItem = SelectQuestionsActivity.questions.get(i);
+        final Question singleItem = SelectQuestionsActivity.chapterQuestions.get(CHAPTER_ID).get(i);
 
         if (!this.isView) {
             holder.checkBox.setVisibility(View.VISIBLE);
             holder.tvTitle.setVisibility(View.GONE);
-            holder.checkBox.setChecked(singleItem.isChecked);
             holder.checkBox.setText(singleItem.getQuestion());
+            holder.checkBox.setOnCheckedChangeListener(null);
+
+            //if true, your checkbox will be selected, else unselected
+            holder.checkBox.setChecked(singleItem.isChecked);
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     singleItem.setChecked(isChecked);
-                    notifyItemChanged(i);
                 }
             });
         } else {
@@ -71,7 +74,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
 
     @Override
     public int getItemCount() {
-        return SelectQuestionsActivity.questions.size();
+        return SelectQuestionsActivity.chapterQuestions.get(CHAPTER_ID).size();
     }
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {

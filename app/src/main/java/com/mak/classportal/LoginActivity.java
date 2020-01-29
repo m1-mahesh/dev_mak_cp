@@ -102,22 +102,25 @@ public class LoginActivity extends AppCompatActivity {
                             if (result.has("user_details")) {
                                 JSONObject object = result.getJSONArray("user_details").getJSONObject(0);
                                 userSession.setAttribute("auth_token", object.getString("auth_code"));
-                                userSession.setInt("role_id", object.getInt("role_id"));
-                                userSession.setInt("org_id", object.getInt("org_id"));
+                                userSession.setAttribute("user_id", object.getString("user_id"));
+                                userSession.setAttribute("role_id", ""+object.getInt("role_id"));
+                                userSession.setAttribute("org_id", ""+object.getInt("org_id"));
                                 if (object.getInt("role_id") == 1)
                                     userSession.setAttribute("userRole", "Admin");
                                 else if (object.getInt("role_id") == 2)
                                     userSession.setAttribute("userRole", "Teacher");
-                                else
+                                else {
                                     userSession.setAttribute("userRole", "Student");
-
+                                    userSession.setAttribute("class_name", object.getString("class_name"));
+                                    userSession.setAttribute("class_id", object.getString("class_id"));
+                                    userSession.setAttribute("division", object.getString("division_name"));
+                                    userSession.setAttribute("division_id", object.getString("division_id"));
+                                }
                                 userSession.setAttribute("name", object.getString("name"));
                                 userSession.setAttribute("email", object.getString("email"));
                                 userSession.setAttribute("mobile", object.getString("mobile"));
-                                userSession.setAttribute("class_name", "Class A");
-                                userSession.setAttribute("class_id", "3");
-                                userSession.setAttribute("division", "A");
-                                userSession.setAttribute("division_id", "1");
+
+                                RootActivity.defaultMenu = 0;
                                 Intent intent = new Intent(LoginActivity.this, RootActivity.class);
                                 LoginActivity.this.startActivity(intent);
                                 overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);

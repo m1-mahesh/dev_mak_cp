@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
@@ -47,12 +48,12 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
 
         } else {
             holder.tvTitle.setTextSize(10);
-            holder.tvTitle.setOnClickListener(new View.OnClickListener() {
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SelectQuestionsActivity.CLASS_ID = "";
-                    SelectQuestionsActivity.SUBJECT_ID = singleItem.getName();
+                    SelectQuestionsActivity.CHAPTER_ID = singleItem.getId();
                     SelectQuestionsActivity.INDEX = 1;
+                    SelectQuestionsActivity.subjectData = SelectQuestionsActivity.subjectData;
                     mContext.startActivity(new Intent(mContext, SelectQuestionsActivity.class));
                     ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
@@ -72,11 +73,14 @@ public class SubjectListAdapter extends RecyclerView.Adapter<SubjectListAdapter.
         protected TextView devisionText;
         protected View hrView;
         protected LinearLayout divisionsView;
+        protected CardView cardView;
+
 
 
         public SingleItemRowHolder(View view) {
             super(view);
             this.tvTitle = view.findViewById(R.id.tvTitle);
+            this.cardView = view.findViewById(R.id.cardView);
 
         }
 

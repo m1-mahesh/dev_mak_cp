@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -60,6 +61,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     public static boolean hasPermissionToDelete= false;
     public static boolean isTeacher= false;
     public static boolean isStudent= false;
+    public static int defaultMenu= 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,13 +71,19 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         appSingleTone = new AppSingleTone(this);
         if (checker.lacksPermissions(REQUIRED_PERMISSION)) {
-            PermissionsActivity.startActivityForResult(this, PERMISSION_REQUEST_CODE, REQUIRED_PERMISSION);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    PermissionsActivity.startActivityForResult(RootActivity.this, PERMISSION_REQUEST_CODE, REQUIRED_PERMISSION);
+                }
+            }, 2000);
+
         }
         initializeViews();
         toggleDrawer();
-        initializeDefaultFragment(savedInstanceState,0);
+        initializeDefaultFragment(savedInstanceState,defaultMenu);
         initiatePermissions();
-        //appSingleTone.createMyPdf(FileUtils.getAppPath(this) + "medata.pdf");
+//        appSingleTone.createMyPdf(FileUtils.getAppPath(this) + "medata.pdf");
     }
      /* Initialize all widgets
      */
@@ -89,10 +97,24 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.removeHeaderView(navigationView.getHeaderView(0));
-        if (userSession.isTeacher())
+        View hView = null;
+        if (userSession.isTeacher()) {
             navigationView.inflateHeaderView(R.layout.teacher_header_layout);
-        else if (userSession.isStudent())
+            hView = navigationView.getHeaderView(0);
+        }
+        else if (userSession.isStudent()){
             navigationView.inflateHeaderView(R.layout.nav_header_layout);
+            hView = navigationView.getHeaderView(0);
+            ((TextView) hView.findViewById(R.id.classText)).setText(userSession.getAttribute("class_name"));
+            ((TextView) hView.findViewById(R.id.division)).setText(userSession.getAttribute("division"));
+        }
+
+        try {
+            ((TextView) hView.findViewById(R.id.nav_header_name_id)).setText(userSession.getAttribute("name"));
+            ((TextView) hView.findViewById(R.id.nav_header_emailaddress_id)).setText(userSession.getAttribute("email"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -182,9 +204,8 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(new Intent(RootActivity.this, TestsList.class));
                     overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }else {
-                    ClassFragment.menuId = Constant.TAKE_TEST;
-                    getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new ClassFragment())
-                            .commit();
+                    startActivity(new Intent(RootActivity.this, TestsList.class));
+                    overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
                 closeDrawer();
                 break;
@@ -213,6 +234,12 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
                 closeDrawer();
                 break;
+            case R.id.logout:
+                userSession.userLogout();
+                startActivity(new Intent(RootActivity.this, LoginActivity.class));
+                overridePendingTransition(R.anim.leftside_out, R.anim.leftside_in);
+                break;
+
         }
         return true;
     }

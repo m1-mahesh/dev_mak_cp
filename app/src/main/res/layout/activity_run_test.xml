@@ -9,33 +9,21 @@
     tools:context=".RunTest">
 
 
-    <TextView
-        android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
-        android:layout_width="wrap_content"
-        android:fontFamily="@font/opensansbold"
-        android:textSize="15sp"
-        android:text="05/26"
-        android:layout_height="wrap_content"/>
-    <com.mak.classportal.swap_plugin.SwipeStack
-        android:id="@+id/swipeStack"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="40dp"
-        app:stack_rotation="0"
-        app:stack_size="30"/>
-    <Button
+
+    <ImageButton
         android:id="@+id/buttonSwipeLeft"
+        android:layout_marginBottom="20dp"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:padding="10dp"
-        android:background="@drawable/layout_border"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="@string/swipe_left"/>
+        android:src="@drawable/button_previous_month_selector"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        />
     <TextView
-        android:layout_alignParentBottom="true"
+        android:id="@+id/countDownText"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:text="01:20:00"
@@ -45,15 +33,31 @@
         android:padding="10dp"
         android:layout_height="wrap_content"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonSwipeRight"
-        android:background="@drawable/layout_border"
+        android:src="@drawable/button_next_month_selector"
         android:padding="10dp"
         style="?android:attr/borderlessButtonStyle"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        />
+    <TextView
+        android:layout_below="@+id/buttonSwipeLeft"
+        android:id="@+id/questionCount"
+        android:layout_margin="05dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/swipe_right"/>
+        android:fontFamily="@font/opensansbold"
+        android:textSize="15sp"
+        android:text="05/26"
+        android:layout_height="wrap_content"/>
+    <com.mak.classportal.swap_plugin.CustomViewPager
+        android:layout_below="@+id/questionCount"
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

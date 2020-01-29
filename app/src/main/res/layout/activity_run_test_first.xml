@@ -24,6 +24,18 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/loadingSpinner"
         android:textColor="@color/white"
+        android:id="@+id/instructionT"
+        android:textSize="10sp"
+        android:fontFamily="@font/proximanovaregular"
+        android:text="Get Ready ):-"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/instructionT"
+        android:textColor="@color/white"
         android:id="@+id/loadingText"
         android:textSize="10sp"
         android:fontFamily="sans-serif-thin"

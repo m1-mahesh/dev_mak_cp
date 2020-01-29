@@ -1,29 +1,37 @@
 package com.mak.classportal;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.mak.classportal.modales.Question;
 import com.mak.classportal.modales.TestData;
+import com.mak.classportal.swap_plugin.CustomPagerAdapter;
+import com.mak.classportal.swap_plugin.CustomViewPager;
 import com.mak.classportal.swap_plugin.SwipeStack;
 import com.mak.classportal.utilities.AppSingleTone;
+import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.ExecuteAPI;
 import com.mak.classportal.utilities.UserSession;
 
@@ -32,27 +40,35 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class RunTest extends AppCompatActivity implements SwipeStack.SwipeStackListener, View.OnClickListener {
+public class RunTest extends AppCompatActivity implements View.OnClickListener {
 
+    public static TestData testData;
     static int step = 0;
-    TextView customToast;
+    static ArrayList<Question> mData = new ArrayList<>();
+    TextView customToast, questionCount;
     LayoutInflater inflater;
     View tostLayout;
-    private Button mButtonLeft, mButtonRight;
-    static ArrayList<Question> mData = new ArrayList<>();
-    private SwipeStack mSwipeStack;
-    private SwipeStackAdapter mAdapter;
     AppSingleTone appSingleTone;
     SharedPreferences sharedPreferences;
     UserSession userSession;
-    public static TestData testData;
+    TextView countDownText;
+    String selectedOption = "";
+    String preOption = "";
+    int questionCountInt = 0;
+    CustomViewPager viewPager;
+    private ImageButton mButtonLeft, mButtonRight;
+    CountDownTimer timerCD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appSingleTone =  new AppSingleTone(this);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        appSingleTone = new AppSingleTone(this);
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         if (step == 0) {
@@ -62,6 +78,7 @@ public class RunTest extends AppCompatActivity implements SwipeStack.SwipeStackL
                 public void run() {
                     step = 1;
                     RunTest.mData = mData;
+                    RunTest.testData = testData;
                     startActivity(new Intent(RunTest.this, RunTest.class));
                     overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                     finish();
@@ -71,44 +88,77 @@ public class RunTest extends AppCompatActivity implements SwipeStack.SwipeStackL
 
         } else {
             setContentView(R.layout.activity_run_test);
-            mSwipeStack = findViewById(R.id.swipeStack);
+            countDownText = findViewById(R.id.countDownText);
+            viewPager =  findViewById(R.id.viewPager);
+            viewPager.setAdapter(new CustomPagerAdapter(this, mData));
+            viewPager.setPagingEnabled(false);
             mButtonLeft = findViewById(R.id.buttonSwipeLeft);
             mButtonRight = findViewById(R.id.buttonSwipeRight);
-
+            questionCount = findViewById(R.id.questionCount);
             mButtonLeft.setOnClickListener(this);
             mButtonRight.setOnClickListener(this);
 
-            mAdapter = new SwipeStackAdapter(mData);
-            mSwipeStack.setAdapter(mAdapter);
-            mSwipeStack.setListener(this);
+
+            startTimer(TimeUnit.MINUTES.toMillis(Integer.parseInt(testData.getDuration())));
 
         }
+    }
+
+    private void startTimer(long noOfMinutes) {
+        Constant.startTime = Calendar.getInstance();
+        Constant.startTime.setTime(new Date());
+
+        timerCD = new CountDownTimer(noOfMinutes, 1000) {
+            public void onTick(long millisUntilFinished) {
+                long millis = millisUntilFinished;
+                //Convert milliseconds into hour,minute and seconds
+                String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis), TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+                countDownText.setText(hms);//set text
+            }
+
+            public void onFinish() {
+                countDownText.setText("TIME'S UP!!"); //On finish change timer text
+                FinishTestActivity.mData = CustomPagerAdapter.mData;
+                startActivity(new Intent(RunTest.this, FinishTestActivity.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                showToast("Test Completed...");
+                finish();
+            }
+        }.start();
+        questionCount.setText("01/"+mData.size());
     }
 
     @Override
     public void onClick(View v) {
         if (v.equals(mButtonLeft)) {
-            mSwipeStack.swipeTopViewToLeft();
-            selectedOption = preOption;
+            viewPager.setCurrentItem(viewPager.getCurrentItem()-1);
         } else if (v.equals(mButtonRight)) {
-            if (!selectedOption.equals(""))
-                mSwipeStack.swipeTopViewToRight();
-            else showToast("Please Select Option");
-        } /*else if (v.equals(mFab)) {
-            mData.add(getString(R.string.dummy_fab));
-            mAdapter.notifyDataSetChanged();
-        }*/
+            Log.e("--",""+viewPager.getCurrentItem());
+            if (mData.size() == viewPager.getCurrentItem()+1){
+                FinishTestActivity.mData = CustomPagerAdapter.mData;
+                startActivity(new Intent(RunTest.this, FinishTestActivity.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                timerCD.cancel();
+                showToast("Test Completed...");
+                finish();
+            }
+//            if (!selectedOption.equals(""))
+                viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
+//            else showToast("Please Select Option");
+
+
+        }
+        questionCount.setText((viewPager.getCurrentItem()+1)+"/"+mData.size());
     }
 
-    String selectedOption = "";
-    String preOption = "";
-
-    @Override
+   /* @Override
     public void onViewSwipedToRight(int position) {
         Question swipedElement = mAdapter.getItem(position);
+        swipedElement.setSelectedAns(selectedOption);
         FinishTestActivity.userTestData.put(swipedElement.getQuestionId(), selectedOption);
         preOption = selectedOption;
         selectedOption = "";
+
     }
 
     @Override
@@ -123,7 +173,7 @@ public class RunTest extends AppCompatActivity implements SwipeStack.SwipeStackL
         overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
         showToast("Test Completed...");
         finish();
-    }
+    }*/
 
     void showToast(String toastText) {
         inflater = getLayoutInflater();
@@ -134,15 +184,16 @@ public class RunTest extends AppCompatActivity implements SwipeStack.SwipeStackL
         customToast.setText(toastText);
         customToast.setTypeface(ResourcesCompat.getFont(this, R.font.opensansregular));
         toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(tostLayout);
         toast.show();
     }
-    void parseTestQuestions(JSONObject jsonObject){
+
+    void parseTestQuestions(JSONObject jsonObject) {
         mData.clear();
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("online_test_question_list");
-            for(int i=0;i<jsonArray.length();i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject object = jsonArray.getJSONObject(i);
                 Question question = new Question();
                 question.setQuestionId(object.getString("id"));
@@ -161,17 +212,17 @@ public class RunTest extends AppCompatActivity implements SwipeStack.SwipeStackL
             e.printStackTrace();
         }
     }
+
     public void getTestQuestions() {
 
         try {
             String url = appSingleTone.questionList;
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
-            Log.e("Org id", ""+userSession.getInt("org_id"));
-            executeAPI.addPostParam("org_id", ""+userSession.getInt("org_id"));
+            executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
             executeAPI.addPostParam("class_id", userSession.getAttribute("class_id"));
-            executeAPI.addPostParam("division_id","1");
-            executeAPI.addPostParam("chapter_id","1");
+            executeAPI.addPostParam("division_id", "1");
+            executeAPI.addPostParam("chapter_id", "1");
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override
                 public void onResponse(JSONObject result) {
@@ -184,7 +235,7 @@ public class RunTest extends AppCompatActivity implements SwipeStack.SwipeStackL
                     Log.d("Result", errorResponse.toString());
                 }
             });
-            executeAPI.showProcessBar(true);
+            executeAPI.showProcessBar(false);
             executeAPI.executeStringRequest(Request.Method.POST);
         } catch (Exception e) {
             e.printStackTrace();
@@ -196,84 +247,5 @@ public class RunTest extends AppCompatActivity implements SwipeStack.SwipeStackL
 
     }
 
-    public class SwipeStackAdapter extends BaseAdapter {
 
-        View view;
-        private List<Question> mData;
-
-        public SwipeStackAdapter(List<Question> data) {
-            this.mData = data;
-        }
-
-        @Override
-        public int getCount() {
-            return mData.size();
-        }
-
-        @Override
-        public Question getItem(int position) {
-            return mData.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                view = getLayoutInflater().inflate(R.layout.question_card, parent, false);
-            }
-            TextView textViewCard = view.findViewById(R.id.textViewCard);
-            Question question = mData.get(position);
-            textViewCard.setText(question.getQuestion());
-            final RadioButton one = view.findViewById(R.id.one);
-            final RadioButton two = view.findViewById(R.id.two);
-            final RadioButton three = view.findViewById(R.id.three);
-            final RadioButton four = view.findViewById(R.id.four);
-            one.setText(question.getOptions().get(0));
-            two.setText(question.getOptions().get(1));
-            three.setText(question.getOptions().get(2));
-            four.setText(question.getOptions().get(3));
-            RadioGroup optionGroup = view.findViewById(R.id.optionView);
-            optionGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    switch (checkedId) {
-                        case R.id.one:
-                            one.setBackgroundResource(R.drawable.redio_selected);
-                            two.setBackgroundResource(R.drawable.layout_border);
-                            three.setBackgroundResource(R.drawable.layout_border);
-                            four.setBackgroundResource(R.drawable.layout_border);
-                            selectedOption = question.getOptions().get(0);
-                            break;
-                        case R.id.two:
-                            one.setBackgroundResource(R.drawable.layout_border);
-                            two.setBackgroundResource(R.drawable.redio_selected);
-                            three.setBackgroundResource(R.drawable.layout_border);
-                            four.setBackgroundResource(R.drawable.layout_border);
-                            selectedOption = question.getOptions().get(1);
-                            break;
-                        case R.id.three:
-                            one.setBackgroundResource(R.drawable.layout_border);
-                            two.setBackgroundResource(R.drawable.layout_border);
-                            three.setBackgroundResource(R.drawable.redio_selected);
-                            four.setBackgroundResource(R.drawable.layout_border);
-                            selectedOption = question.getOptions().get(2);
-                            break;
-                        case R.id.four:
-                            one.setBackgroundResource(R.drawable.layout_border);
-                            two.setBackgroundResource(R.drawable.layout_border);
-                            three.setBackgroundResource(R.drawable.layout_border);
-                            four.setBackgroundResource(R.drawable.redio_selected);
-                            selectedOption = question.getOptions().get(3);
-                            break;
-                    }
-                }
-            });
-
-            return view;
-        }
-    }
 }

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,12 +22,9 @@ import com.mak.classportal.NewTestActivity;
 import com.mak.classportal.R;
 import com.mak.classportal.RootActivity;
 import com.mak.classportal.TestsList;
-import com.mak.classportal.adapter.ClassListAdapter;
 import com.mak.classportal.adapter.ScheduledTestsAdapter;
-import com.mak.classportal.modales.StudentClass;
 import com.mak.classportal.modales.TestData;
 import com.mak.classportal.utilities.AppSingleTone;
-import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.ExecuteAPI;
 import com.mak.classportal.utilities.UserSession;
 
@@ -37,13 +33,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by @vitovalov on 30/9/15.
  */
-public class ActiveTestsTabFragment extends Fragment {
+public class AttemptedTestsTabFragment extends Fragment {
 
     private ListAdapter mAdapter;
     ArrayList<TestData> allClassData = new ArrayList<>();
@@ -71,10 +65,10 @@ public class ActiveTestsTabFragment extends Fragment {
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                NewTestActivity.isTest = true;
-                NewTestActivity.classId = TestsList.CLASS_ID;
-                getActivity().startActivity(new Intent(getContext(), NewTestActivity.class));
-                getActivity().overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+//                NewTestActivity.isTest = true;
+//                NewTestActivity.classId = TestsList.CLASS_ID;
+//                getActivity().startActivity(new Intent(getContext(), NewTestActivity.class));
+//                getActivity().overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
             }
         });
 
@@ -99,7 +93,7 @@ public class ActiveTestsTabFragment extends Fragment {
                 testData.setTestStatus("Pending");
                 allClassData.add(testData);
             }
-            ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, false, userSession, false);
+            ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, false, userSession, true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             recyclerView.setAdapter(adapter1);
         }catch (JSONException e){

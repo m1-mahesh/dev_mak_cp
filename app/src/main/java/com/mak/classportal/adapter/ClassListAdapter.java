@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.OnClassClick;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.SingleItemRowHolder> {
 
@@ -63,17 +63,19 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
                 }
             });
         } else {
-            for (int j = 0; j < singleItem.devisions.length; j++) {
+            for (Map.Entry<String, String> entry : singleItem.getDivisions().entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
                 TextView textView = new TextView(mContext);
                 textView.setPadding(5, 5, 5, 5);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 textView.setTypeface(Typeface.create("serif-monospace", Typeface.NORMAL));
                 params.setMarginStart(30);
                 textView.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border));
-                textView.setText(singleItem.devisions[j]);
+                textView.setText(""+value.charAt((value.length()-1)));
                 textView.setTextSize(25);
                 textView.setLayoutParams(params);
-                className = singleItem.devisions[j];
+                className = value;
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -85,6 +87,9 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
                     }
                 });
                 holder.divisionsView.addView(textView);
+            }
+            for (int j = 0; j < singleItem.getDivisions().size(); j++) {
+
             }
         }
 

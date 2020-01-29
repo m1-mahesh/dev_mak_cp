@@ -9,6 +9,7 @@ public class Question {
     public int marks;
     public String status;
     public String imageUrl;
+    public int selectedAns = -1;
     public boolean isChecked;
     public ArrayList<String> options = new ArrayList<>();
 
@@ -34,6 +35,14 @@ public class Question {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public int getSelectedAns() {
+        return selectedAns;
+    }
+
+    public void setSelectedAns(int selectedAns) {
+        this.selectedAns = selectedAns;
     }
 
     public void setImageUrl(String imageUrl) {

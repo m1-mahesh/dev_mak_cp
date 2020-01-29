@@ -61,17 +61,18 @@ import static com.mak.classportal.utilities.LogUtils.LOGE;
 public class AppSingleTone {
 
     //    https://github.com/wasabeef/awesome-android-ui
-    //public String baseUrl = "https://dev.api.patients.migenesys.com/";
 
     public String signIn = "http://nikvay.com/demo/schoolApp/ws-login";
     public String classList = "http://nikvay.com/demo/schoolApp/ws-class-list";
     public String testList = "http://nikvay.com/demo/schoolApp/ws-online-test-list";
     public String questionList = "http://nikvay.com/demo/schoolApp/ws-online-test-question-list";
+    public String classDivisionList = "http://nikvay.com/demo/schoolApp/ws-class-division-list";
+    public String teacherTestList = "http://nikvay.com/demo/schoolApp/ws-teacher-online-test-list";
+    public String subjectChapterList = "http://nikvay.com/demo/schoolApp/ws-subject-chapter-list";
+    public String createTest = "http://nikvay.com/demo/schoolApp/ws-create-online-test";
+    public String addTestQuestions = "http://nikvay.com/demo/schoolApp/ws-add-question-to-online-test";
+    public String submitTest = "http://nikvay.com/demo/schoolApp/ws-submit-test";
 
-    //public String getPatientAccount = baseUrl + "accounts/";
-    //public String getPatientConsent = baseUrl + "accounts/%s/consents";
-    //public String getCountryLookups = "https://dev.api.common.migenesys.com/metadata/country_lookups";
-    //public String getProviderOrg = "https://dev.api.providers.migenesys.com/orgs/%s";
     Context context;
     UserSession userSession;
     SharedPreferences sharedPreferences;
@@ -326,7 +327,7 @@ public class AppSingleTone {
             /***
              * Variables for further use....
              */
-            BaseColor mColorAccent = new BaseColor(0, 153, 204, 255);
+            BaseColor mColorAccent = new BaseColor(0, 0, 0, 255);
             float mHeadingFontSize = 20.0f;
             float mValueFontSize = 26.0f;
 
@@ -376,7 +377,7 @@ public class AppSingleTone {
             mOrderDateValueParagraph.setSpacingBefore(30);
             mOrderDateValueParagraph.setIndentationLeft(30);
             mOrderDateValueParagraph.add(new Chunk("Name: ", keyFont));
-            mOrderDateValueParagraph.add(new Chunk(" Mr. Mahesh Ashok Kharat", valueFont));
+            mOrderDateValueParagraph.add(new Chunk(" Mahesh Ashok Kharat", valueFont));
             document.add(mOrderDateValueParagraph);
 
             mOrderDateValueParagraph.clear();
@@ -436,14 +437,14 @@ public class AppSingleTone {
             mOrderDateValueParagraph.setSpacingBefore(20);
             mOrderDateValueParagraph.setIndentationLeft(30);
             mOrderDateValueParagraph.add(new Chunk("Education: ", keyFont));
-            mOrderDateValueParagraph.add(new Chunk(" BCA(Bachelor Computer Application)", valueFont));
+            mOrderDateValueParagraph.add(new Chunk(" BCA(Bachelor in Computer Application)", valueFont));
             document.add(mOrderDateValueParagraph);
 
             Font valueFontSub = new Font(urName, 15, Font.BOLD, mColorAccent);
             Font keyFontSub = new Font(urName, 15, Font.BOLD, BaseColor.BLACK);
             mOrderDateValueParagraph.clear();
-            mOrderDateValueParagraph.setSpacingBefore(20);
-            mOrderDateValueParagraph.setIndentationLeft(35);
+            mOrderDateValueParagraph.setSpacingBefore(10);
+            mOrderDateValueParagraph.setIndentationLeft(30);
             mOrderDateValueParagraph.add(new Chunk("College: ", keyFontSub));
             mOrderDateValueParagraph.add(new Chunk(" Sangola Collage, Sangola (Yr 2013-2016)", valueFontSub));
             document.add(mOrderDateValueParagraph);
@@ -457,14 +458,14 @@ public class AppSingleTone {
             mOrderDateValueParagraph.setSpacingBefore(20);
             mOrderDateValueParagraph.setIndentationLeft(30);
             mOrderDateValueParagraph.add(new Chunk("Name: ", keyFont));
-            mOrderDateValueParagraph.add(new Chunk(" Software Engineer", valueFont));
+            mOrderDateValueParagraph.add(new Chunk(" Software Engineer (Python Developer)", valueFont));
             document.add(mOrderDateValueParagraph);
 
             mOrderDateValueParagraph.clear();
-            mOrderDateValueParagraph.setSpacingBefore(20);
-            mOrderDateValueParagraph.setIndentationLeft(35);
+            mOrderDateValueParagraph.setSpacingBefore(10);
+            mOrderDateValueParagraph.setIndentationLeft(30);
             mOrderDateValueParagraph.add(new Chunk("Company: ", keyFontSub));
-            mOrderDateValueParagraph.add(new Chunk(" Ambrosial Techoffring PVT. LTD.(Magarpatta City, Pune)", valueFontSub));
+            mOrderDateValueParagraph.add(new Chunk(" Ambrosial Techoffring Pvt. LTD.(Magarpatta City, Pune)", valueFontSub));
             document.add(mOrderDateValueParagraph);
 
             mOrderDateValueParagraph.clear();
@@ -472,12 +473,120 @@ public class AppSingleTone {
             mOrderDateValueParagraph.setSpacingAfter(20);
             mOrderDateValueParagraph.setIndentationLeft(30);
             mOrderDateValueParagraph.add(new Chunk("Annual Income: ", keyFont));
-            mOrderDateValueParagraph.add(new Chunk(" 000000.00", valueFont));
+            mOrderDateValueParagraph.add(new Chunk(" 5,16,000.00", valueFont));
             document.add(mOrderDateValueParagraph);
             document.add(new Chunk(lineSeparator));
 
+            zapfDingbatsList2 = new ZapfDingbatsList(43, 30);
+            zapfDingbatsList2.add(new ListItem("Family Details", font));
+            document.add(zapfDingbatsList2);
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Father: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" Ashok Dhula Kharat", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(10);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Mother: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" Laxmi Ashok Kharat", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(10);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("Father Occupation: ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" Farming", valueFont));
+            document.add(mOrderDateValueParagraph);
+
+            com.itextpdf.text.List jo = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            jo.add(new ListItem("Dewak: Pach Palawa", font));
+            jo.setIndentationLeft(20);
+            document.add(jo);
+            com.itextpdf.text.List job2 = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            job2.add(new ListItem("Sisters:", font));
+            job2.setIndentationLeft(20);
+            document.add(job2);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("1. Bhagyashree Shirish Kokare", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" (Solapur)", valueFontSub));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("2. Urmila Eknath Kale", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" (Bembale, Pandharpur)", valueFontSub));
+            document.add(mOrderDateValueParagraph);
+
+
+            com.itextpdf.text.List job3 = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            job3.add(new ListItem("Brothers: None", font));
+            job3.setIndentationLeft(20);
+            document.add(job3);
+
+            com.itextpdf.text.List job4 = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            job4.add(new ListItem("Mama:", font));
+            job4.setIndentationLeft(20);
+            document.add(job4);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("1. Laxman Sadashiv Khandekar", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" (Ropale, Madha)", valueFontSub));
+            document.add(mOrderDateValueParagraph);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("2. Uttreshwar Sadashiv Khandekar", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" (Ropale, Madha)", valueFontSub));
+            document.add(mOrderDateValueParagraph);
+
+            com.itextpdf.text.List job5 = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            job5.add(new ListItem("Other Relatives:", font));
+            job5.setIndentationLeft(20);
+            document.add(job5);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk("( Salgar, Gavade, Gadhave, Lawate, Hegade, Tarate..etc)", keyFont));
+            document.add(mOrderDateValueParagraph);
+
+            com.itextpdf.text.List job6 = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            job6.add(new ListItem("Full Address:", font));
+            job6.setIndentationLeft(20);
+            document.add(job6);
+
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(20);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk(" Ashok Dhula Kharat ", keyFont));
+            document.add(mOrderDateValueParagraph);
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(5);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk(" AP- Gursale, Tal- Pandharpur, Dist- Solapur", keyFont));
+            document.add(mOrderDateValueParagraph);
+            mOrderDateValueParagraph.clear();
+            mOrderDateValueParagraph.setSpacingBefore(5);
+            mOrderDateValueParagraph.setIndentationLeft(30);
+            mOrderDateValueParagraph.add(new Chunk(" Mo. 9604554815, ", keyFont));
+            mOrderDateValueParagraph.add(new Chunk(" Mo. 7719846014", keyFont));
+            document.add(mOrderDateValueParagraph);
+
+
+
             Paragraph p = new Paragraph();
-            Chunk c = new Chunk("The MAK Image ");
+            Chunk c = new Chunk("Photos -->");
+            p.setAlignment(Element.ALIGN_CENTER);
             p.add(c);
             try {
                 InputStream ims = context.getAssets().open("mak.jpg");
@@ -485,8 +594,10 @@ public class AppSingleTone {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 Image i = Image.getInstance(stream.toByteArray());
-                i.scaleToFit(300f, 400f);
+                i.setAlignment(Element.ALIGN_CENTER);
+                i.scaleToFit(400f, 600f);
                 p.add(i);
+
             }catch (Exception e){
                 e.printStackTrace();
             }

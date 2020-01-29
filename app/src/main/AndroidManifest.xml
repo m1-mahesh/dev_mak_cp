@@ -21,8 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".HomeWorkDetails"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ViewTestQuestions"></activity>
+        <activity
+            android:name=".HomeWorkDetails"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".FinalisePaperActivity" />
         <activity android:name=".RootActivity" />
         <activity android:name=".permission.PermissionsActivity" />
@@ -32,6 +34,10 @@
         <activity android:name=".RunTest" />
         <activity
             android:name=".TestsList"
+            android:label="@string/title_activity_tests_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".QuickTestResult"
             android:label="@string/title_activity_tests_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

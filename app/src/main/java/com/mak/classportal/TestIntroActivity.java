@@ -57,6 +57,8 @@ public class TestIntroActivity extends AppCompatActivity {
         ((Button) findViewById(R.id.saveButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                RunTest.testData = testData;
+                RunTest.step = 0;
                 startActivity(new Intent(TestIntroActivity.this, RunTest.class));
                 overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 finish();

@@ -2,9 +2,27 @@ package com.mak.classportal.modales;
 
 public class HomeMenu {
     private String name;
+    private String id;
     private String url;
     private String description;
     private int resourceId;
+    private int menuId;
+
+    public int getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(int menuId) {
+        this.menuId = menuId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

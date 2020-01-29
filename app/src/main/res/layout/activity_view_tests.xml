@@ -37,14 +37,19 @@
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/selectClass"
                 android:background="@drawable/layout_border"
-                android:prompt="@string/select_class_prompt"
-                android:entries="@array/class_arrays"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"/>
+            <TextView
+                android:id="@+id/classText"
+                android:fontFamily="@font/proximanovaregular"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/selectDiv"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
                 android:background="@drawable/layout_border"
                 android:prompt="@string/select_division_prompt"
                 android:entries="@array/division_arrays"
@@ -54,6 +59,7 @@
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/selectSubject"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
                 android:background="@drawable/layout_border"
                 android:prompt="@string/select_division_prompt"
                 android:entries="@array/subject_arrays"

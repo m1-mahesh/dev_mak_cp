@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
@@ -33,22 +35,38 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
     private ArrayList<TestData> itemsList;
     private Context mContext;
     private boolean isStep = false;
+    private boolean isAttempted = false;
     UserSession userSession;
-    public ScheduledTestsAdapter(Context context, ArrayList<TestData> itemsList, boolean isStep, UserSession userSession) {
+    public ScheduledTestsAdapter(Context context, ArrayList<TestData> itemsList, boolean isStep, UserSession userSession, boolean isAttempted) {
         this.itemsList = itemsList;
         this.mContext = context;
         this.isStep = isStep;
         this.userSession = userSession;
+        this.isAttempted = isAttempted;
+    }
+
+
+    @NonNull
+    @Override
+    public SingleItemRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (isStep) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.resulttest_list_item, null);
+            SingleItemRowHolder mh = new SingleItemRowHolder(v);
+            return mh;
+        }else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.test_list_item, null);
+            SingleItemRowHolder mh = new SingleItemRowHolder(v);
+            return mh;
+        }
+
     }
 
     @Override
-    public SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public void onBindViewHolder(SingleItemRowHolder holder, int i) {
 
-        TestData testData = itemsList.get(i);
+        final TestData testData = itemsList.get(i);
         if (isStep){
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.resulttest_list_item, null);
-            SingleItemRowHolder mh = new SingleItemRowHolder(v);
-            v.setOnClickListener(new View.OnClickListener() {
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     TestResultActivity.CLASS_ID = "10th";
@@ -58,13 +76,10 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
                     ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
             });
-            return mh;
         }else {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.test_list_item, null);
-            SingleItemRowHolder mh = new SingleItemRowHolder(v);
-            mh.testTitle.setText(testData.getTestTitle());
+            holder.testTitle.setText(testData.getTestTitle());
 
-            Date date= null;
+            Date date = null;
             try {
                 date = new SimpleDateFormat("yyyy-MM-dd").parse(testData.getTestDate());
                 Calendar calendar = Calendar.getInstance();
@@ -73,47 +88,37 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
 
                 SimpleDateFormat formatter = new SimpleDateFormat("MMM");
                 String month = formatter.format(date);
-                mh.monthText.setText(month.toUpperCase());
+                holder.monthText.setText(month.toUpperCase());
                 formatter = new SimpleDateFormat("dd");
-                mh.dateText.setText(formatter.format(date));
+                holder.dateText.setText(formatter.format(date));
                 formatter = new SimpleDateFormat("dd-MMM");
-                mh.testExpiryTest.setText("Expire On "+ formatter.format(calendar.getTime()));
-                mh.testDate.setText(testData.getDuration()+" min *60 Questions");
-                mh.timeTxt.setText("Time: "+ testData.getTestTime());
+                holder.testExpiryTest.setText("Expire On " + formatter.format(calendar.getTime()));
+                holder.testDate.setText(testData.getDuration() + " min *60 Questions");
+                holder.timeTxt.setText("Time: " + testData.getTestTime());
 
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            v.setOnClickListener(new View.OnClickListener() {
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (userSession.isStudent()) {
+                    if (userSession.isStudent() && !isAttempted) {
                         TestIntroActivity.testData = testData;
                         ((Activity) mContext).startActivity(new Intent(mContext, TestIntroActivity.class));
                         ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
-                    }else {
+                    } else {
                         TestResultActivity.CLASS_ID = testData.getTestTitle();
                         TestResultActivity.DIVISION = "A";
                     }
                 }
             });
-            return mh;
         }
-
-    }
-
-    @Override
-    public void onBindViewHolder(SingleItemRowHolder holder, int i) {
-
-        final TestData testItem = itemsList.get(i);
-
-
     }
 
     @Override
     public int getItemCount() {
-        return (null != itemsList ? itemsList.size() : 0);
+        return itemsList.size();
     }
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
@@ -121,6 +126,7 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
         protected TextView tvTitle, timeTxt;
         protected TextView monthText, dateText, testTitle, testDate, testExpiryTest;
         protected View hrView;
+        protected CardView cardView;
 
 
         public SingleItemRowHolder(View view) {
@@ -128,6 +134,7 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
             this.tvTitle = view.findViewById(R.id.tvTitle);
             this.monthText = view.findViewById(R.id.monthText);
             this.dateText = view.findViewById(R.id.dateText);
+            this.cardView = view.findViewById(R.id.cardItem);
 
             this.testTitle = view.findViewById(R.id.testTitle);
             this.testDate = view.findViewById(R.id.testDate);

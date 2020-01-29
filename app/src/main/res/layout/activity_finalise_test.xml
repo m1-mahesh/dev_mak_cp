@@ -38,7 +38,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="2dp"
             android:layout_marginBottom="8dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -109,6 +109,22 @@
                     android:inputType="number"
                     android:fontFamily="@font/opensansregular"
                     android:hint="Total Marks"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/instructionET"
+                    style="@style/RegistrationEditTextStyle"
+                    android:layout_gravity="center_horizontal"
+                    android:inputType="textMultiLine"
+                    android:fontFamily="@font/opensansregular"
+                    android:hint="Instructions"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>

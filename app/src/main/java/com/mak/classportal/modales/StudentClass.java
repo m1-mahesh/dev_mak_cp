@@ -1,17 +1,15 @@
 package com.mak.classportal.modales;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class StudentClass {
     public String id;
     public String name;
     public String url;
-    public String[] devisions = new String[4];
+    public Map<String, String> divisions = new HashMap<>();
 
-    public StudentClass(){
-        devisions[0] = "A";
-        devisions[1] = "B";
-        devisions[2] = "C";
-        devisions[3] = "D";
-    }
+
     public String getName() {
         return name;
     }
@@ -34,5 +32,28 @@ public class StudentClass {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Map<String, String> getDivisions(){
+        return divisions;
+    }
+    public void addDivision(String id, String name){
+        divisions.put(id, name);
+    }
+
+    //to display object as a string in spinner
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof StudentClass){
+            StudentClass c = (StudentClass )obj;
+            if(c.getName().equals(name) && c.getId()==id ) return true;
+        }
+
+        return false;
     }
 }

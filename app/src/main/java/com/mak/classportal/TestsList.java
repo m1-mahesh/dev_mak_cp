@@ -1,6 +1,7 @@
 package com.mak.classportal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -12,9 +13,11 @@ import com.google.android.material.tabs.TabLayout;
 import com.mak.classportal.adapter.ClassListAdapter;
 import com.mak.classportal.adapter.ScheduledTestsAdapter;
 import com.mak.classportal.fragment.ActiveTestsTabFragment;
+import com.mak.classportal.fragment.AttemptedTestsTabFragment;
 import com.mak.classportal.modales.HomeMenu;
 import com.mak.classportal.modales.TestData;
 import com.mak.classportal.utilities.Constant;
+import com.mak.classportal.utilities.UserSession;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -45,11 +48,14 @@ public class TestsList extends AppCompatActivity {
     public static String CLASS_ID ="";
     public static String CLASS_NAME ="";
     public static String DIVISION_ID ="1";
-
+    UserSession userSession;
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tests);
+        sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
+        userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         ((TextView)findViewById(R.id.tvTitle)).setText(CLASS_NAME);
         setupToolbar();
         Constant.IS_PAPER = false;
@@ -74,15 +80,6 @@ public class TestsList extends AppCompatActivity {
         });*/
     }
 
-    void getTestList() {
-        for (int i = 0; i < 5; i++) {
-            TestData testData = new TestData();
-            testData.setTestClass(i + " std");
-            testData.setTestDate("12-Dec-2019");
-            testData.setTestStatus("Pending");
-            allClassData.add(testData);
-        }
-    }
 
     private void setupCollapsingToolbar() {
         final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(
@@ -109,8 +106,9 @@ public class TestsList extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new ActiveTestsTabFragment(), "ACTIVE");
-        adapter.addFrag(new ActiveTestsTabFragment(), "UPCOMING");
-        adapter.addFrag(new ActiveTestsTabFragment(), "ATTEMPTED");
+//        adapter.addFrag(new ActiveTestsTabFragment(), "UPCOMING");
+        if (userSession.isStudent())
+            adapter.addFrag(new AttemptedTestsTabFragment(), "ATTEMPTED");
 
         viewPager.setAdapter(adapter);
     }

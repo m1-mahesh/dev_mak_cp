@@ -1,5 +1,8 @@
 package com.mak.classportal.utilities;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class Constant {
     public static final String CLOSE = "Close";
     public static final String BUILDING = "Home";
@@ -19,13 +22,25 @@ public class Constant {
     public static final String TIME_TABLE = "TimeTable";
     public static final String PAPER = "Generate Papers";
 
-
     public static final String ROLE_STUDENT = "Student";
     public static final String ROLE_TEACHER = "Teacher";
     public static final String ROLE_ADMIN = "Admin";
     public static boolean IS_PAPER = false;
+    public static int ACTIVITY_FINISH_REQUEST_CODE = 1919;
+    public static int ACTIVITY_BACK_REQUEST_CODE = 2929;
+    public static Calendar startTime = null;
+
 
     public static int RESULT_LOAD_IMAGE = 100;
     public static int CAMERA_REQUEST = 200;
+
+    /*
+        Student attempted test with result
+        Teacher Created List with class name and id
+        Division data with single letter
+        Test questions not coming
+        Active and upcoming test for student
+
+    */
 
 }
