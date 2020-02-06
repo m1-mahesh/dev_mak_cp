@@ -59,5 +59,17 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <Button
+        android:id="@+id/skipButton"
+        android:layout_width="wrap_content"
+        android:layout_margin="7dp"
+        android:text="SKIP"
+        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/twitter"
+        android:fontFamily="@font/opensansbold"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
 
 </RelativeLayout>

@@ -173,6 +173,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         switch (menuItem.getItemId()){
             case R.id.attendance:
                 ClassFragment.menuId = "";
+                toolbar.setTitle("Attendance");
                 if (userSession.isStudent())
                     getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new CompactCalendarFragment())
                             .commit();
@@ -182,17 +183,19 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 closeDrawer();
                 break;
             case R.id.homework:
-
+                toolbar.setTitle("Homework");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new HomeworkFragment())
                         .commit();
                 closeDrawer();
                 break;
             case R.id.notice:
+                toolbar.setTitle("Notice");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new NoticeFragment())
                         .commit();
                 closeDrawer();
                 break;
             case R.id.videos:
+                toolbar.setTitle("Videos");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new VideosFragment())
                         .commit();
                 closeDrawer();
@@ -210,26 +213,31 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 closeDrawer();
                 break;
             case R.id.testResult:
+                toolbar.setTitle("Results");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new TestResultFragment())
                         .commit();
                 closeDrawer();
                 break;
             case R.id.timeTable:
+                toolbar.setTitle("Time Table");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new TimeTableFragment())
                         .commit();
                 closeDrawer();
                 break;
             case R.id.paper:
+                toolbar.setTitle("Board Papers");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new PaperListFragment())
                         .commit();
                 closeDrawer();
                 break;
             case R.id.profile:
+                toolbar.setTitle("Profile");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new ProfileFragment())
                         .commit();
                 closeDrawer();
                 break;
             case R.id.dashboard:
+                toolbar.setTitle("Dashboard");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new DashboardFragment())
                         .commit();
                 closeDrawer();

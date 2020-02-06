@@ -6,6 +6,33 @@ public class StudentData {
     public String className;
     public String classDivision;
     public String profileImg;
+    public String totalMarks;
+    public String testName;
+    public String marksGain;
+
+    public String getTotalMarks() {
+        return totalMarks;
+    }
+
+    public void setTotalMarks(String totalMarks) {
+        this.totalMarks = totalMarks;
+    }
+
+    public String getTestName() {
+        return testName;
+    }
+
+    public void setTestName(String testName) {
+        this.testName = testName;
+    }
+
+    public String getMarksGain() {
+        return marksGain;
+    }
+
+    public void setMarksGain(String marksGain) {
+        this.marksGain = marksGain;
+    }
 
     public String getName() {
         return name;

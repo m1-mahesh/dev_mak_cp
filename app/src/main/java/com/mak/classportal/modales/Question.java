@@ -1,6 +1,8 @@
 package com.mak.classportal.modales;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Question {
     public String questionId;
@@ -9,9 +11,9 @@ public class Question {
     public int marks;
     public String status;
     public String imageUrl;
-    public int selectedAns = -1;
+    public String selectedAns = null;
     public boolean isChecked;
-    public ArrayList<String> options = new ArrayList<>();
+    public Map<String,String> options = new HashMap<>();
 
     public String getCorrectAns() {
         return correctAns;
@@ -37,11 +39,11 @@ public class Question {
         return imageUrl;
     }
 
-    public int getSelectedAns() {
+    public String getSelectedAns() {
         return selectedAns;
     }
 
-    public void setSelectedAns(int selectedAns) {
+    public void setSelectedAns(String selectedAns) {
         this.selectedAns = selectedAns;
     }
 
@@ -49,13 +51,10 @@ public class Question {
         this.imageUrl = imageUrl;
     }
 
-    public ArrayList<String> getOptions() {
+    public Map<String, String> getOptions() {
         return options;
     }
 
-    public void setOptions(ArrayList<String> options) {
-        this.options = options;
-    }
 
     public void setCorrectAns(String correctAns) {
         this.correctAns = correctAns;

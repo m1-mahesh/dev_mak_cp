@@ -50,8 +50,13 @@ public class TestIntroActivity extends AppCompatActivity {
         descriptionText = findViewById(R.id.descriptionText);
 
         instructionText.setText(Html.fromHtml(testData.getInstruction()));
-        marksText.setText("120");
-        questionText.setText("50");
+        String totalMarks = "", noOfQ = "";
+        if (testData.getTotalMarks()<10)
+            totalMarks="0"+testData.getTotalMarks();
+        if (testData.getTotalMarks()<10)
+            noOfQ="0"+testData.totalQuestions;
+        marksText.setText(totalMarks);
+        questionText.setText(noOfQ);
         durationText.setText(testData.getDuration()+" Mins");
         descriptionText.setText(testData.getDescription());
         ((Button) findViewById(R.id.saveButton)).setOnClickListener(new View.OnClickListener() {

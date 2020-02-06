@@ -106,6 +106,7 @@ public class CompactCalendarFragment extends Fragment {
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
+                calTitle.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
             }
         });
 
@@ -113,6 +114,7 @@ public class CompactCalendarFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 compactCalendarView.scrollLeft();
+                calTitle.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
             }
         });
 
@@ -120,6 +122,7 @@ public class CompactCalendarFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 compactCalendarView.scrollRight();
+                calTitle.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
             }
         });
 

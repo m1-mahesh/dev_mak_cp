@@ -2,8 +2,10 @@ package com.mak.classportal;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,11 +19,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.mak.classportal.adapter.StudentListAdapter;
 import com.mak.classportal.adapter.StudentResultAd;
+import com.mak.classportal.adapter.TestResults;
+import com.mak.classportal.modales.Question;
 import com.mak.classportal.modales.StudentData;
+import com.mak.classportal.utilities.AppSingleTone;
+import com.mak.classportal.utilities.ExecuteAPI;
+import com.mak.classportal.utilities.UserSession;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -43,7 +57,7 @@ public class TestResultActivity extends AppCompatActivity {
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     public static String CLASS_ID = "";
     public static String DIVISION = "";
-    public static String TEST_TITLE = "";
+    public static String TEST_TITLE = "Results";
 
 
     /**
@@ -103,38 +117,33 @@ public class TestResultActivity extends AppCompatActivity {
     };
 
     ArrayList<StudentData> students = new ArrayList<>();
+    public static String TEST_ID;
     TextView topTitle;
     TextView customToast;
     LayoutInflater inflater;
     View tostLayout;
     Fragment contentFragment;
+    RecyclerView studentList;
+    AppSingleTone appSingleTone;
+    SharedPreferences sharedPreferences;
+    UserSession userSession;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.test_result);
+        appSingleTone = new AppSingleTone(this);
+        sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
+        userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         topTitle = findViewById(R.id.tvTitle);
         topTitle.setText(TEST_TITLE);
         mVisible = true;
         mContentView = findViewById(R.id.fullscreen_content);
-        for (int i=101;i<125;i++){
-            StudentData studentData = new StudentData();
-            studentData.setName("Rakesh Mehata");
-            studentData.setRollNumber(""+i);
-            students.add(studentData);
-        }
 
-        RecyclerView studentList = findViewById(R.id.studentList);
-
+        studentList = findViewById(R.id.studentList);
         studentList.setHasFixedSize(true);
-
-        StudentResultAd adapter1 = new StudentResultAd(this,students);
-
-        studentList.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-
-        studentList.setAdapter(adapter1);
-
         // Set up the user interaction to manually show or hide the system UI.
+        getResult();
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -215,5 +224,55 @@ public class TestResultActivity extends AppCompatActivity {
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(tostLayout);
         toast.show();
+    }
+    void parseTestQuestions(JSONObject jsonObject) {
+        try {
+            students.clear();
+            JSONArray jsonArray = jsonObject.getJSONArray("student_list");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                StudentData studentData = new StudentData();
+                studentData.setName(object.getString("name"));
+                studentData.setClassName(object.getString("class_name"));
+                studentData.setClassDivision(object.getString("division_name"));
+                studentData.setTestName(object.getString("test_name"));
+                studentData.setTotalMarks(object.getString("total_marks"));
+                studentData.setMarksGain(object.getString("total_marks_recived"));
+                students.add(studentData);
+            }
+            StudentResultAd adapter1 = new StudentResultAd(this,students);
+
+            studentList.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+
+            studentList.setAdapter(adapter1);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public void getResult() {
+
+        try {
+            String url = appSingleTone.testResultAll;
+            ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
+            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
+            executeAPI.addPostParam("test_id", TEST_ID);
+            executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                @Override
+                public void onResponse(JSONObject result) {
+                    Log.d("Result", result.toString());
+                    parseTestQuestions(result);
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                    Log.d("Result", errorResponse.toString());
+                }
+            });
+            executeAPI.showProcessBar(true);
+            executeAPI.executeStringRequest(Request.Method.POST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

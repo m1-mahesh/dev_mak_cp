@@ -21,6 +21,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.mak.classportal.modales.Question;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.ExecuteAPI;
@@ -58,6 +59,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
         titleET = findViewById(R.id.title_edit_text);
         durationET = findViewById(R.id.duration_text);
         totalMarksET = findViewById(R.id.total_marks_text);
+        totalMarksET.setVisibility(View.GONE);
         instructionET = findViewById(R.id.instructionET);
         txtTime.setOnClickListener(this);
         txtDate.setOnClickListener(this);
@@ -67,6 +69,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
         txtTime.setKeyListener(null);
         c = Calendar.getInstance();
         findViewById(R.id.saveButton).setOnClickListener(this);
+        filterResult();
     }
 
     void showToast(String toastText) {
@@ -81,6 +84,13 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(tostLayout);
         toast.show();
+    }
+    void filterResult(){
+        for (int i=0;i<ViewTestQuestions.selectedQ.size(); i++){
+            Question q = ViewTestQuestions.selectedQ.get(i);
+            jsonArray.put(q.getQuestionId());
+            totalMarks+=q.getMarks();
+        }
     }
 
     boolean isValidated() {
@@ -100,10 +110,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
             showToast("Please Enter Test Duration in Minutes");
             return false;
         }
-        if (totalMarksET.getText().toString().equals("")) {
-            showToast("Please Enter Test Total Marks");
-            return false;
-        }
+
         if (instructionET.getText().toString().equals("")) {
             showToast("Please Enter Test Instructions");
             return false;
@@ -126,8 +133,10 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-
-                                txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                                monthOfYear ++;
+                                String month = monthOfYear<10?"0"+monthOfYear:""+monthOfYear;
+                                String day = dayOfMonth<10?"0"+dayOfMonth:""+dayOfMonth;
+                                txtDate.setText(year + "-" + month  + "-" + day);
 
                             }
                         }, mYear, mMonth, mDay);
@@ -144,8 +153,10 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
+                                String hr = hourOfDay<10?"0"+hourOfDay:""+hourOfDay;
+                                String minuteStr = minute<10?"0"+minute:""+minute;
 
-                                txtTime.setText(hourOfDay + ":" + minute);
+                                txtTime.setText(hr + ":" + minuteStr);
                             }
                         }, mHour, mMinute, false);
                 timePickerDialog.show();
@@ -179,6 +190,8 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
             executeAPI.addPostParam("test_date", txtDate.getText().toString());
             executeAPI.addPostParam("test_time", txtTime.getText().toString());
             executeAPI.addPostParam("test_instructions", instructionET.getText().toString());
+            executeAPI.addPostParam("total_marks", ""+totalMarks);
+            executeAPI.addPostParam("subject_id", SelectQuestionsActivity.subjectData.getId());
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override
                 public void onResponse(JSONObject result) {
@@ -205,13 +218,12 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
     }
+    int totalMarks = 0;
     public void addQuestion(String test_id) {
 
         try {
             String url = appSingleTone.addTestQuestions;
-            for (int i=0;i<ViewTestQuestions.selectedQ.size(); i++){
-                jsonArray.put(ViewTestQuestions.selectedQ.get(i).getQuestionId());
-            }
+
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
             executeAPI.addPostParam("test_id", test_id);

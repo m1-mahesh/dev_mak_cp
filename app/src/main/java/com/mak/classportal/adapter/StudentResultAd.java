@@ -36,7 +36,8 @@ public class StudentResultAd extends RecyclerView.Adapter<StudentResultAd.Single
 
         final StudentData singleItem = itemsList.get(i);
 
-        holder.tvTitle.setText(singleItem.getName()+" ("+singleItem.getRollNumber()+")");
+        holder.tvTitle.setText(singleItem.getName());
+        holder.marksTxt.setText("Marks: "+singleItem.getMarksGain()+"/"+singleItem.getTotalMarks());
 
     }
 
@@ -47,7 +48,7 @@ public class StudentResultAd extends RecyclerView.Adapter<StudentResultAd.Single
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
-        protected TextView tvTitle;
+        protected TextView tvTitle, marksTxt;
 
         protected ImageView itemImage;
 
@@ -55,7 +56,8 @@ public class StudentResultAd extends RecyclerView.Adapter<StudentResultAd.Single
         public SingleItemRowHolder(View view) {
             super(view);
 
-            this.tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+            this.tvTitle = view.findViewById(R.id.tvTitle);
+            this.marksTxt = view.findViewById(R.id.resultText);
 //
 
         }

@@ -1,5 +1,6 @@
 package com.mak.classportal;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,19 +10,15 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -29,7 +26,6 @@ import com.mak.classportal.modales.Question;
 import com.mak.classportal.modales.TestData;
 import com.mak.classportal.swap_plugin.CustomPagerAdapter;
 import com.mak.classportal.swap_plugin.CustomViewPager;
-import com.mak.classportal.swap_plugin.SwipeStack;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.ExecuteAPI;
@@ -42,7 +38,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class RunTest extends AppCompatActivity implements View.OnClickListener {
@@ -61,8 +56,9 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
     String preOption = "";
     int questionCountInt = 0;
     CustomViewPager viewPager;
-    private ImageButton mButtonLeft, mButtonRight;
     CountDownTimer timerCD;
+    private ImageButton mButtonLeft, mButtonRight;
+    Button mSkipButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,14 +85,16 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
         } else {
             setContentView(R.layout.activity_run_test);
             countDownText = findViewById(R.id.countDownText);
-            viewPager =  findViewById(R.id.viewPager);
+            viewPager = findViewById(R.id.viewPager);
             viewPager.setAdapter(new CustomPagerAdapter(this, mData));
             viewPager.setPagingEnabled(false);
             mButtonLeft = findViewById(R.id.buttonSwipeLeft);
             mButtonRight = findViewById(R.id.buttonSwipeRight);
             questionCount = findViewById(R.id.questionCount);
+            mSkipButton = findViewById(R.id.skipButton);
             mButtonLeft.setOnClickListener(this);
             mButtonRight.setOnClickListener(this);
+            mSkipButton.setOnClickListener(this);
 
 
             startTimer(TimeUnit.MINUTES.toMillis(Integer.parseInt(testData.getDuration())));
@@ -125,30 +123,50 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
                 finish();
             }
         }.start();
-        questionCount.setText("01/"+mData.size());
+        questionCount.setText("01/" + mData.size());
     }
 
     @Override
     public void onClick(View v) {
         if (v.equals(mButtonLeft)) {
-            viewPager.setCurrentItem(viewPager.getCurrentItem()-1);
-        } else if (v.equals(mButtonRight)) {
-            Log.e("--",""+viewPager.getCurrentItem());
-            if (mData.size() == viewPager.getCurrentItem()+1){
-                FinishTestActivity.mData = CustomPagerAdapter.mData;
-                startActivity(new Intent(RunTest.this, FinishTestActivity.class));
-                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
-                timerCD.cancel();
-                showToast("Test Completed...");
-                finish();
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+        } else if (v.equals(mButtonRight) || v.equals(mSkipButton)) {
+            Log.e("--", "" + viewPager.getCurrentItem());
+            if (mData.size() == viewPager.getCurrentItem() + 1) {
+                confirmDialog();
+            }else if (mData.size() == viewPager.getCurrentItem() ){
+                mSkipButton.setVisibility(View.GONE);
             }
-//            if (!selectedOption.equals(""))
-                viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
-//            else showToast("Please Select Option");
-
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 
         }
-        questionCount.setText((viewPager.getCurrentItem()+1)+"/"+mData.size());
+        questionCount.setText((viewPager.getCurrentItem() + 1) + "/" + mData.size());
+    }
+
+    private void confirmDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder
+                .setMessage("Do you want to submit test?")
+                .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        FinishTestActivity.mData = CustomPagerAdapter.mData;
+                        startActivity(new Intent(RunTest.this, FinishTestActivity.class));
+                        overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                        timerCD.cancel();
+                        showToast("Test Completed...");
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
 
    /* @Override
@@ -198,10 +216,11 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
                 Question question = new Question();
                 question.setQuestionId(object.getString("id"));
                 question.setQuestion(object.getString("questions"));
-                question.options.add(object.getString("optionA"));
-                question.options.add(object.getString("optionB"));
-                question.options.add(object.getString("optionC"));
-                question.options.add(object.getString("optionD"));
+                JSONArray options = object.getJSONArray("options");
+                for(int k=0;k<options.length();k++){
+                   JSONObject op = options.getJSONObject(k);
+                    question.options.put(op.getString("option_id"),op.getString("option_value"));
+                }
                 question.setCorrectAns(object.getString("answer_id"));
                 question.setMarks(object.getInt("questions_marks"));
                 question.setStatus(object.getString("status"));
@@ -216,13 +235,10 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
     public void getTestQuestions() {
 
         try {
-            String url = appSingleTone.questionList;
+            String url = appSingleTone.attendTestQ;
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
-            executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
-            executeAPI.addPostParam("class_id", userSession.getAttribute("class_id"));
-            executeAPI.addPostParam("division_id", "1");
-            executeAPI.addPostParam("chapter_id", "1");
+            executeAPI.addPostParam("test_id", testData.getId());
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override
                 public void onResponse(JSONObject result) {

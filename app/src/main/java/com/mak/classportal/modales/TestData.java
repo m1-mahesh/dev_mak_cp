@@ -10,6 +10,27 @@ public class TestData {
     String description = "";
     String instruction = "";
     String duration = "";
+    int totalMarks = 0;
+    int gainMarks = 0;
+    String className = "";
+    String classId = "";
+    public int totalQuestions = 0;
+    public boolean isTestAttempt = false;
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
+    }
 
     public String getDuration() {
         return duration;
@@ -81,5 +102,21 @@ public class TestData {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getTotalMarks() {
+        return totalMarks;
+    }
+
+    public void setTotalMarks(int totalMarks) {
+        this.totalMarks = totalMarks;
+    }
+
+    public int getGainMarks() {
+        return gainMarks;
+    }
+
+    public void setGainMarks(int gainMarks) {
+        this.gainMarks = gainMarks;
     }
 }

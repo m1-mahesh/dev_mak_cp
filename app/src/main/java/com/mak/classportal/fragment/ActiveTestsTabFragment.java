@@ -36,8 +36,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -96,10 +98,34 @@ public class ActiveTestsTabFragment extends Fragment {
                 testData.setInstruction(object.getString("test_instructions"));
                 testData.setDescription(object.getString("test_description"));
                 testData.setDuration(object.getString("test_time_in_mints"));
+                testData.setClassName(object.getString("class_name"));
+                testData.setClassId(object.getString("class_id"));
+                testData.totalQuestions = object.getInt("num_of_question");
+
                 testData.setTestStatus("Pending");
-                allClassData.add(testData);
+                if (userSession.isStudent()) {
+                    if (object.has("total_marks") && !object.getString("total_marks").equals("null"))
+                        testData.setTotalMarks(object.getInt("total_marks"));
+                    if (object.has("result_data") && !object.getJSONObject("result_data").getString("total_marks_recived").equals("null"))
+                        testData.setGainMarks(object.getJSONObject("result_data").getInt("total_marks_recived"));
+                    testData.isTestAttempt = object.getBoolean("isTestAttempt");
+                    if (!testData.isTestAttempt)
+                        allClassData.add(testData);
+                }else{
+                    try {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = dateFormat.parse(testData.getTestDate());
+                        if (date.after(new Date()))
+                            allClassData.add(testData);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
             }
-            ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, false, userSession, false);
+            boolean viewResultForTeacher = false;
+            if (userSession.isTeacher())
+                viewResultForTeacher = true;
+            ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, viewResultForTeacher, userSession, false);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             recyclerView.setAdapter(adapter1);
         }catch (JSONException e){
@@ -109,6 +135,14 @@ public class ActiveTestsTabFragment extends Fragment {
 
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (userSession!=null&&appSingleTone!=null)
+            getTestList();
+    }
+
     public void getTestList() {
 
         try {

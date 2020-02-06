@@ -30,43 +30,7 @@
             android:orientation="vertical"
             android:layout_height="wrap_content">
 
-            <RadioButton
-                android:id="@+id/one"
-                android:layout_marginTop="15dp"
-                android:padding="5dp"
-                android:background="@drawable/layout_border"
-                android:layout_width="match_parent"
-                android:fontFamily="@font/opensanssemibold"
-                android:text="1. Google"
-                android:buttonTint="@color/colorPrimaryDark"
-                android:layout_height="wrap_content"/>
-            <RadioButton
-                android:id="@+id/two"
-                android:layout_width="match_parent"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/layout_border"
-                android:fontFamily="@font/opensanssemibold"
-                android:buttonTint="@color/colorPrimaryDark"
-                android:text="2. Microsoft"
-                android:layout_height="wrap_content"/>
-            <RadioButton
-                android:id="@+id/three"
-                android:layout_width="match_parent"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/layout_border"
-                android:fontFamily="@font/opensanssemibold"
-                android:text="3. Facebook"
-                android:buttonTint="@color/colorPrimaryDark"
-                android:layout_height="wrap_content"/>
-            <RadioButton
-                android:id="@+id/four"
-                android:layout_width="match_parent"
-                android:background="@drawable/layout_border"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/opensanssemibold"
-                android:text="4. Amazon"
-                android:buttonTint="@color/colorPrimaryDark"
-                android:layout_height="wrap_content"/>
+
         </RadioGroup>
 
     </RelativeLayout>

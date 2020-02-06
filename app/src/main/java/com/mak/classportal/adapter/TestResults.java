@@ -29,15 +29,17 @@ import java.util.Date;
 public class TestResults extends RecyclerView.Adapter<TestResults.SingleItemRowHolder> {
 
     public static OnClassClick onClassClick;
-    public static String menuId = "";
+    boolean isAttemptedTest = false;
     String className = "";
     private ArrayList<Question> itemsList;
     private Context mContext;
     UserSession userSession;
-    public TestResults(Context context, ArrayList<Question> itemsList, UserSession userSession) {
+
+    public TestResults(Context context, ArrayList<Question> itemsList, UserSession userSession, boolean isAttemptedTest) {
         this.itemsList = itemsList;
         this.mContext = context;
         this.userSession = userSession;
+        this.isAttemptedTest = isAttemptedTest;
     }
 
     @Override
@@ -55,25 +57,37 @@ public class TestResults extends RecyclerView.Adapter<TestResults.SingleItemRowH
     public void onBindViewHolder(SingleItemRowHolder holder, int i) {
 
         final Question question = itemsList.get(i);
-        char selectedChar = (char)question.getSelectedAns();
-        char actualAns = question.getCorrectAns().charAt(0);
-        if (selectedChar ==  actualAns){
+        holder.tvTitle.setText(question.getQuestion());
+        holder.marksTxt.setText("" + question.getMarks());
+        if (question.getSelectedAns() != null && question.getSelectedAns().equals(question.getCorrectAns())) {
             holder.correctAnsView.setVisibility(View.GONE);
             holder.wrongAnsView.setVisibility(View.VISIBLE);
             holder.statusImg.setImageResource(R.drawable.ic_correct_ans_24dp);
-        }else{
+        } else {
             holder.statusImg.setImageResource(R.drawable.ic_wrong_ans_24dp);
             holder.correctAnsView.setVisibility(View.VISIBLE);
             holder.wrongAnsView.setVisibility(View.VISIBLE);
         }
-        holder.tvTitle.setText(question.getQuestion());
-        holder.marksTxt.setText(""+question.getMarks());
-        holder.correctAnsVTxt.setText(question.getCorrectAns());
-        if (question.getSelectedAns() == -1)
-            holder.yourAnsVTxt.setText("None");
-        else
-            holder.yourAnsVTxt.setText(""+selectedChar);
+        if (!isAttemptedTest) {
 
+            if (question.getOptions().containsKey(question.getCorrectAns()))
+                holder.correctAnsVTxt.setText(question.getOptions().get(question.getCorrectAns()));
+            else
+                holder.correctAnsVTxt.setText("Unknown");
+            if (question.getSelectedAns() == null)
+                holder.yourAnsVTxt.setText("None");
+            else
+                holder.yourAnsVTxt.setText(question.getOptions().get(question.getSelectedAns()));
+        }else {
+            if (question.getCorrectAns()!=null && !question.getCorrectAns().equals("null"))
+                holder.correctAnsVTxt.setText(question.getCorrectAns());
+            else
+                holder.correctAnsVTxt.setText("Unknown");
+            if (question.getSelectedAns() != null && question.getSelectedAns().equals("null"))
+                holder.yourAnsVTxt.setText("None");
+            else
+                holder.yourAnsVTxt.setText(question.getSelectedAns());
+        }
 
 
     }

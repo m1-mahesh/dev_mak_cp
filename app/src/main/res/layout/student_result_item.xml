@@ -15,18 +15,27 @@
         android:background="?android:selectableItemBackground"
         android:orientation="horizontal">
 
-        <com.mak.classportal.utilities.CircularImageView
-            android:id="@+id/studentIcon"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/myCardView"
             android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:cardCornerRadius="50dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/student"
-            android:layout_height="50dp"/>
+            >
+            <ImageView
+                android:id="@+id/studentIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/student"
+                />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/tvTitle"
             android:textStyle="bold"
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/studentIcon"
+            android:layout_below="@+id/myCardView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

@@ -107,8 +107,7 @@ public class TestsList extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new ActiveTestsTabFragment(), "ACTIVE");
 //        adapter.addFrag(new ActiveTestsTabFragment(), "UPCOMING");
-        if (userSession.isStudent())
-            adapter.addFrag(new AttemptedTestsTabFragment(), "ATTEMPTED");
+        adapter.addFrag(new AttemptedTestsTabFragment(), "ATTEMPTED");
 
         viewPager.setAdapter(adapter);
     }

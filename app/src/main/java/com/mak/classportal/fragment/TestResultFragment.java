@@ -30,11 +30,6 @@ public class TestResultFragment extends Fragment {
 
     SharedPreferences sharedPreferences;
     UserSession userSession;
-    public static TestResultFragment newInstance(String menuID) {
-        TestResultFragment contentFragment = new TestResultFragment();
-        return contentFragment;
-    }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

@@ -185,10 +185,11 @@ public class SelectQuestionsActivity extends AppCompatActivity {
                 Question question = new Question();
                 question.setQuestionId(object.getString("id"));
                 question.setQuestion(object.getString("questions"));
-                question.options.add(object.getString("optionA"));
-                question.options.add(object.getString("optionB"));
-                question.options.add(object.getString("optionC"));
-                question.options.add(object.getString("optionD"));
+                JSONArray options = object.getJSONArray("options");
+                for(int k=0;k<options.length();k++){
+                    JSONObject op = options.getJSONObject(k);
+                    question.options.put(op.getString("option_id"),op.getString("option_value"));
+                }
                 question.setCorrectAns(object.getString("answer_id"));
                 question.setMarks(object.getInt("questions_marks"));
                 question.setStatus(object.getString("status"));

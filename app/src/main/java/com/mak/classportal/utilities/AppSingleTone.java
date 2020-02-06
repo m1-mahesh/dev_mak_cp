@@ -72,6 +72,9 @@ public class AppSingleTone {
     public String createTest = "http://nikvay.com/demo/schoolApp/ws-create-online-test";
     public String addTestQuestions = "http://nikvay.com/demo/schoolApp/ws-add-question-to-online-test";
     public String submitTest = "http://nikvay.com/demo/schoolApp/ws-submit-test";
+    public String attendTestQ = "http://nikvay.com/demo/schoolApp/ws-online-test-question-list-for-student";
+    public String testResult = "http://nikvay.com/demo/schoolApp/ws-student-test-result";
+    public String testResultAll = "http://nikvay.com/demo/schoolApp/ws-teacher-test-result";
 
     Context context;
     UserSession userSession;

@@ -54,6 +54,7 @@ public class FinishTestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 QuickTestResult.mData = mData;
+                QuickTestResult.isQuick = true;
                 startActivity(new Intent(FinishTestActivity.this, QuickTestResult.class));
                 overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 finish();
@@ -66,16 +67,19 @@ public class FinishTestActivity extends AppCompatActivity {
         postTestData();
     }
 
+    int totalMarks = 0;
     void filterResult() {
         try {
             resultObject = new JSONObject();
             totalQ = mData.size();
             for (int i = 0; i < mData.size(); i++) {
                 Question question = mData.get(i);
-                if (question.getSelectedAns() > 0) {
+                if (question.getSelectedAns() != null) {
                     totalAttemptedQ++;
-                    char selectedChar = (char)question.getSelectedAns();
-                    resultObject.put(question.getQuestionId(), ""+selectedChar);
+                    if (question.getSelectedAns()!=null&&question.getSelectedAns().equals(question.getCorrectAns())){
+                       totalMarks += question.getMarks();
+                    }
+                    resultObject.put(question.getQuestionId(), question.getSelectedAns());
                 }
             }
         }catch (JSONException e){
@@ -126,6 +130,7 @@ public class FinishTestActivity extends AppCompatActivity {
             executeAPI.addPostParam("start_time", startTimeStr);
             executeAPI.addPostParam("end_time", endTimeStr);
             executeAPI.addPostParam("question_answer_array", resultObject.toString());
+            executeAPI.addPostParam("total_marks_recived", ""+totalMarks);
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override
                 public void onResponse(JSONObject result) {

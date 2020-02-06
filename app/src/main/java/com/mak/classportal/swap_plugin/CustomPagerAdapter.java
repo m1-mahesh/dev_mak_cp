@@ -1,6 +1,7 @@
 package com.mak.classportal.swap_plugin;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,12 +9,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.mak.classportal.NewTestActivity;
 import com.mak.classportal.R;
 import com.mak.classportal.modales.Question;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by anupamchugh on 26/12/15.
@@ -36,60 +40,63 @@ public class CustomPagerAdapter extends PagerAdapter {
         TextView textViewCard = view.findViewById(R.id.textViewCard);
         Question question = mData.get(position);
         textViewCard.setText(question.getQuestion());
-        final RadioButton one = view.findViewById(R.id.one);
-        final RadioButton two = view.findViewById(R.id.two);
-        final RadioButton three = view.findViewById(R.id.three);
-        final RadioButton four = view.findViewById(R.id.four);
-        if (question.getSelectedAns() == 0)
-            one.setSelected(true);
-        else if (question.getSelectedAns() == 1)
-            two.setSelected(true);
-        else if (question.getSelectedAns() == 2)
-            three.setSelected(true);
-        else if (question.getSelectedAns() == 3)
-            four.setSelected(true);
-        one.setText(question.getOptions().get(0));
-        two.setText(question.getOptions().get(1));
-        three.setText(question.getOptions().get(2));
-        four.setText(question.getOptions().get(3));
+        RadioGroup optionView = view.findViewById(R.id.optionView);
+
+
+        for (Map.Entry<String, String> entry : question.getOptions().entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            RadioButton button = new RadioButton(mContext);
+            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+            button.setTypeface(ResourcesCompat.getFont(mContext, R.font.opensanssemibold));
+            params.setMargins(0,15,0,0);
+            button.setPadding(5,5,5,5);
+            button.setBackgroundResource(R.drawable.layout_border);
+            button.setTag(key);
+            button.setLayoutParams(params);
+//            button.setButtonTintList(R.color.colorPrimaryDark);
+            /*
+            <RadioButton
+                android:id="@+id/one"
+                android:layout_marginTop="15dp"
+                android:padding="5dp"
+                android:background="@drawable/layout_border"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/opensanssemibold"
+                android:text="1. Google"
+                android:buttonTint="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"/>
+            * */
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][] {
+                            new int[] { -android.R.attr.state_checked }, // unchecked
+                            new int[] {  android.R.attr.state_checked }  // checked
+                    },
+                    new int[] {
+                            R.color.colorAccent,
+                            R.color.colorPrimary
+                    }
+            );
+            button.setButtonTintList(colorStateList);
+            button.setText(value);
+            if (question.getSelectedAns()!=null&&question.getSelectedAns().equals(key))
+                button.setSelected(true);
+            optionView.addView(button);
+        }
+
         RadioGroup optionGroup = view.findViewById(R.id.optionView);
         optionGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.one:
-                        one.setBackgroundResource(R.drawable.redio_selected);
-                        two.setBackgroundResource(R.drawable.layout_border);
-                        three.setBackgroundResource(R.drawable.layout_border);
-                        four.setBackgroundResource(R.drawable.layout_border);
-                        question.setSelectedAns(65);
-                        notifyDataSetChanged();
-                        break;
-                    case R.id.two:
-                        one.setBackgroundResource(R.drawable.layout_border);
-                        two.setBackgroundResource(R.drawable.redio_selected);
-                        three.setBackgroundResource(R.drawable.layout_border);
-                        four.setBackgroundResource(R.drawable.layout_border);
-                        question.setSelectedAns(66);
-                        notifyDataSetChanged();
-                        break;
-                    case R.id.three:
-                        one.setBackgroundResource(R.drawable.layout_border);
-                        two.setBackgroundResource(R.drawable.layout_border);
-                        three.setBackgroundResource(R.drawable.redio_selected);
-                        four.setBackgroundResource(R.drawable.layout_border);
-                        question.setSelectedAns(67);
-                        notifyDataSetChanged();
-                        break;
-                    case R.id.four:
-                        one.setBackgroundResource(R.drawable.layout_border);
-                        two.setBackgroundResource(R.drawable.layout_border);
-                        three.setBackgroundResource(R.drawable.layout_border);
-                        four.setBackgroundResource(R.drawable.redio_selected);
-                        question.setSelectedAns(68);
-                        notifyDataSetChanged();
-                        break;
+                for(int i=0;i<group.getChildCount(); i++){
+                    RadioButton button =(RadioButton) group.getChildAt(i);
+                    if (button.getId() == checkedId) {
+                        button.setBackgroundResource(R.drawable.redio_selected);
+                        question.setSelectedAns(button.getTag().toString());
+                    }
+                    else button.setBackgroundResource(R.drawable.layout_border);
                 }
+                notifyDataSetChanged();
             }
         });
         collection.addView(view);
