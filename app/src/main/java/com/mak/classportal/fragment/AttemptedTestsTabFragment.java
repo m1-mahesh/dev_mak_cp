@@ -25,6 +25,7 @@ import com.mak.classportal.TestsList;
 import com.mak.classportal.adapter.ScheduledTestsAdapter;
 import com.mak.classportal.modales.TestData;
 import com.mak.classportal.utilities.AppSingleTone;
+import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.ExecuteAPI;
 import com.mak.classportal.utilities.UserSession;
 
@@ -60,20 +61,6 @@ public class AttemptedTestsTabFragment extends Fragment {
         sharedPreferences =  getContext().getSharedPreferences("User", Context.MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         getTestList();
-        FloatingActionButton fab = view.findViewById(R.id.fab);
-        if (!RootActivity.hasPermissionToCreate)
-            fab.setVisibility(View.GONE);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//                NewTestActivity.isTest = true;
-//                NewTestActivity.classId = TestsList.CLASS_ID;
-//                getActivity().startActivity(new Intent(getContext(), NewTestActivity.class));
-//                getActivity().overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
-            }
-        });
 
         return view;
     }
@@ -120,7 +107,7 @@ public class AttemptedTestsTabFragment extends Fragment {
             boolean viewResultForTeacher = false;
             if (userSession.isTeacher())
                 viewResultForTeacher = true;
-            ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, viewResultForTeacher, userSession, true);
+            ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, viewResultForTeacher, userSession, Constant.TAB_INDEX_2);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             recyclerView.setAdapter(adapter1);
         }catch (JSONException e){

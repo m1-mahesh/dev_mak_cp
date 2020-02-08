@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import com.mak.classportal.modales.Question;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.ExecuteAPI;
-import com.mak.classportal.utilities.TestTime;
 import com.mak.classportal.utilities.UserSession;
 
 import org.json.JSONException;
@@ -26,8 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class FinishTestActivity extends AppCompatActivity {
 

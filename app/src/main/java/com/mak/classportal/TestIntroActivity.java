@@ -53,8 +53,10 @@ public class TestIntroActivity extends AppCompatActivity {
         String totalMarks = "", noOfQ = "";
         if (testData.getTotalMarks()<10)
             totalMarks="0"+testData.getTotalMarks();
-        if (testData.getTotalMarks()<10)
+        else totalMarks = ""+testData.getTotalMarks();
+        if (testData.totalQuestions<10)
             noOfQ="0"+testData.totalQuestions;
+        else noOfQ = ""+testData.totalQuestions;
         marksText.setText(totalMarks);
         questionText.setText(noOfQ);
         durationText.setText(testData.getDuration()+" Mins");

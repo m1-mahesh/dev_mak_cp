@@ -1,5 +1,6 @@
 package com.mak.classportal;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
@@ -14,6 +15,7 @@ import com.mak.classportal.adapter.ClassListAdapter;
 import com.mak.classportal.adapter.ScheduledTestsAdapter;
 import com.mak.classportal.fragment.ActiveTestsTabFragment;
 import com.mak.classportal.fragment.AttemptedTestsTabFragment;
+import com.mak.classportal.fragment.UpcommingTestsTabFragment;
 import com.mak.classportal.modales.HomeMenu;
 import com.mak.classportal.modales.TestData;
 import com.mak.classportal.utilities.Constant;
@@ -50,6 +52,8 @@ public class TestsList extends AppCompatActivity {
     public static String DIVISION_ID ="1";
     UserSession userSession;
     SharedPreferences sharedPreferences;
+    FloatingActionButton fab;
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,22 @@ public class TestsList extends AppCompatActivity {
         overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
         }
         });*/
+        fab = findViewById(R.id.fab);
+        if (!RootActivity.hasPermissionToCreate) {
+            fab.setVisibility(View.GONE);
+        }
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                NewTestActivity.isTest = true;
+                NewTestActivity.classId = CLASS_ID;
+                startActivity(new Intent(TestsList.this, NewTestActivity.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+            }
+        });
+
     }
 
 
@@ -106,7 +126,7 @@ public class TestsList extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new ActiveTestsTabFragment(), "ACTIVE");
-//        adapter.addFrag(new ActiveTestsTabFragment(), "UPCOMING");
+        adapter.addFrag(new UpcommingTestsTabFragment(), "UPCOMING");
         adapter.addFrag(new AttemptedTestsTabFragment(), "ATTEMPTED");
 
         viewPager.setAdapter(adapter);

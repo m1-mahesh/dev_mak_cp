@@ -34,6 +34,10 @@ public class Constant {
     public static int RESULT_LOAD_IMAGE = 100;
     public static int CAMERA_REQUEST = 200;
 
+    public final static int TAB_INDEX_0 = 0;
+    public final static int TAB_INDEX_1 = 1;
+    public final static int TAB_INDEX_2 = 2;
+
     /*
         Student attempted test with result
         Teacher Created List with class name and id
@@ -42,5 +46,7 @@ public class Constant {
         Active and upcoming test for student
 
     */
+
+
 
 }

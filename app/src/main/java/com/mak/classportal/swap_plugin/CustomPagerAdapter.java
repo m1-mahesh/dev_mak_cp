@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.bumptech.glide.Glide;
 import com.mak.classportal.NewTestActivity;
 import com.mak.classportal.R;
 import com.mak.classportal.modales.Question;
@@ -38,11 +40,14 @@ public class CustomPagerAdapter extends PagerAdapter {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.question_card, collection, false);
 
         TextView textViewCard = view.findViewById(R.id.textViewCard);
+        ImageView imageView = view.findViewById(R.id.qImage);
         Question question = mData.get(position);
         textViewCard.setText(question.getQuestion());
         RadioGroup optionView = view.findViewById(R.id.optionView);
 
-
+        Glide.with(view)
+                .load("https://d1m6qo1ndegqmm.cloudfront.net/uploadimages/sales_offer_mainpic_20110622120613Impart_Banner.jpg")
+                .into(imageView);
         for (Map.Entry<String, String> entry : question.getOptions().entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();

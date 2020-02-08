@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mak.classportal.R;
 import com.mak.classportal.adapter.ScheduledTestsAdapter;
 import com.mak.classportal.modales.TestData;
+import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.UserSession;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class TestResultFragment extends Fragment {
 
         mRecyclerView = rootView.findViewById(R.id.scheduledTest);
         getTestList();
-        ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, true, userSession, false);
+        ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, true, userSession, Constant.TAB_INDEX_2);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(adapter1);
 

@@ -213,10 +213,10 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 closeDrawer();
                 break;
             case R.id.testResult:
-                toolbar.setTitle("Results");
-                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new TestResultFragment())
-                        .commit();
-                closeDrawer();
+//                toolbar.setTitle("Results");
+//                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new TestResultFragment())
+//                        .commit();
+//                closeDrawer();
                 break;
             case R.id.timeTable:
                 toolbar.setTitle("Time Table");

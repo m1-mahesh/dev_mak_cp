@@ -193,6 +193,7 @@ public class NewTestActivity extends AppCompatActivity {
         else if(selectedSubject.equals(""))
             showToast("Please Select Subject");
         else {
+            SelectQuestionsActivity.selectedQ.clear();
             startActivity(new Intent(this, SelectQuestionsActivity.class));
             overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
             finish();
@@ -211,6 +212,7 @@ public class NewTestActivity extends AppCompatActivity {
                 aClass.setId(classObj.getString("class_id"));
                 aClass.setName(classObj.getString("class_name"));
                 aClass.addDivision("", "Select Division");
+                aClass.addDivision("all", "All");
                 for (int j =0; j< classObj.getJSONArray("division_list").length(); j++) {
                     JSONObject obj = classObj.getJSONArray("division_list").getJSONObject(j);
                     aClass.addDivision(obj.getString("division_id"), obj.getString("division_name"));

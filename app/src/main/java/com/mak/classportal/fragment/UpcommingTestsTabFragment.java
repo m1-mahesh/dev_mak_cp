@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,9 +22,7 @@ import com.mak.classportal.NewTestActivity;
 import com.mak.classportal.R;
 import com.mak.classportal.RootActivity;
 import com.mak.classportal.TestsList;
-import com.mak.classportal.adapter.ClassListAdapter;
 import com.mak.classportal.adapter.ScheduledTestsAdapter;
-import com.mak.classportal.modales.StudentClass;
 import com.mak.classportal.modales.TestData;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
@@ -39,15 +36,13 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by @vitovalov on 30/9/15.
  */
-public class ActiveTestsTabFragment extends Fragment {
+public class UpcommingTestsTabFragment extends Fragment {
 
     private ListAdapter mAdapter;
     ArrayList<TestData> allClassData = new ArrayList<>();
@@ -67,7 +62,6 @@ public class ActiveTestsTabFragment extends Fragment {
         sharedPreferences =  getContext().getSharedPreferences("User", Context.MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         getTestList();
-
 
         return view;
     }
@@ -98,29 +92,21 @@ public class ActiveTestsTabFragment extends Fragment {
                     if (object.has("result_data") && !object.getJSONObject("result_data").getString("total_marks_recived").equals("null"))
                         testData.setGainMarks(object.getJSONObject("result_data").getInt("total_marks_recived"));
                     testData.isTestAttempt = object.getBoolean("isTestAttempt");
-
                     try {
                         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        SimpleDateFormat ff= new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", Locale.ENGLISH);
                         Date date = dateFormat.parse(testData.getTestDate());
-                        Date current = ff.parse(new Date().toString());
-                        current = dateFormat.parse(dateFormat.format(current));
 
-                        if (!testData.isTestAttempt && date.equals(current))
+                        if (!testData.isTestAttempt && date.after(new Date()))
                             allClassData.add(testData);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
-
                 }else{
                     try {
                         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        SimpleDateFormat ff= new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", Locale.ENGLISH);
                         Date date = dateFormat.parse(testData.getTestDate());
-                        Date current = ff.parse(new Date().toString());
-                        current = dateFormat.parse(dateFormat.format(current));
 
-                        if (date.equals(current))
+                        if (date.after(new Date()))
                             allClassData.add(testData);
                     }catch (Exception e){
                         e.printStackTrace();
@@ -130,7 +116,7 @@ public class ActiveTestsTabFragment extends Fragment {
             boolean viewResultForTeacher = false;
             if (userSession.isTeacher())
                 viewResultForTeacher = true;
-            ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, viewResultForTeacher, userSession, Constant.TAB_INDEX_0);
+            ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, viewResultForTeacher, userSession, Constant.TAB_INDEX_1);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             recyclerView.setAdapter(adapter1);
         }catch (JSONException e){

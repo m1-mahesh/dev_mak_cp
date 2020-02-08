@@ -10,13 +10,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/qImage"
+            android:src="@drawable/maths_im"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"/>
         <TextView
             android:id="@+id/textViewCard"
-            android:background="@drawable/layout_border"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/qImage"
             android:layout_width="match_parent"
-            android:gravity="center"
+            android:layout_marginLeft="7dp"
+            android:gravity="left"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif-medium"
             android:textSize="15sp"

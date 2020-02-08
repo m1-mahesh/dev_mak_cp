@@ -17,6 +17,7 @@ import com.mak.classportal.R;
 import com.mak.classportal.TestIntroActivity;
 import com.mak.classportal.TestResultActivity;
 import com.mak.classportal.modales.TestData;
+import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.OnClassClick;
 import com.mak.classportal.utilities.UserSession;
 
@@ -35,14 +36,14 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
     private ArrayList<TestData> itemsList;
     private Context mContext;
     private boolean isStep = false;
-    private boolean isAttempted = false;
+    int tabIndex;
 
-    public ScheduledTestsAdapter(Context context, ArrayList<TestData> itemsList, boolean isStep, UserSession userSession, boolean isAttempted) {
+    public ScheduledTestsAdapter(Context context, ArrayList<TestData> itemsList, boolean isStep, UserSession userSession, int tabIndex) {
         this.itemsList = itemsList;
         this.mContext = context;
         this.isStep = isStep;
         this.userSession = userSession;
-        this.isAttempted = isAttempted;
+        this.tabIndex = tabIndex;
     }
 
 
@@ -66,6 +67,9 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
 
         final TestData testData = itemsList.get(i);
         holder.testTitle.setText(testData.getTestTitle());
+        if (tabIndex == Constant.TAB_INDEX_2)holder.tvTitle.setText("Attempted");
+        else if(tabIndex == Constant.TAB_INDEX_1) holder.tvTitle.setText("Ongoing");
+        else if(tabIndex == Constant.TAB_INDEX_0) holder.tvTitle.setText("Active");
 
         Date date = null;
         try {
@@ -85,7 +89,7 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
             holder.testDate.setText(testData.getDuration() + " min *" + (testData.totalQuestions < 10 ? "0" + testData.totalQuestions : testData.totalQuestions) + " Questions");
 
             holder.className.setText(testData.getClassName());
-            if (this.isAttempted) {
+            if (tabIndex==2 && userSession.isStudent()) {
                 String totalMarks = "", noOfQ = "";
                 if (testData.getGainMarks() < 10)
                     totalMarks = "0" + testData.getGainMarks();
@@ -99,7 +103,7 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
             e.printStackTrace();
         }
         if (isStep) {
-            holder.tvTitle.setText("Ongoing");
+
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -107,7 +111,7 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
                         QuickTestResult.TEST_ID = testData.getId();
                         QuickTestResult.isQuick = false;
                         mContext.startActivity(new Intent(mContext, QuickTestResult.class));
-                    } else {
+                    } else if(tabIndex == Constant.TAB_INDEX_2){
                         TestResultActivity.TEST_ID = testData.getId();
                         mContext.startActivity(new Intent(mContext, TestResultActivity.class));
                     }
@@ -115,14 +119,15 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
                 }
             });
         } else {
+
             holder.timeTxt.setText("Time: " + testData.getTestTime());
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (userSession.isStudent() && !isAttempted) {
+                    if (userSession.isStudent() && tabIndex == Constant.TAB_INDEX_0) {
                         TestIntroActivity.testData = testData;
                         mContext.startActivity(new Intent(mContext, TestIntroActivity.class));
-                    } else if (userSession.isStudent()) {
+                    } else if (userSession.isStudent() && tabIndex == Constant.TAB_INDEX_2) {
                         QuickTestResult.TEST_ID = testData.getId();
                         QuickTestResult.isQuick = false;
                         mContext.startActivity(new Intent(mContext, QuickTestResult.class));
