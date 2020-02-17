@@ -204,6 +204,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 if (userSession.isStudent()){
                     TestsList.CLASS_ID = userSession.getAttribute("class_id");
                     TestsList.CLASS_NAME = userSession.getAttribute("class_name");
+                    TestsList.DIVISION_ID = userSession.getAttribute("division_id");
                     startActivity(new Intent(RootActivity.this, TestsList.class));
                     overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }else {

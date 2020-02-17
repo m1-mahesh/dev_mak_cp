@@ -1,9 +1,12 @@
 package com.mak.classportal.modales;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class StudentClass {
+public class StudentClass implements Parcelable {
     public String id;
     public String name;
     public String url;
@@ -55,5 +58,15 @@ public class StudentClass {
         }
 
         return false;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

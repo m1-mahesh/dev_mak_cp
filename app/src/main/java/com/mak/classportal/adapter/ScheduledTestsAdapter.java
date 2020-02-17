@@ -90,7 +90,7 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
 
             holder.className.setText(testData.getClassName());
             if (tabIndex==2 && userSession.isStudent()) {
-                String totalMarks = "", noOfQ = "";
+                String totalMarks = ""+testData.getGainMarks(), noOfQ = ""+testData.getTotalMarks();
                 if (testData.getGainMarks() < 10)
                     totalMarks = "0" + testData.getGainMarks();
                 if (testData.getTotalMarks() < 10)

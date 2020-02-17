@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,14 +51,16 @@ public class NewTestActivity extends AppCompatActivity {
     Fragment contentFragment;
     RecyclerView mRecyclerView;
     ArrayList<HomeMenu> allClassData = new ArrayList<>();
-    AppCompatSpinner selectClass, selectSubject, selectDiv, selectLevel;
-    TextView classText;
+    AppCompatSpinner selectClass, selectSubject, selectLevel;
+    GridLayout divisionsView;
+    TextView classText, selectTxt;
     UserSession userSession;
     SharedPreferences sharedPreferences;
     AppSingleTone appSingleTone;
     ArrayList<StudentClass> classes = new ArrayList<>();
     ArrayList<SubjectData> subjects = new ArrayList<>();
-    String selectedClass = "", selectedDivision = "", selectedSubject = "";
+    public Map<String, String> selectedDivisions = new HashMap<>();
+    String selectedClass = "", selectedSubject = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,11 +76,11 @@ public class NewTestActivity extends AppCompatActivity {
 
         classText = findViewById(R.id.classText);
         selectClass = findViewById(R.id.selectClass);
-        selectDiv = findViewById(R.id.selectDiv);
         selectSubject = findViewById(R.id.selectSubject);
         selectLevel = findViewById(R.id.selectLevel);
         classText.setText(CLASS_NAME);
-
+        selectTxt = findViewById(R.id.selectTxt);
+        divisionsView = findViewById(R.id.divisionsLayout);
 
         if (isTest) {
             selectLevel.setVisibility(View.GONE);
@@ -97,31 +103,33 @@ public class NewTestActivity extends AppCompatActivity {
                     selectedClass = sClass.getId();
                     if (!selectedClass.equals("")) {
                         getSubjectChapters();
-                        selectDiv.setVisibility(View.VISIBLE);
+                        selectTxt.setVisibility(View.VISIBLE);
+                        divisionsView.setVisibility(View.VISIBLE);
                         selectSubject.setVisibility(View.VISIBLE);
                     }
-                    List<StringWithTag> itemList = new ArrayList<>();
+                    divisionsView.removeAllViews();
+
                     for (Map.Entry<String, String> entry : sClass.getDivisions().entrySet()) {
                         String key = entry.getKey();
                         String value = entry.getValue();
-                        itemList.add(new StringWithTag(value, key));
+                        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                        CheckBox checkBox = new CheckBox(NewTestActivity.this);
+                        checkBox.setText(value);
+                        params.setMargins(10,10,0,0);
+                        checkBox.setTypeface(ResourcesCompat.getFont(NewTestActivity.this, R.font.proximanovaregular));
+                        checkBox.setLayoutParams(params);
+                        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                if (isChecked)
+                                    selectedDivisions.put(key, value);
+                                else selectedDivisions.remove(key);
+
+                            }
+                        });
+                        divisionsView.addView(checkBox);
                     }
-                    ArrayAdapter<StringWithTag> spinnerAdapter = new ArrayAdapter<StringWithTag>(NewTestActivity.this, android.R.layout.simple_spinner_item, itemList);
-                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    selectDiv.setAdapter(spinnerAdapter);
-                    selectDiv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            StringWithTag swt = (StringWithTag) parent.getItemAtPosition(position);
-                            selectedDivision = swt.tag.toString();
 
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-
-                        }
-                    });
                 }
 
                 @Override
@@ -138,12 +146,11 @@ public class NewTestActivity extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     SubjectData swt = (SubjectData) parent.getItemAtPosition(position);
                     selectedSubject = swt.getId();
-                    if (!selectSubject.equals("") && !selectedDivision.equals("")) {
+                    if (!selectSubject.equals("") && selectedDivisions.size()>0) {
                         swt.setClassId(selectedClass);
-                        swt.setDivisionId(selectedDivision);
+                        swt.divisions = selectedDivisions;
                         SelectQuestionsActivity.subjectData = swt;
                     }
-                    Log.e("Sel Sub "+swt.getName(), swt.getId());
                 }
 
                 @Override
@@ -188,7 +195,7 @@ public class NewTestActivity extends AppCompatActivity {
         SelectQuestionsActivity.INDEX = 0;
         if (selectedClass.equals(""))
             showToast("Please Select Class");
-        else if(selectedDivision.equals(""))
+        else if(selectedDivisions.size() == 0)
             showToast("Please Select Division");
         else if(selectedSubject.equals(""))
             showToast("Please Select Subject");
@@ -202,6 +209,7 @@ public class NewTestActivity extends AppCompatActivity {
     void prepareClassData(JSONArray apiResponse){
         try {
             classes.clear();
+            SelectQuestionsActivity.divisions.clear();
             StudentClass aClass1 = new StudentClass();
             aClass1.setName("Select Class");
             aClass1.setId("");
@@ -211,11 +219,10 @@ public class NewTestActivity extends AppCompatActivity {
                 StudentClass aClass = new StudentClass();
                 aClass.setId(classObj.getString("class_id"));
                 aClass.setName(classObj.getString("class_name"));
-                aClass.addDivision("", "Select Division");
-                aClass.addDivision("all", "All");
                 for (int j =0; j< classObj.getJSONArray("division_list").length(); j++) {
                     JSONObject obj = classObj.getJSONArray("division_list").getJSONObject(j);
                     aClass.addDivision(obj.getString("division_id"), obj.getString("division_name"));
+                    SelectQuestionsActivity.divisions.put(obj.getString("division_id"), obj.getString("division_name"));
                 }
                 classes.add(aClass);
             }

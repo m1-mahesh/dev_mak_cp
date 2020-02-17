@@ -129,7 +129,7 @@ public class TakeAttendance extends AppCompatActivity {
 
         studentList.setHasFixedSize(true);
 
-        StudentListAdapter adapter1 = new StudentListAdapter(this,students);
+        StudentListAdapter adapter1 = new StudentListAdapter(this,students, true);
 
         studentList.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
 

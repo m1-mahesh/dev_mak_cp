@@ -1,6 +1,7 @@
 package com.mak.classportal.modales;
 
 public class StudentData {
+    public String id;
     public String name;
     public String rollNumber;
     public String className;
@@ -72,5 +73,13 @@ public class StudentData {
 
     public void setProfileImg(String profileImg) {
         this.profileImg = profileImg;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

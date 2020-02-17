@@ -49,7 +49,7 @@ public class TestsList extends AppCompatActivity {
     Toolbar toolbar;
     public static String CLASS_ID ="";
     public static String CLASS_NAME ="";
-    public static String DIVISION_ID ="1";
+    public static String DIVISION_ID ="";
     UserSession userSession;
     SharedPreferences sharedPreferences;
     FloatingActionButton fab;

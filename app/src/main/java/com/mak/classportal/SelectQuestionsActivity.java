@@ -56,7 +56,8 @@ public class SelectQuestionsActivity extends AppCompatActivity {
     ArrayList<HomeMenu> allClassData = new ArrayList<>();
     public static HashMap<String, ArrayList<Question>> chapterQuestions = new HashMap<>();
     TextView totalQText, viewText;
-    public static SubjectData subjectData;
+    public static SubjectData subjectData = new SubjectData();
+    public static Map<String, String> divisions = new HashMap<>();
     AppSingleTone appSingleTone;
     UserSession userSession;
     SharedPreferences sharedPreferences;
@@ -214,13 +215,19 @@ public class SelectQuestionsActivity extends AppCompatActivity {
     public void getChapterQuestions() {
 
         try {
+            JSONArray jsonArray = new JSONArray();
+            for (Map.Entry<String, String> entry : subjectData.divisions.entrySet()) {
+                String key = entry.getKey();
+                jsonArray.put(key);
+            }
             String url = appSingleTone.questionList;
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
             executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
             executeAPI.addPostParam("class_id", subjectData.getClassId());
-            executeAPI.addPostParam("division_id", subjectData.getDivisionId());
+            executeAPI.addPostParam("division_id", jsonArray.toString());
             executeAPI.addPostParam("chapter_id", CHAPTER_ID);
+            executeAPI.addPostParam("subject_id", subjectData.getId());
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override
                 public void onResponse(JSONObject result) {

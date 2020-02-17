@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".NewNoticeActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -15,23 +14,12 @@
         android:layout_height="match_parent"
         android:keepScreenOn="true">
 
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:fontFamily="serif-monospace"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/tvTitle"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="5dp"
             android:orientation="vertical"
+            android:background="@color/white"
             android:padding="20dp"
             android:weightSum="1">
 
@@ -39,8 +27,8 @@
                 android:id="@+id/selectClass"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="10dp"
                 android:textSize="15sp"
+                android:background="@drawable/layout_border"
                 android:fontFamily="@font/opensansregular"
                 android:entries="@array/class_arrays"
                 android:prompt="@string/select_class_prompt" />
@@ -96,16 +84,7 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/twitter"
-            android:fontFamily="@font/opensansbold"
-            android:text="@string/dummy_button"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+
 
     </RelativeLayout>
 

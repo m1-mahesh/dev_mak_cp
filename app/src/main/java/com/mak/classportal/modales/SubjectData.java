@@ -10,6 +10,7 @@ public class SubjectData {
     public String classId;
     public String divisionId;
     public Map<String, String> chapters = new HashMap<>();
+    public Map<String, String> divisions = new HashMap<>();
 
     public String getId() {
         return id;

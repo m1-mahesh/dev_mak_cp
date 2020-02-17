@@ -32,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.Map;
 
 public class FinaliseTest extends AppCompatActivity implements View.OnClickListener {
 
@@ -49,7 +50,6 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finalise_test);
-
         appSingleTone = new AppSingleTone(this);
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
@@ -172,17 +172,21 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    //    teacher_id,org_id,class_id,division_id,test_name,test_description,test_time_in_mints,test_date,test_time,test_instructions
     public void createNewTest() {
 
         try {
             String url = appSingleTone.createTest;
-
+            JSONArray jsonArray = new JSONArray();
+            for (Map.Entry<String, String> entry : SelectQuestionsActivity.subjectData.divisions.entrySet()) {
+                String key = entry.getKey();
+                jsonArray.put(key);
+            }
+            Log.e("Array:", jsonArray.toString());
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
             executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
             executeAPI.addPostParam("class_id", SelectQuestionsActivity.subjectData.getClassId());
-            executeAPI.addPostParam("division_id", SelectQuestionsActivity.subjectData.getDivisionId());
+            executeAPI.addPostParam("division_id", jsonArray.toString());
             executeAPI.addPostParam("teacher_id", userSession.getAttribute("user_id"));
             executeAPI.addPostParam("test_name", titleET.getText().toString());
             executeAPI.addPostParam("test_description", titleET.getText().toString());

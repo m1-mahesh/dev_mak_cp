@@ -68,6 +68,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
                 if (homeMenu.getMenuId() == 5) {
                     TestsList.CLASS_ID = userSession.getAttribute("class_id");
                     TestsList.CLASS_NAME = userSession.getAttribute("class_name");
+                    TestsList.DIVISION_ID = userSession.getAttribute("division_id");
                     ((Activity) mContext).startActivity(new Intent(mContext, TestsList.class));
                 }else {
                     RootActivity.defaultMenu = homeMenu.getMenuId();

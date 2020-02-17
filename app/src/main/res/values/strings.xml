@@ -33,6 +33,8 @@
     <string name="select_division_prompt">Select Class Division</string>
     <string-array name="division_arrays">
         <item>Select Division</item>
+        <item>Div A</item>
+        <item>Div B</item>
     </string-array>
     <string-array name="subject_arrays">
         <item>Select Subject</item>
