@@ -59,9 +59,8 @@
         <activity android:name=".SelectQuestionsActivity" />
         <activity
             android:name=".TakeAttendance"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_take_attendance"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".SplashScreen">
             <intent-filter>

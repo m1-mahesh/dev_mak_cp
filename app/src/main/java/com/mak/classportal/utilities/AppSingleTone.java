@@ -82,6 +82,7 @@ public class AppSingleTone {
     public String submitHomework = "http://nikvay.com/demo/schoolApp/ws-submit-homework";
     public String studentHomeworkList = "http://nikvay.com/demo/schoolApp/ws-homework-list";
     public String teacherHomeworkList = "http://nikvay.com/demo/schoolApp/ws-homework-list-teacher";
+    public String submitClassAttendance = "http://nikvay.com/demo/schoolApp/ws-submit-attendence";
 
     Context context;
     UserSession userSession;

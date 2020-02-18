@@ -44,7 +44,7 @@
             android:text="Sample title"
             android:textColor="@android:color/black"
             android:textSize="10sp" />
-        <LinearLayout
+        <RadioGroup
             android:id="@+id/checkLayout"
             android:layout_below="@+id/tvTitle"
             android:layout_marginTop="10dp"
@@ -52,21 +52,22 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_height="wrap_content">
-            <CheckBox
+            <RadioButton
+                android:id="@+id/presentButton"
                 android:text="Present"
                 android:textSize="8sp"
                 android:fontFamily="serif-monospace"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"/>
-            <CheckBox
+            <RadioButton
+                android:id="@+id/absentButton"
                 android:text="Absent"
                 android:textSize="8sp"
-
                 android:fontFamily="serif-monospace"
                 android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"/>
-        </LinearLayout>
+        </RadioGroup>
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

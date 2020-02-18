@@ -67,20 +67,22 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
                 String key = entry.getKey();
                 String value = entry.getValue();
                 TextView textView = new TextView(mContext);
-                textView.setPadding(5, 5, 5, 5);
+                textView.setPadding(5, 3, 5, 3);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 textView.setTypeface(Typeface.create("serif-monospace", Typeface.NORMAL));
-                params.setMarginStart(30);
                 textView.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border));
-                textView.setText(""+value.charAt((value.length()-1)));
-                textView.setTextSize(25);
+                textView.setText(value);
+                textView.setTextSize(15);
+                params.setMargins(20,15,0,0);
                 textView.setLayoutParams(params);
                 className = value;
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        TakeAttendance.CLASS_ID = singleItem.getName();
-                        TakeAttendance.DIVISION = className;
+                        TakeAttendance.CLASS_ID = singleItem.getId();
+                        TakeAttendance.DIVISION_ID = key;
+                        TakeAttendance.DIVISION_NAME = value;
+                        TakeAttendance.CLASS_NAME = singleItem.getName();
                         mContext.startActivity(new Intent(mContext, TakeAttendance.class));
                         ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
 

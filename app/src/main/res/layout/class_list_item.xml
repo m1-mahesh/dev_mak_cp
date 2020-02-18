@@ -20,7 +20,6 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:fontFamily="@font/opensanssemibold"
             android:text="Sample title"
             android:textColor="@android:color/black"
@@ -34,7 +33,6 @@
             android:layout_below="@id/tvTitle"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:gravity="center"
             android:layout_height="wrap_content">
             <View
                 android:id="@+id/hrView"
@@ -51,11 +49,9 @@
                 android:layout_height="wrap_content" />
             <LinearLayout
                 android:id="@+id/divisionsView"
-                android:padding="10dp"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
                 android:layout_height="wrap_content">
 
             </LinearLayout>

@@ -93,14 +93,8 @@ public class ClassFragment extends Fragment {
                 allClassData.add(aClass);
             }
             ClassListAdapter adapter1 = new ClassListAdapter(getContext(), allClassData);
-            if (menuId.equals(Constant.TAKE_TEST) || menuId.equals(Constant.CASE)) {
-                ClassListAdapter.menuId = menuId;
-                classList.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-            } else {
-                ClassListAdapter.menuId = menuId;
-                classList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-            }
+            ClassListAdapter.menuId = menuId;
+            classList.setLayoutManager(new GridLayoutManager(getContext(), 2));
             classList.setAdapter(adapter1);
         }catch (JSONException e){
             e.printStackTrace();
