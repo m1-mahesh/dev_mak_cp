@@ -44,11 +44,7 @@ public class VideosFragment extends Fragment {
     }
 
     void getTestList() {
-        for (int i = 8; i < 12; i++) {
-            NoticeData notice = new NoticeData();
-            notice.setName(i + "st");
-            allClassData.add(notice);
-        }
+
     }
 
     @Override

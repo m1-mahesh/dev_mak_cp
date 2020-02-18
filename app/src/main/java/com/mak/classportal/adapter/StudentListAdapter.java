@@ -47,7 +47,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
 
         final StudentData singleItem = itemsList.get(i);
         if (!isAttendance){
-            holder.studentName.setText(singleItem.getName() + " (" + singleItem.getRollNumber() + ")");
+            holder.studentName.setText(singleItem.getName());
             holder.studentName.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

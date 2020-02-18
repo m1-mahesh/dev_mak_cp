@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".NewNoticeActivity">
+    android:layout_height="match_parent">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -37,6 +36,7 @@
                 android:id="@+id/ifOneStudent"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
+                android:visibility="gone"
                 android:text="For Particular Students"
                 android:fontFamily="@font/proximanovaregular"
                 android:layout_width="wrap_content"
@@ -92,4 +92,4 @@
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
-</FrameLayout>
+</RelativeLayout>

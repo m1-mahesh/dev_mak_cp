@@ -5,10 +5,20 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.mak.classportal.modales.NoticeData;
 
 public class HomeWorkDetails extends AppCompatActivity {
 
     Toolbar toolbar;
+    public static NoticeData noticeData;
+    ImageView homeworkAttachment;
+    LinearLayout containerView;
+    TextView descriptionText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,6 +26,16 @@ public class HomeWorkDetails extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_id);
         toolbar.setTitle("Attachments");
         setSupportActionBar(toolbar);
+        containerView = findViewById(R.id.containerView);
+        descriptionText = findViewById(R.id.descriptionText);
+        homeworkAttachment = findViewById(R.id.homeworkAttachment);
+        if (noticeData!=null && noticeData.getMediaUrl()!=null&&!noticeData.getMediaUrl().equals("")) {
+            Glide.with(containerView)
+                    .load(noticeData.getMediaUrl())
+                    .into(homeworkAttachment);
+        }
+        if (noticeData!=null)
+            descriptionText.setText(noticeData.getDescription());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     @Override

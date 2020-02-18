@@ -136,9 +136,6 @@ public class ActiveTestsTabFragment extends Fragment {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        for (int i=0;i<5;i++){
-
-        }
     }
 
     @Override

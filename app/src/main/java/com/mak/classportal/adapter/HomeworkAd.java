@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.HomeWorkDetails;
@@ -34,13 +35,6 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
     public SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.homework_list_item, null);
         SingleItemRowHolder mh = new SingleItemRowHolder(v);
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, HomeWorkDetails.class));
-                ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
-            }
-        });
         return mh;
     }
     String className = "";
@@ -50,17 +44,16 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
         final NoticeData singleItem = itemsList.get(i);
 
         holder.tvTitle.setText("HomeWork For Monday");
-        if (menuId.equals(Constant.TAKE_TEST)){
-            holder.devisionText.setVisibility(View.GONE);
-            holder.hrView.setVisibility(View.GONE);
-            holder.tvTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onClassClick!=null)
-                        onClassClick.onClassClick(Constant.SELECT_SUBJECT);
-                }
-            });
-        }
+        holder.descriptionText.setText(singleItem.getDescription());
+        holder.homeworkDate.setText(singleItem.getCreatedOn());
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HomeWorkDetails.noticeData = singleItem;
+                mContext.startActivity(new Intent(mContext, HomeWorkDetails.class));
+                ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+            }
+        });
 
     }
 
@@ -71,16 +64,19 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
-        protected TextView tvTitle;
-        protected TextView devisionText;
+        protected TextView tvTitle, homeworkDate;
+        protected TextView descriptionText;
         protected View hrView;
+        protected CardView cardView;
 
 
         public SingleItemRowHolder(View view) {
             super(view);
-            this.devisionText = view.findViewById(R.id.divisionText);
+            this.descriptionText = view.findViewById(R.id.descriptionText);
             this.hrView = view.findViewById(R.id.hrView);
             this.tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+            this.homeworkDate = (TextView) view.findViewById(R.id.workDate);
+            this.cardView = view.findViewById(R.id.cardView);
 //            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
 
         }

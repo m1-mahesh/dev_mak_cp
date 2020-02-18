@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".NewNoticeActivity">
+    tools:context=".NewHomeworkActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -12,89 +11,133 @@
     <RelativeLayout
         android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:keepScreenOn="true">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
             android:fontFamily="serif-monospace"
+            android:gravity="center"
+            android:padding="20dp"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:layout_below="@id/tvTitle"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:orientation="vertical"
-            android:padding="20dp"
-            android:weightSum="1">
+            android:scrollbars="none"
+            android:layout_above="@id/saveButton"
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/selectClass"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:textSize="15sp"
-                android:fontFamily="@font/opensansregular"
-                android:entries="@array/class_arrays"
-                android:prompt="@string/select_class_prompt" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:weightSum="1">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/title_edit_text"
-                    style="@style/RegistrationEditTextStyle"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="15sp"
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/selectClass"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_border"
+                    android:entries="@array/class_arrays"
                     android:fontFamily="@font/opensansregular"
-                    android:hint="Homework Title" />
+                    android:prompt="@string/select_class_prompt"
+                    android:textSize="15sp" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/selectTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/proximanovaregular"
+                    android:text="Select Division:"
+                    android:textSize="15dp"
+                    android:visibility="gone" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp">
+                <GridLayout
+                    android:id="@+id/divisionsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-                <com.google.android.material.textfield.TextInputEditText
+                </GridLayout>
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/selectSubject"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/layout_border"
+                    android:entries="@array/subject_arrays"
+                    android:prompt="@string/select_division_prompt"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/title_edit_text"
+                        style="@style/RegistrationEditTextStyle"
+                        android:singleLine="true"
+                        android:layout_gravity="center_horizontal"
+                        android:fontFamily="@font/opensansregular"
+                        android:hint="Homework Title"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <EditText
                     android:id="@+id/date_edit_text"
                     style="@style/RegistrationEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
                     android:fontFamily="@font/opensansregular"
-                    android:textSize="15sp"
-                    android:hint="Homework Date" />
+                    android:hint="Submission Date"
+                    android:textSize="15sp" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-            <EditText
-                android:layout_width="match_parent"
-                android:inputType="text|textMultiLine"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/opensansregular"
-                android:background="@drawable/layout_border"
-                android:textSize="15sp"
-                android:hint="@string/notice_description"
-                android:layout_height="90dp"/>
+                <EditText
+                    android:id="@+id/descriptionEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/layout_border"
+                    android:fontFamily="@font/opensansregular"
+                    android:hint="@string/notice_description"
+                    android:inputType="text|textMultiLine"
+                    android:textSize="15sp" />
 
-            <TextView
-                android:id="@+id/attachment"
-                android:layout_marginTop="20dp"
-                android:textSize="15sp"
-                android:fontFamily="@font/opensansregular"
-                android:text="Attachment (If have)"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/attachment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/opensansregular"
+                    android:text="Attachment (If have)"
+                    android:textSize="15sp" />
+                <ImageView
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/imageView"
+                    android:scaleType="fitXY"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp" />
+            </LinearLayout>
+        </ScrollView>
 
         <Button
             android:id="@+id/saveButton"

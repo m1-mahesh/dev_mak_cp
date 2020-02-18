@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewNoticeActivity">
+    tools:context=".FinaliseNotice">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -13,8 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:keepScreenOn="true">
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:fontFamily="serif-monospace"
+            android:gravity="center"
+            android:padding="20dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <LinearLayout
+            android:layout_below="@id/tvTitle"
+            android:layout_above="@id/saveButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
@@ -22,16 +35,6 @@
             android:background="@color/white"
             android:padding="20dp"
             android:weightSum="1">
-
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/selectClass"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:textSize="15sp"
-                android:background="@drawable/layout_border"
-                android:fontFamily="@font/opensansregular"
-                android:entries="@array/class_arrays"
-                android:prompt="@string/select_class_prompt" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -49,22 +52,8 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/date_edit_text"
-                    style="@style/RegistrationEditTextStyle"
-                    android:layout_gravity="center_horizontal"
-                    android:fontFamily="@font/opensansregular"
-                    android:textSize="15sp"
-                    android:hint="Notice Date" />
-
-            </com.google.android.material.textfield.TextInputLayout>
             <EditText
+                android:id="@+id/descriptionEditText"
                 android:layout_width="match_parent"
                 android:inputType="text|textMultiLine"
                 android:layout_marginTop="20dp"
@@ -82,8 +71,23 @@
                 android:text="Attachment (If have)"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_marginTop="20dp"
+                android:id="@+id/imageView"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:layout_height="150dp" />
         </LinearLayout>
-
+        <Button
+            android:layout_alignParentBottom="true"
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/twitter"
+            android:fontFamily="@font/opensansbold"
+            android:text="Save"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
 
     </RelativeLayout>

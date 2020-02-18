@@ -10,10 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
 import com.mak.classportal.modales.NoticeData;
-import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.OnClassClick;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class NoticeListAd extends RecyclerView.Adapter<NoticeListAd.SingleItemRowHolder> {
 
@@ -38,20 +40,25 @@ public class NoticeListAd extends RecyclerView.Adapter<NoticeListAd.SingleItemRo
     @Override
     public void onBindViewHolder(SingleItemRowHolder holder, int i) {
 
-        final NoticeData singleItem = itemsList.get(i);
+        final NoticeData notice = itemsList.get(i);
 
-        holder.tvTitle.setText("Notice For Holiday");
-        if (menuId.equals(Constant.TAKE_TEST)) {
-            holder.devisionText.setVisibility(View.GONE);
-            holder.hrView.setVisibility(View.GONE);
-            holder.tvTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onClassClick != null)
-                        onClassClick.onClassClick(Constant.SELECT_SUBJECT);
-                }
-            });
+        holder.tvTitle.setText(notice.getTitle());
+        holder.description.setText(notice.getDescription());
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(notice.getCreatedOn());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            SimpleDateFormat formatter = new SimpleDateFormat("MMM");
+            String month = formatter.format(date);
+            formatter = new SimpleDateFormat("dd");
+            String dateStr = formatter.format(date);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        holder.noticeDate.setText(notice.getCreatedOn());
 
     }
 
@@ -62,16 +69,17 @@ public class NoticeListAd extends RecyclerView.Adapter<NoticeListAd.SingleItemRo
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
-        protected TextView tvTitle;
-        protected TextView devisionText;
+        protected TextView tvTitle, noticeDate;
+        protected TextView description;
         protected View hrView;
 
 
         public SingleItemRowHolder(View view) {
             super(view);
-            this.devisionText = view.findViewById(R.id.divisionText);
+            this.description = view.findViewById(R.id.divisionsView);
             this.hrView = view.findViewById(R.id.hrView);
             this.tvTitle = view.findViewById(R.id.tvTitle);
+            this.noticeDate = view.findViewById(R.id.noticeDate);
 //            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
 
         }

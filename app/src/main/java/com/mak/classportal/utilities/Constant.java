@@ -38,6 +38,9 @@ public class Constant {
     public final static int TAB_INDEX_1 = 1;
     public final static int TAB_INDEX_2 = 2;
 
+    public static final String NOTICE_TYPE_DIVISION = "divisions";
+    public static final String NOTICE_TYPE_STUDENTS = "students";
+    public static final String NOTICE_TYPE_ALL = "all";
     /*
         Student attempted test with result
         Teacher Created List with class name and id

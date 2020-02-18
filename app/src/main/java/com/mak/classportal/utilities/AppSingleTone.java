@@ -75,6 +75,13 @@ public class AppSingleTone {
     public String attendTestQ = "http://nikvay.com/demo/schoolApp/ws-online-test-question-list-for-student";
     public String testResult = "http://nikvay.com/demo/schoolApp/ws-student-test-result";
     public String testResultAll = "http://nikvay.com/demo/schoolApp/ws-teacher-test-result";
+    public String studentListByDivision = "http://nikvay.com/demo/schoolApp/ws-student-list-for-attendence";
+    public String submitNotice = "http://nikvay.com/demo/schoolApp/ws-submit-notice";
+    public String teacherNoticeList = "http://nikvay.com/demo/schoolApp/ws-teacher-notice-list";
+    public String studentNoticeList = "http://nikvay.com/demo/schoolApp/ws-student-notice-list";
+    public String submitHomework = "http://nikvay.com/demo/schoolApp/ws-submit-homework";
+    public String studentHomeworkList = "http://nikvay.com/demo/schoolApp/ws-homework-list";
+    public String teacherHomeworkList = "http://nikvay.com/demo/schoolApp/ws-homework-list-teacher";
 
     Context context;
     UserSession userSession;

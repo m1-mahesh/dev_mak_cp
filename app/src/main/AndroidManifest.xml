@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SelectStudents"></activity>
+        <activity android:name=".FinaliseNotice"></activity>
+        <activity android:name=".SelectStudents" />
         <activity android:name=".ViewTestQuestions" />
         <activity
             android:name=".HomeWorkDetails"

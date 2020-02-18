@@ -146,7 +146,7 @@ public class NewTestActivity extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     SubjectData swt = (SubjectData) parent.getItemAtPosition(position);
                     selectedSubject = swt.getId();
-                    if (!selectSubject.equals("") && selectedDivisions.size()>0) {
+                    if (!selectedSubject.equals("") && selectedDivisions.size()>0) {
                         swt.setClassId(selectedClass);
                         swt.divisions = selectedDivisions;
                         SelectQuestionsActivity.subjectData = swt;

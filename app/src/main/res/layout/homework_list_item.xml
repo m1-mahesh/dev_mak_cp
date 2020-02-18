@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -26,6 +27,7 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/workDate"
             android:layout_alignParentRight="true"
             android:fontFamily="@font/opensanssemibold"
             android:textSize="12sp"
@@ -55,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
-                android:id="@+id/divisionsView"
+                android:id="@+id/descriptionText"
                 android:fontFamily="@font/opensansregular"
                 android:textSize="15sp"
                 android:ellipsize="end"

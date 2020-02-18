@@ -11,25 +11,15 @@
         android:layout_height="match_parent"
         android:keepScreenOn="true">
 
-        <TextView
-            android:id="@+id/topText"
-            android:textSize="20sp"
-            android:layout_marginTop="5dp"
-            android:layout_centerHorizontal="true"
-            android:text="Select Notice For Who"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/proximanovaregular"
-            />
+
         <LinearLayout
-            android:layout_below="@+id/topText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
             android:background="@color/white"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="20dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
             android:weightSum="1">
 
             <RelativeLayout
@@ -51,7 +41,7 @@
                     android:layout_below="@+id/allC"
                     android:layout_marginTop="20dp"
                     android:layout_centerHorizontal="true"
-                    android:text="For All Classes"
+                    android:text="All Classes"
                     android:gravity="center"
                     android:fontFamily="@font/proximanovaregular"
                     android:layout_width="wrap_content"
@@ -80,10 +70,10 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/single_class" />
                 <TextView
-                    android:text="For Particular Class/Students"
+                    android:text="Particular Class/Students"
                     android:gravity="center"
                     android:layout_below="@+id/singleC"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="20dp"
                     android:layout_centerHorizontal="true"
                     android:fontFamily="@font/proximanovaregular"
                     android:layout_width="wrap_content"
@@ -91,7 +81,17 @@
             </RelativeLayout>
 
         </LinearLayout>
-
+        <TextView
+            android:id="@+id/topText"
+            android:textSize="20sp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:text="Select Notice For Who"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/proximanovaregular"
+            />
     </RelativeLayout>
 
     <!-- This FrameLayout insets its children based on system windows using

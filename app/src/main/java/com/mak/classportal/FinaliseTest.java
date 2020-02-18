@@ -202,7 +202,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
                     try {
                         Log.d("Result", result.toString());
                         if (result.getInt("error_code") == 200) {
-                            showToast("Created");
+                            showToast("New Test Created");
                             addQuestion(result.getString("test_id"));
                         }
                     }catch (JSONException e){
@@ -238,7 +238,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
                     try {
                         Log.d("Result", result.toString());
                         if (result.getInt("error_code") == 200) {
-                            showToast("Created");
+                            showToast("New Test Created");
                             SelectQuestionsActivity.chapterQuestions.clear();
                             SelectQuestionsActivity.subjectData = null;
                             ViewTestQuestions.selectedQ.clear();

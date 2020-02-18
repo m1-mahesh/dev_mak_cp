@@ -58,13 +58,6 @@ public class PaperListFragment extends Fragment {
 
     }
 
-    void getTestList() {
-        for (int i = 8; i < 12; i++) {
-            NoticeData notice = new NoticeData();
-            notice.setName(i + "st");
-            allClassData.add(notice);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +65,6 @@ public class PaperListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_paper_list, container, false);
 
         mRecyclerView = rootView.findViewById(R.id.paperList);
-        getTestList();
         PaperListAd adapter1 = new PaperListAd(getContext(), allClassData);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(adapter1);

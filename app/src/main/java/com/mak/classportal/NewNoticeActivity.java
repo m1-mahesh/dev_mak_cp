@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -80,9 +81,6 @@ public class NewNoticeActivity extends AppCompatActivity implements View.OnClick
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         ((TextView) findViewById(R.id.tvTitle)).setText(R.string.new_notice);
         mViewPager =  findViewById(R.id.pager);
-        mViewPager.setAdapter(new SamplePagerAdapter(
-                getSupportFragmentManager()));
-
         mViewPager.setPagingEnabled(false);
         ((Button) findViewById(R.id.saveButton)).setOnClickListener(this);
         ((Button) findViewById(R.id.prevButton)).setOnClickListener(this);
@@ -136,7 +134,30 @@ public class NewNoticeActivity extends AppCompatActivity implements View.OnClick
             case R.id.time_edit_text:
                 break;
             case R.id.saveButton:
-                mViewPager.setCurrentItem(1,true);
+                if (NoticeStepOneFragment.selectedOption == 0){
+                    SelectStudents.selectedStudents.clear();
+                    FinaliseNotice.NOTICE_TYPE = Constant.NOTICE_TYPE_ALL;
+                    startActivity(new Intent(this, FinaliseNotice.class));
+                    overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                }else if (NoticeStepOneFragment.selectedOption == 1) {
+                    if (mViewPager.getCurrentItem() == 0)
+                        mViewPager.setCurrentItem(1, true);
+                    else {
+                        if (!NoticeStepTwoFragment.selectedClass.equals("")) {
+                            if (NoticeStepTwoFragment.selectedDivisions.size() > 0) {
+                                SelectStudents.selectedStudents.clear();
+                                FinaliseNotice.NOTICE_TYPE = Constant.NOTICE_TYPE_DIVISION;
+                                FinaliseNotice.CLASS_ID = NoticeStepTwoFragment.selectedClass;
+                                startActivity(new Intent(this, FinaliseNotice.class));
+                                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                            } else {
+                                showToast("Please Select Division(S)");
+                            }
+                        } else {
+                            showToast("Please Select Class");
+                        }
+                    }
+                }else showToast("Please Select Notice For What");
                 break;
             case R.id.prevButton:
                 mViewPager.setCurrentItem(0,true);
@@ -196,6 +217,8 @@ public class NewNoticeActivity extends AppCompatActivity implements View.OnClick
                 classes.add(aClass);
             }
 
+            mViewPager.setAdapter(new SamplePagerAdapter(
+                    getSupportFragmentManager()));
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -239,80 +262,12 @@ public class NewNoticeActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    void showPicPopup(){
-        if (appSingleTone.checkAndRequestPermissions()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
-            builder.setTitle("Select option");
-            final CharSequence[] items = {"Gallery", "Camera"};
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int item) {
-                    if (item == 0) {
-                        isCamera = false;
-                        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(i, Constant.RESULT_LOAD_IMAGE);
-                    } else if (item == 1) {
-                        isCamera = true;
-                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(cameraIntent, Constant.CAMERA_REQUEST);
-                    }
-                }
-            });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
-    }
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constant.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            if (cursor == null) { // Source is Dropbox or other similar local file path
-                picturePath = selectedImage.getPath();
-
-            } else {
-                int idx = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                picturePath = cursor.getString(idx);
-                cursor.close();
-            }
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-            //new UpdateProfile().execute();
-//            uploadBitmap(BitmapFactory.decodeFile(picturePath));
-
-        } else if (requestCode == Constant.CAMERA_REQUEST && resultCode == RESULT_OK) {
-
-
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-
-            Uri tempUri = getImageUri(this, photo);
-
-            // CALL THIS METHOD TO GET THE ACTUAL PATH
-            File finalFile = new File(getRealPathFromURI(tempUri));
-
-            picturePath = finalFile.toString();
-            imageView.setImageBitmap(photo);
-            //new UpdateProfile().execute();
-//            uploadBitmap(photo);
-        } else {
-            //Toast.makeText(this, "Please Select Image", Toast.LENGTH_LONG)
-            //   .show();
+        if (requestCode == Constant.ACTIVITY_FINISH_REQUEST_CODE && resultCode == Constant.ACTIVITY_FINISH_REQUEST_CODE) {
+            setResult(Constant.ACTIVITY_FINISH_REQUEST_CODE);
+            finish();
         }
-
-    }
-
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = this.getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
     }
 }

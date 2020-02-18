@@ -2,6 +2,7 @@ package com.mak.classportal.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +14,16 @@ import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.mak.classportal.R;
 import com.mak.classportal.SelectStudents;
 import com.mak.classportal.modales.StudentClass;
+import com.mak.classportal.utilities.Constant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,14 +31,18 @@ import java.util.Map;
 
 public class NoticeStepTwoFragment extends Fragment {
 
-    public Map<String, String> selectedDivisions = new HashMap<>();
+    public static Map<String, String> selectedDivisions = new HashMap<>();
     GridLayout divisionsGridLayout;
     Spinner classSpinner, divisionSpinner;
     CheckBox ifConditionCheckBox;
     TextView selectTopText;
     Button selectStudentButton;
     ArrayList<StudentClass> classes = new ArrayList<>();
-    String selectedClass = "";
+    public static String selectedClass = "";
+
+    TextView customToast;
+    LayoutInflater inflater;
+    View tostLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,8 +61,12 @@ public class NoticeStepTwoFragment extends Fragment {
         selectStudentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getContext().startActivity(new Intent(getContext(), SelectStudents.class));
-                getActivity().overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                if (!SelectStudents.divisionId.equals("")&&!SelectStudents.classId.equals("")) {
+                    getActivity().startActivityForResult(new Intent(getContext(), SelectStudents.class), Constant.ACTIVITY_FINISH_REQUEST_CODE);
+                    getActivity().overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                }else {
+                    showToast("Please Select Division");
+                }
             }
         });
         ifConditionCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -76,8 +88,22 @@ public class NoticeStepTwoFragment extends Fragment {
         spinnerImplementation();
         return rootView;
     }
+    void showToast(String toastText){
+        inflater = getLayoutInflater();
+        tostLayout = inflater.inflate(R.layout.toast_layout_file,
+                (ViewGroup) getActivity().findViewById(R.id.toast_layout_root));
+        customToast = tostLayout.findViewById(R.id.text);
+        Toast toast = new Toast(getActivity());
+        customToast.setText(toastText);
+        customToast.setTypeface(ResourcesCompat.getFont(this.getActivity(), R.font.opensansregular));
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(tostLayout);
+        toast.show();
+    }
 
     void spinnerImplementation() {
+
         ArrayAdapter<StudentClass> adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, classes);
         classSpinner.setAdapter(adapter);
         classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -85,6 +111,8 @@ public class NoticeStepTwoFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 StudentClass sClass = (StudentClass) parent.getSelectedItem();
                 selectedClass = sClass.getId();
+                selectedDivisions.clear();
+                ifConditionCheckBox.setVisibility(View.VISIBLE);
                 if (!selectedClass.equals("") && !ifConditionCheckBox.isChecked()) {
                     divisionsGridLayout.setVisibility(View.VISIBLE);
                     selectTopText.setVisibility(View.VISIBLE);
@@ -94,9 +122,13 @@ public class NoticeStepTwoFragment extends Fragment {
                 }
                 divisionsGridLayout.removeAllViews();
 
+                String[] divisionArrays = new String[sClass.getDivisions().size()+1];
+                int i = 0;
+                divisionArrays[i++] = "Select Division";
                 for (Map.Entry<String, String> entry : sClass.getDivisions().entrySet()) {
                     String key = entry.getKey();
                     String value = entry.getValue();
+                    divisionArrays[i++] = value;
                     GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                     CheckBox checkBox = new CheckBox(getContext());
                     checkBox.setText(value);
@@ -114,7 +146,32 @@ public class NoticeStepTwoFragment extends Fragment {
                     });
                     divisionsGridLayout.addView(checkBox);
                 }
+                ArrayAdapter<String> adapter1 = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, divisionArrays);
+                divisionSpinner.setAdapter(adapter1);
+                divisionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        String sDiv = (String) adapterView.getSelectedItem();
+                        for (Map.Entry<String, String> entry : sClass.getDivisions().entrySet()) {
+                            String key = entry.getKey();
+                            String value = entry.getValue();
+                            if (sDiv.equals(value)){
+                                SelectStudents.classId = selectedClass;
+                                SelectStudents.divisionId = key;
+                                break;
+                            }else {
+                                SelectStudents.classId = "";
+                                SelectStudents.divisionId = "";
+                            }
+                        }
 
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
             }
 
             @Override
@@ -124,4 +181,8 @@ public class NoticeStepTwoFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
