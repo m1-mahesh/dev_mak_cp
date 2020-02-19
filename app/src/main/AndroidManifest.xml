@@ -39,6 +39,10 @@
             android:label="@string/title_activity_tests_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".ViewAttendanceActivity"
+            android:label="@string/title_activity_tests_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".QuickTestResult"
             android:label="@string/title_activity_tests_list"
             android:theme="@style/AppTheme.NoActionBar" />

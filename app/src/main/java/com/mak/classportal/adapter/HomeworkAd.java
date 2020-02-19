@@ -50,6 +50,7 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
             @Override
             public void onClick(View v) {
                 HomeWorkDetails.noticeData = singleItem;
+
                 mContext.startActivity(new Intent(mContext, HomeWorkDetails.class));
                 ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
             }

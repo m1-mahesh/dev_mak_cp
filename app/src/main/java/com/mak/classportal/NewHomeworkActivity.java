@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -57,8 +58,8 @@ import java.util.Map;
 
 public class NewHomeworkActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public Map<String, String> selectedDivisions = new HashMap<>();
     EditText txtDate, titleEditText, descriptionEditText;
-    private int mYear, mMonth, mDay, mHour, mMinute;
     TextView customToast, attachmentText, selectTxt;
     GridLayout divisionsView;
     LayoutInflater inflater;
@@ -71,8 +72,13 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
     SharedPreferences sharedPreferences;
     ArrayList<StudentClass> classes = new ArrayList<>();
     ArrayList<SubjectData> subjects = new ArrayList<>();
-    public Map<String, String> selectedDivisions = new HashMap<>();
     String selectedClass = "", selectedSubject = "";
+    boolean isCamera;
+    ImageView imageView;
+    String picturePath = "";
+    String imgBase64Str = "";
+    private int mYear, mMonth, mDay, mHour, mMinute;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,14 +102,14 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         txtDate.setKeyListener(null);
 
         c = Calendar.getInstance();
-        ((Button) findViewById(R.id.saveButton)).setOnClickListener(this);
+        findViewById(R.id.saveButton).setOnClickListener(this);
         getClassDivision();
     }
 
-    void showToast(String toastText){
+    void showToast(String toastText) {
         inflater = getLayoutInflater();
         tostLayout = inflater.inflate(R.layout.toast_layout_file,
-                (ViewGroup) findViewById(R.id.toast_layout_root));
+                findViewById(R.id.toast_layout_root));
         customToast = tostLayout.findViewById(R.id.text);
         Toast toast = new Toast(getApplicationContext());
         customToast.setText(toastText);
@@ -113,9 +119,10 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         toast.setView(tostLayout);
         toast.show();
     }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.date_edit_text:
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
@@ -140,15 +147,15 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             case R.id.saveButton:
                 if (selectedClass.equals(""))
                     showToast("Please Select Class");
-                else if(selectedDivisions.size() == 0)
+                else if (selectedDivisions.size() == 0)
                     showToast("Please Select Division");
-                else if(selectedSubject.equals(""))
+                else if (selectedSubject.equals(""))
                     showToast("Please Select Subject");
-                else if(titleEditText.getText().toString().equals(""))
+                else if (titleEditText.getText().toString().equals(""))
                     showToast("Please Enter Homework Title");
-                else if(txtDate.getText().toString().equals(""))
+                else if (txtDate.getText().toString().equals(""))
                     showToast("Please Enter Submission Date");
-                else if(descriptionEditText.getText().toString().equals(""))
+                else if (descriptionEditText.getText().toString().equals(""))
                     showToast("Please Enter Homework Description");
                 else submitHomework();
                 break;
@@ -159,7 +166,8 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         }
 
     }
-    void spinnerImplementation(boolean isClass){
+
+    void spinnerImplementation(boolean isClass) {
         if (isClass) {
             ArrayAdapter<StudentClass> adapter = new ArrayAdapter<StudentClass>(this, android.R.layout.simple_spinner_dropdown_item, classes);
             classSpinner.setAdapter(adapter);
@@ -182,7 +190,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                         CheckBox checkBox = new CheckBox(NewHomeworkActivity.this);
                         checkBox.setText(value);
-                        params.setMargins(10,10,0,0);
+                        params.setMargins(10, 10, 0, 0);
                         checkBox.setTypeface(ResourcesCompat.getFont(NewHomeworkActivity.this, R.font.proximanovaregular));
                         checkBox.setLayoutParams(params);
                         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -204,7 +212,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
 
                 }
             });
-        }else {
+        } else {
             ArrayAdapter<SubjectData> spinnerAdapter = new ArrayAdapter<>(NewHomeworkActivity.this, android.R.layout.simple_spinner_item, subjects);
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             subjectSpinner.setAdapter(spinnerAdapter);
@@ -213,7 +221,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     SubjectData swt = (SubjectData) parent.getItemAtPosition(position);
                     selectedSubject = swt.getId();
-                    if (!selectedSubject.equals("") && selectedDivisions.size()>0) {
+                    if (!selectedSubject.equals("") && selectedDivisions.size() > 0) {
                         swt.setClassId(selectedClass);
                         swt.divisions = selectedDivisions;
                         SelectQuestionsActivity.subjectData = swt;
@@ -227,6 +235,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             });
         }
     }
+
     public void getClassDivision() {
 
         try {
@@ -264,7 +273,8 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             e.printStackTrace();
         }
     }
-    void prepareClassData(JSONArray apiResponse){
+
+    void prepareClassData(JSONArray apiResponse) {
         try {
             classes.clear();
             SelectQuestionsActivity.divisions.clear();
@@ -277,7 +287,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                 StudentClass aClass = new StudentClass();
                 aClass.setId(classObj.getString("class_id"));
                 aClass.setName(classObj.getString("class_name"));
-                for (int j =0; j< classObj.getJSONArray("division_list").length(); j++) {
+                for (int j = 0; j < classObj.getJSONArray("division_list").length(); j++) {
                     JSONObject obj = classObj.getJSONArray("division_list").getJSONObject(j);
                     aClass.addDivision(obj.getString("division_id"), obj.getString("division_name"));
                     SelectQuestionsActivity.divisions.put(obj.getString("division_id"), obj.getString("division_name"));
@@ -285,11 +295,12 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                 classes.add(aClass);
             }
             spinnerImplementation(true);
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-    void prepareSubjectChapter(JSONArray apiResponse){
+
+    void prepareSubjectChapter(JSONArray apiResponse) {
         try {
             subjects.clear();
             SubjectData sub = new SubjectData();
@@ -301,15 +312,15 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                 SubjectData aClass = new SubjectData();
                 aClass.setId(classObj.getString("id"));
                 aClass.setName(classObj.getString("subject_name"));
-                for (int j =0; j< classObj.getJSONArray("chapter_list").length(); j++) {
+                for (int j = 0; j < classObj.getJSONArray("chapter_list").length(); j++) {
                     JSONObject obj = classObj.getJSONArray("chapter_list").getJSONObject(j);
                     aClass.addChapter(obj.getString("id"), obj.getString("chapter_name"));
                 }
-                Log.e("",aClass.id);
+                Log.e("", aClass.id);
                 subjects.add(aClass);
             }
             spinnerImplementation(false);
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
@@ -351,6 +362,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             e.printStackTrace();
         }
     }
+
     void showPicPopup() {
         if (appSingleTone.checkAndRequestPermissions()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
@@ -373,9 +385,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             alert.show();
         }
     }
-    boolean isCamera;
-    ImageView imageView;
-    String picturePath = "";
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constant.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
@@ -393,9 +403,9 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                 cursor.close();
             }
             Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
-            if (bitmap!=null) {
+            if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
-                //toBase64(bitmap);
+                new MakeBitmap().execute(bitmap);
             }
 
         } else if (requestCode == Constant.CAMERA_REQUEST && resultCode == RESULT_OK) {
@@ -411,25 +421,23 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             picturePath = finalFile.toString();
             imageView.setImageBitmap(photo);
 
-            if (photo!=null)
-                toBase64(photo);
-        } else {
-            //Toast.makeText(this, "Please Select Image", Toast.LENGTH_LONG)
-            //   .show();
+            if (photo != null)
+                new MakeBitmap().execute(photo);
         }
 
     }
-    String imgBase64Str = "";
-    void toBase64(Bitmap bitmap){
+
+    String toBase64(Bitmap bitmap) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
             imgBase64Str = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        }catch (Exception e){
+            return imgBase64Str;
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
+    return null;
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -493,5 +501,23 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    class MakeBitmap extends AsyncTask<Bitmap, Boolean, String> {
+
+        protected void onPreExecute() {
+
+        }
+
+        protected String doInBackground(Bitmap... params) {
+            Bitmap bitmap = params[0];
+            return toBase64(bitmap);
+        }
+
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+        }
+
     }
 }

@@ -196,8 +196,10 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.videos:
                 toolbar.setTitle("Videos");
-                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new VideosFragment())
-                        .commit();
+                /*getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new VideosFragment())
+                        .commit();*/
+                startActivity(new Intent(RootActivity.this, ViewAttendanceActivity.class));
+                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 closeDrawer();
                 break;
             case R.id.testSchedule:

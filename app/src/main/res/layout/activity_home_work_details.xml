@@ -24,12 +24,22 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/homeworkAttachment"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:src="@drawable/homework"
-        android:scaleType="fitXY"
-        android:layout_height="400dp"/>
+        android:layout_height="400dp">
+        <ImageView
+            android:id="@+id/homeworkAttachment"
+            android:layout_width="match_parent"
+            android:src="@drawable/homework"
+            android:scaleType="fitXY"
+            android:layout_height="match_parent"/>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerVertical="true"
+            android:visibility="visible" />
+    </RelativeLayout>
 
     <TextView
         android:layout_margin="15dp"

@@ -59,7 +59,11 @@ public class HomeworkFragment extends Fragment {
 
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getHomeworkList();
+    }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -145,7 +149,6 @@ public class HomeworkFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
 
 }
 
