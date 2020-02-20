@@ -1,5 +1,7 @@
 package com.mak.classportal.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,19 +23,37 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.mak.classportal.R;
+import com.mak.classportal.SelectQuestionsActivity;
+import com.mak.classportal.TestsList;
+import com.mak.classportal.adapter.ScheduledTestsAdapter;
+import com.mak.classportal.modales.TestData;
+import com.mak.classportal.utilities.AppSingleTone;
+import com.mak.classportal.utilities.Constant;
+import com.mak.classportal.utilities.ExecuteAPI;
+import com.mak.classportal.utilities.UserSession;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class CompactCalendarFragment extends Fragment {
@@ -42,12 +62,24 @@ public class CompactCalendarFragment extends Fragment {
     private Calendar currentCalender = Calendar.getInstance(Locale.getDefault());
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.getDefault());
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMM - yyyy", Locale.getDefault());
+    private SimpleDateFormat monthFormat = new SimpleDateFormat("MM", Locale.getDefault());
     private boolean shouldShow = false;
     private CompactCalendarView compactCalendarView;
 
+    AppSingleTone appSingleTone;
+    SharedPreferences sharedPreferences;
+    UserSession userSession;
+    TextView totalAbsentText, totalPresentText;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mainTabView = inflater.inflate(R.layout.calendar_activity,container,false);
+
+        appSingleTone = new AppSingleTone(getContext());
+        sharedPreferences = getContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+        userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
+
+        totalAbsentText = mainTabView.findViewById(R.id.absentCount);
+        totalPresentText = mainTabView.findViewById(R.id.presentCount);
 
         final List<String> mutableBookings = new ArrayList<>();
 
@@ -61,17 +93,14 @@ public class CompactCalendarFragment extends Fragment {
         // below allows you to configure color for the current day in the month
         // compactCalendarView.setCurrentDayBackgroundColor(getResources().getColor(R.color.black));
         // below allows you to configure colors for the current day the user has selected
-        // compactCalendarView.setCurrentSelectedDayBackgroundColor(getResources().getColor(R.color.dark_red));
+        compactCalendarView.setCurrentSelectedDayBackgroundColor(getResources().getColor(R.color.colorPrimary));
         compactCalendarView.setUseThreeLetterAbbreviation(false);
-        compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
+//        compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
         compactCalendarView.setIsRtl(false);
         compactCalendarView.displayOtherMonthDays(false);
         //compactCalendarView.setIsRtl(true);
-        loadEvents();
-        loadEventsForYear(2017);
-        compactCalendarView.invalidate();
 
-        logEventsByMonth(compactCalendarView);
+
 
         // below line will display Sunday as the first day of the week
         // compactCalendarView.setShouldShowMondayAsFirstDay(false);
@@ -107,6 +136,7 @@ public class CompactCalendarFragment extends Fragment {
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 calTitle.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+                getStudentAttendance(Integer.parseInt(monthFormat.format(compactCalendarView.getFirstDayOfCurrentMonth())));
             }
         });
 
@@ -115,6 +145,7 @@ public class CompactCalendarFragment extends Fragment {
             public void onClick(View v) {
                 compactCalendarView.scrollLeft();
                 calTitle.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+                getStudentAttendance(Integer.parseInt(monthFormat.format(compactCalendarView.getFirstDayOfCurrentMonth())));
             }
         });
 
@@ -123,6 +154,7 @@ public class CompactCalendarFragment extends Fragment {
             public void onClick(View v) {
                 compactCalendarView.scrollRight();
                 calTitle.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+                getStudentAttendance(Integer.parseInt(monthFormat.format(compactCalendarView.getFirstDayOfCurrentMonth())));
             }
         });
 
@@ -144,6 +176,7 @@ public class CompactCalendarFragment extends Fragment {
         // uncomment below to open onCreate
         //openCalendarOnCreate(v);
 
+        getStudentAttendance(currentCalender.get(Calendar.MONTH));
         return mainTabView;
     }
 
@@ -197,62 +230,8 @@ public class CompactCalendarFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    private void loadEvents() {
-        addEvents(-1, -1);
-        addEvents(Calendar.DECEMBER, -1);
-        addEvents(Calendar.AUGUST, -1);
-    }
-
-    private void loadEventsForYear(int year) {
-        addEvents(Calendar.DECEMBER, year);
-        addEvents(Calendar.AUGUST, year);
-    }
-
-    private void logEventsByMonth(CompactCalendarView compactCalendarView) {
-        currentCalender.setTime(new Date());
-        currentCalender.set(Calendar.DAY_OF_MONTH, 1);
-        currentCalender.set(Calendar.MONTH, Calendar.AUGUST);
-        List<String> dates = new ArrayList<>();
-        for (Event e : compactCalendarView.getEventsForMonth(new Date())) {
-            dates.add(dateFormatForDisplaying.format(e.getTimeInMillis()));
-        }
-        Log.d(TAG, "Events for Aug with simple date formatter: " + dates);
-        Log.d(TAG, "Events for Aug month using default local and timezone: " + compactCalendarView.getEventsForMonth(currentCalender.getTime()));
-    }
-
-    private void addEvents(int month, int year) {
-        currentCalender.setTime(new Date());
-        currentCalender.set(Calendar.DAY_OF_MONTH, 1);
-        Date firstDayOfMonth = currentCalender.getTime();
-        for (int i = 0; i < 6; i++) {
-            currentCalender.setTime(firstDayOfMonth);
-            if (month > -1) {
-                currentCalender.set(Calendar.MONTH, month);
-            }
-            if (year > -1) {
-                currentCalender.set(Calendar.ERA, GregorianCalendar.AD);
-                currentCalender.set(Calendar.YEAR, year);
-            }
-            currentCalender.add(Calendar.DATE, i);
-            setToMidnight(currentCalender);
-            long timeInMillis = currentCalender.getTimeInMillis();
-
-            List<Event> events = getEvents(timeInMillis, i);
-            if (events!=null)
-                compactCalendarView.addEvents(events);
-        }
-    }
-
-    private List<Event> getEvents(long timeInMillis, int day) {
-        if (day < 2) {
-            return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)));
-        }
-        return null;
+    private List<Event> getEvents(long timeInMillis) {
+        return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)));
     }
 
     private void setToMidnight(Calendar calendar) {
@@ -260,5 +239,99 @@ public class CompactCalendarFragment extends Fragment {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
+    }
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    HashMap<String, String> attendanceData = new HashMap<>();
+    int totalAbsent = 0, totalPresent = 0;
+    void addEvents(){
+        try {
+            compactCalendarView.removeAllEvents();
+            Calendar calendar = Calendar.getInstance();
+            Calendar todayCalendar1 = Calendar.getInstance();
+            calendar.setTime(compactCalendarView.getFirstDayOfCurrentMonth());
+            int day = calendar.get(Calendar.DATE);
+            calendar.set(Calendar.DATE, day);
+            for(int i = 0; i<currentCalender.getActualMaximum(Calendar.DATE); i ++){
+                if (i !=0)
+                    calendar.add(Calendar.DAY_OF_MONTH, 1);
+                if (todayCalendar1.after(calendar)) {
+                    String formattedDate = dateFormat.format(calendar.getTime());
+                    Date date = dateFormat.parse(formattedDate);
+                    boolean isPresent = false;
+                    if (attendanceData.containsKey(formattedDate)) {
+                        if (attendanceData.get(formattedDate).equals("0"))
+                            isPresent = false;
+                        else isPresent = true;
+                    }
+                    if (date != null && !isPresent) {
+                        totalAbsent ++;
+                        currentCalender.setTime(date);
+                        Date firstDayOfMonth = currentCalender.getTime();
+                        currentCalender.setTime(firstDayOfMonth);
+                        setToMidnight(currentCalender);
+                        long timeInMillis = currentCalender.getTimeInMillis();
+
+                        List<Event> events = getEvents(timeInMillis);
+                        if (events != null)
+                            compactCalendarView.addEvents(events);
+                    }else totalPresent++;
+                }
+            }
+            compactCalendarView.invalidate();
+            totalPresentText.setText("Total Present: "+totalPresent+" days");
+            totalAbsentText.setText("Total Absent: "+totalAbsent+" days");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    void parseTestList(JSONObject jsonObject){
+        try {
+            attendanceData.clear();
+            totalAbsent = 0;
+            totalPresent = 0;
+            JSONArray attendanceList = jsonObject.getJSONArray("attendances_list");
+            for(int i=0; i<attendanceList.length();i++) {
+                JSONObject object = attendanceList.getJSONObject(i);
+                attendanceData.put(object.getString("attendance_date"), object.getString("attendance_status"));
+            }
+            addEvents();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        if (userSession!=null&&appSingleTone!=null)
+//            getStudentAttendance("2");
+    }
+
+    public void getStudentAttendance(int month) {
+
+        try {
+            String url = appSingleTone.studentAttendance;
+            ExecuteAPI executeAPI = new ExecuteAPI(getContext(), url, null);
+            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
+            Log.e("Org id", userSession.getAttribute("org_id"));
+            executeAPI.addPostParam("month", ""+month);
+            executeAPI.addPostParam("student_id", userSession.getAttribute("user_id"));
+            executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                @Override
+                public void onResponse(JSONObject result) {
+                    Log.d("Result", result.toString());
+                    parseTestList(result);
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                    Log.d("Result", errorResponse.toString());
+                }
+            });
+            executeAPI.showProcessBar(true);
+            executeAPI.executeStringRequest(Request.Method.POST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

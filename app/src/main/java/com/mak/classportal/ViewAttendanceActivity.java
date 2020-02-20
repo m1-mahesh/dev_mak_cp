@@ -305,7 +305,6 @@ public class ViewAttendanceActivity extends AppCompatActivity {
             .DataObjectHolder> {
 
 
-        private final OnStartDragListener mDragStartListener;
         StudentData d1;
         private String LOG_TAG = "MyRecyclerViewAdapter";
         private ArrayList<StudentData> mDataset;
@@ -313,8 +312,7 @@ public class ViewAttendanceActivity extends AppCompatActivity {
         private Context context;
         private UserSession userSession;
 
-        public AppoitmentAdapter(Context context, ArrayList<StudentData> myDataset, OnStartDragListener dragStartListener, RecyclerView recyclerView, UserSession userSession) {
-            mDragStartListener = dragStartListener;
+        public AppoitmentAdapter(Context context, ArrayList<StudentData> myDataset, RecyclerView recyclerView, UserSession userSession) {
             mDataset = myDataset;
             this.recyclerView = recyclerView;
             this.context = context;
