@@ -35,14 +35,15 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
-        Question modelObject = mData.get(position);
         LayoutInflater inflater = LayoutInflater.from(mContext);
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.question_card, collection, false);
 
         TextView textViewCard = view.findViewById(R.id.textViewCard);
+        TextView marksTextView = view.findViewById(R.id.marksTxt);
         ImageView imageView = view.findViewById(R.id.qImage);
         Question question = mData.get(position);
         textViewCard.setText(question.getQuestion());
+        marksTextView.setText("Marks: "+question.getMarks());
         RadioGroup optionView = view.findViewById(R.id.optionView);
 
         Glide.with(view)
@@ -59,19 +60,7 @@ public class CustomPagerAdapter extends PagerAdapter {
             button.setBackgroundResource(R.drawable.layout_border);
             button.setTag(key);
             button.setLayoutParams(params);
-//            button.setButtonTintList(R.color.colorPrimaryDark);
-            /*
-            <RadioButton
-                android:id="@+id/one"
-                android:layout_marginTop="15dp"
-                android:padding="5dp"
-                android:background="@drawable/layout_border"
-                android:layout_width="match_parent"
-                android:fontFamily="@font/opensanssemibold"
-                android:text="1. Google"
-                android:buttonTint="@color/colorPrimaryDark"
-                android:layout_height="wrap_content"/>
-            * */
+
             ColorStateList colorStateList = new ColorStateList(
                     new int[][] {
                             new int[] { -android.R.attr.state_checked }, // unchecked

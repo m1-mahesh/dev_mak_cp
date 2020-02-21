@@ -157,6 +157,7 @@ public class SelectQuestionsActivity extends AppCompatActivity {
     public void viewQuestion(View view){
         if (selectedQ.size()>0) {
             ViewTestQuestions.selectedQ = selectedQ;
+            ViewTestQuestions.IS_VIEW_CREATED_TEST = false;
             startActivityForResult(new Intent(SelectQuestionsActivity.this, ViewTestQuestions.class), Constant.ACTIVITY_FINISH_REQUEST_CODE);
             overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
         }

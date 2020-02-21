@@ -57,7 +57,7 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
     int questionCountInt = 0;
     CustomViewPager viewPager;
     CountDownTimer timerCD;
-    private ImageButton mButtonLeft, mButtonRight;
+    private Button mButtonLeft, mButtonRight;
     Button mSkipButton;
 
     @Override

@@ -64,7 +64,7 @@ public class TestResultFragment extends Fragment {
         mRecyclerView = rootView.findViewById(R.id.scheduledTest);
         getTestList();
         ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, true, userSession, Constant.TAB_INDEX_2);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(adapter1);
 
         return rootView;

@@ -99,7 +99,7 @@ public class QuickTestResult extends AppCompatActivity {
             String url = appSingleTone.testResult;
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
-            executeAPI.addPostParam("student_id", userSession.getAttribute("org_id"));
+            executeAPI.addPostParam("student_id", userSession.getAttribute("user_id"));
             executeAPI.addPostParam("test_id", TEST_ID);
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override

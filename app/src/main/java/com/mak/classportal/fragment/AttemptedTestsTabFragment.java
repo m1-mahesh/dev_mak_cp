@@ -108,7 +108,7 @@ public class AttemptedTestsTabFragment extends Fragment {
             if (userSession.isTeacher())
                 viewResultForTeacher = true;
             ScheduledTestsAdapter adapter1 = new ScheduledTestsAdapter(getContext(), allClassData, viewResultForTeacher, userSession, Constant.TAB_INDEX_2);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
             recyclerView.setAdapter(adapter1);
         }catch (JSONException e){
             e.printStackTrace();

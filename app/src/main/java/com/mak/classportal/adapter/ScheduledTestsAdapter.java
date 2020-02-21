@@ -16,6 +16,7 @@ import com.mak.classportal.QuickTestResult;
 import com.mak.classportal.R;
 import com.mak.classportal.TestIntroActivity;
 import com.mak.classportal.TestResultActivity;
+import com.mak.classportal.ViewTestQuestions;
 import com.mak.classportal.modales.TestData;
 import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.OnClassClick;
@@ -114,6 +115,10 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
                     } else if(tabIndex == Constant.TAB_INDEX_2){
                         TestResultActivity.TEST_ID = testData.getId();
                         mContext.startActivity(new Intent(mContext, TestResultActivity.class));
+                    }else if(tabIndex != Constant.TAB_INDEX_2 && userSession.isTeacher()){
+                        ViewTestQuestions.TEST_ID = testData.getId();
+                        ViewTestQuestions.IS_VIEW_CREATED_TEST = true;
+                        mContext.startActivity(new Intent(mContext, ViewTestQuestions.class));
                     }
                     ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
