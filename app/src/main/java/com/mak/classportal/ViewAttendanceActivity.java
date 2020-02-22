@@ -1,26 +1,31 @@
 package com.mak.classportal;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,14 +33,20 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.google.android.material.tabs.TabLayout;
-import com.mak.classportal.adapter.OrgAppointmentAd;
+import com.mak.classportal.adapter.StudentAttendanceTabAd;
 import com.mak.classportal.modales.DaysData;
 import com.mak.classportal.modales.StudentData;
 import com.mak.classportal.utilities.AppSingleTone;
+import com.mak.classportal.utilities.ExecuteAPI;
 import com.mak.classportal.utilities.UserSession;
 
-import java.text.ParseException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +56,8 @@ import java.util.Vector;
 
 public class ViewAttendanceActivity extends AppCompatActivity {
 
+    public static ArrayList<DaysData> attendanceList = new ArrayList<>();
+    public static String CLASS_ID = "11", DIVISION_ID = "7", DIVISION_NAME = "", CLASS_NAME = "";
     int month, day;
     int Position;
     Vector<View> pages;
@@ -53,7 +66,6 @@ public class ViewAttendanceActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     ViewPagerAdapter adapter;
     CustomPagerAdapter myViewPagerAdapter;
-    CoordinatorLayout coordinatorLayout;
     AppoitmentAdapter mAdapter;
     String currentdate;
     SimpleDateFormat dfdate;
@@ -65,8 +77,8 @@ public class ViewAttendanceActivity extends AppCompatActivity {
     LayoutInflater inflater1;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     Calendar cal = Calendar.getInstance();
-    public static ArrayList<DaysData> appointmentList = new ArrayList<>();
     Date currentDate;
+    ArrayList<StudentData> studentDataList = new ArrayList<>();
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private ItemTouchHelper mItemTouchHelper;
@@ -84,12 +96,11 @@ public class ViewAttendanceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_appointment);
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tabs);
-        coordinatorLayout = findViewById(R.id.coordinatorLayout);
         appSingleTone = new AppSingleTone(this);
         opensanssemibold = ResourcesCompat.getFont(this, R.font.opensanssemibold);
         inflater1 = getLayoutInflater();
         layout = inflater1.inflate(R.layout.toast_layout_file,
-                (ViewGroup) findViewById(R.id.toast_layout_root));
+                findViewById(R.id.toast_layout_root));
         text = layout.findViewById(R.id.text);
         error_message = "";
         sharedPreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
@@ -99,7 +110,7 @@ public class ViewAttendanceActivity extends AppCompatActivity {
         currentDate = new Date();
 //        GlobleValues.appointmentDate = sdf.format(currentDate); //2016/11/16 12:08:43
         layout = getLayoutInflater().inflate(R.layout.toast_layout_file,
-                (ViewGroup) findViewById(R.id.toast_layout_root));
+                findViewById(R.id.toast_layout_root));
         text = layout.findViewById(R.id.text);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -110,6 +121,13 @@ public class ViewAttendanceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+
+            }
+        });
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
 
             }
         });
@@ -134,25 +152,90 @@ public class ViewAttendanceActivity extends AppCompatActivity {
             }
         });
 
-
-       initiliseRecylerView();
-
+        getClassAttendance("2020-02-19");
     }
+    private int mYear, mMonth, mDay, mHour, mMinute;
+    void openDialog(){
+        final Dialog dialog = new Dialog(ViewAttendanceActivity.this, R.style.Dialog);
+        dialog.setContentView(R.layout.attendance_date);
+        dialog.setTitle("Attendance Date");
+        c = Calendar.getInstance();
+        // set the custom dialog components - text, image and button
+        EditText editText = dialog.findViewById(R.id.dateInput);
 
+        Button cancelButton = dialog.findViewById(R.id.cancelButton);
+        Button okButton = dialog.findViewById(R.id.okButton);
+        // if button is clicked, close the custom dialog
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!editText.getText().equals("")){
+                    TakeAttendance.CLASS_ID = CLASS_ID;
+                    TakeAttendance.DIVISION_ID = DIVISION_ID;
+                    TakeAttendance.DIVISION_NAME = DIVISION_NAME;
+                    TakeAttendance.CLASS_NAME = CLASS_NAME;
+                    startActivity(new Intent(ViewAttendanceActivity.this, TakeAttendance.class));
+                    overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                    dialog.dismiss();
+                }
+
+            }
+        });
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(ViewAttendanceActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                monthOfYear ++;
+                                String month = monthOfYear<10?"0"+monthOfYear:""+monthOfYear;
+                                String day = dayOfMonth<10?"0"+dayOfMonth:""+dayOfMonth;
+                                editText.setText(year + "-" + month  + "-" + day);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
+
+        dialog.show();
+    }
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        for (int i = 0; i < appointmentList.size(); i++) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, -10);
+        calendar = setToMidnight(calendar);
+
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(new Date());
+        calendar1 = setToMidnight(calendar1);
+        Date newDate = calendar.getTime();
+        Date currentDate = calendar1.getTime();
+        while (!newDate.equals(currentDate)) {
+
             LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // adapter.addFragment(new AppointmentsActivity(), Globle_Values.special_child_information.get(i).Title);
             View itemView = inflater.inflate(R.layout.activity_notice_list, null);
+            itemView.findViewById(R.id.fab).setVisibility(View.GONE);
             RecyclerView listview = itemView.findViewById(R.id.noticeList);
             LinearLayoutManager llm = new LinearLayoutManager(this);
             llm.setOrientation(RecyclerView.VERTICAL);
-            final OrgAppointmentAd  mAdapter = new OrgAppointmentAd(ViewAttendanceActivity.this, appointmentList.get(i).getAppointmentData(),  userSession, 0);
+            final StudentAttendanceTabAd mAdapter = new StudentAttendanceTabAd(ViewAttendanceActivity.this, studentDataList);
             listview.setAdapter(mAdapter);
-            mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-            listview.setLayoutManager(mStaggeredLayoutManager);
-            listview.setLayoutManager(new LinearLayoutManager(this));
+            listview.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
             listview.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -164,54 +247,59 @@ public class ViewAttendanceActivity extends AppCompatActivity {
             });
             pages.add(itemView);
 
-
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            newDate = calendar.getTime();
         }
-
-/*
- for (int i = 0; i < GlobleValues.AppointmentData.size(); i++) {
-            appointmentList=GlobleValues.AppointmentData.get(i);
-        }
-*/
-
 
         viewPager.setAdapter(adapter);
+    }
+
+    private Calendar setToMidnight(Calendar calendar) {
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
     }
 
     private void setupTabIcons() {
 
         tabLayout.removeAllTabs();
 
-        for (int i1 = 0; i1 < appointmentList.size(); i1++) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, -10);
+        calendar = setToMidnight(calendar);
 
-            Date date = null;
-            try {
-                date = sdf.parse(appointmentList.get(i1).getDay());
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(new Date());
+        calendar1 = setToMidnight(calendar1);
+        Date newDate = calendar.getTime();
+        Date currentDate = calendar1.getTime();
+        int i = 0;
+        while (!newDate.equals(currentDate)) {
 
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            cal.setTime(date);
+            cal.setTime(newDate);
             int dayInt = cal.get(Calendar.DAY_OF_MONTH);
             SimpleDateFormat sdf1 = new SimpleDateFormat("MMM");
-            String month = sdf1.format(date);
+            String month = sdf1.format(newDate);
             tabLayout.addTab(tabLayout.newTab().setText(month + "\n" + "" + dayInt));
             tabLayout.setTag(tabLayout.newTab().setText(month + "\n" + "" + dayInt));
-
-
             cal.setTime(currentDate);
             int dayInt1 = cal.get(Calendar.DAY_OF_MONTH);
             SimpleDateFormat sdf11 = new SimpleDateFormat("MMM");
             String month1 = sdf11.format(currentDate);
             TextView tv = (TextView) LayoutInflater.from(this).inflate(R.layout.tab_text_layout, null);
             tv.setTypeface(opensanssemibold);
-            if (tabLayout.getTabAt(i1).getText().toString().equalsIgnoreCase(month1 + "\n" + "" + dayInt1)) {
+            if (tabLayout.getTabAt(i).getText().toString().equalsIgnoreCase(month1 + "\n" + "" + dayInt1)) {
                 tv.setTextColor(getResources().getColor(R.color.colorPrimary));
             } else {
                 tv.setTextColor(getResources().getColor(R.color.ivory));
             }
-            tabLayout.getTabAt(i1).setCustomView(tv);
-
+            tabLayout.getTabAt(i).setCustomView(tv);
+            i++;
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            newDate = calendar.getTime();
         }
 
     }
@@ -229,7 +317,6 @@ public class ViewAttendanceActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     protected void onResume() {
 
@@ -237,6 +324,52 @@ public class ViewAttendanceActivity extends AppCompatActivity {
 
     }
 
+    void parseTestList(JSONObject jsonObject) {
+        try {
+            studentDataList.clear();
+            Log.e("", jsonObject.toString());
+            JSONArray jsonArray = jsonObject.getJSONArray("student_list");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                StudentData studentData = new StudentData();
+                studentData.setId(object.getString("student_id"));
+                studentData.setName(object.getString("name"));
+                studentData.setAttendanceStatus(object.getInt("attendance_status"));
+                studentDataList.add(studentData);
+            }
+            initiliseRecylerView();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getClassAttendance(String date) {
+
+        try {
+            String url = appSingleTone.attendanceByClass;
+            ExecuteAPI executeAPI = new ExecuteAPI(ViewAttendanceActivity.this, url, null);
+            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
+            executeAPI.addPostParam("date", date);
+            executeAPI.addPostParam("class_id", CLASS_ID);
+            executeAPI.addPostParam("division_id", DIVISION_ID);
+            executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                @Override
+                public void onResponse(JSONObject result) {
+                    Log.d("Result", result.toString());
+                    parseTestList(result);
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                    Log.d("Result", errorResponse.toString());
+                }
+            });
+            executeAPI.showProcessBar(true);
+            executeAPI.executeStringRequest(Request.Method.POST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();

@@ -6,7 +6,7 @@ public class DaysData {
 
     String day;
 
-    ArrayList<StudentData> appointmentData=new ArrayList<>();
+    ArrayList<StudentData> attendanceData =new ArrayList<>();
 
     public String getDay() {
         return day;
@@ -16,12 +16,12 @@ public class DaysData {
         this.day = day;
     }
 
-    public ArrayList<StudentData> getAppointmentData() {
-        return appointmentData;
+    public ArrayList<StudentData> getAttendanceData() {
+        return attendanceData;
     }
 
-    public void setAppointmentData(ArrayList<StudentData> appointmentData) {
-        this.appointmentData = appointmentData;
+    public void setAttendanceData(ArrayList<StudentData> attendanceData) {
+        this.attendanceData = attendanceData;
     }
 
 }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mak.classportal.R;
 import com.mak.classportal.TakeAttendance;
 import com.mak.classportal.TestsList;
+import com.mak.classportal.ViewAttendanceActivity;
 import com.mak.classportal.modales.StudentClass;
 import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.OnClassClick;
@@ -79,11 +80,11 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        TakeAttendance.CLASS_ID = singleItem.getId();
-                        TakeAttendance.DIVISION_ID = key;
-                        TakeAttendance.DIVISION_NAME = value;
-                        TakeAttendance.CLASS_NAME = singleItem.getName();
-                        mContext.startActivity(new Intent(mContext, TakeAttendance.class));
+                        ViewAttendanceActivity.CLASS_ID = singleItem.getId();
+                        ViewAttendanceActivity.DIVISION_ID = key;
+                        ViewAttendanceActivity.DIVISION_NAME = value;
+                        ViewAttendanceActivity.CLASS_NAME = singleItem.getName();
+                        mContext.startActivity(new Intent(mContext, ViewAttendanceActivity.class));
                         ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
 
                     }

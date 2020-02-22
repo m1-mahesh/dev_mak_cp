@@ -11,6 +11,16 @@ public class StudentData {
     public String testName;
     public String marksGain;
 
+    int attendanceStatus = 0;
+
+    public int getAttendanceStatus() {
+        return attendanceStatus;
+    }
+
+    public void setAttendanceStatus(int attendanceStatus) {
+        this.attendanceStatus = attendanceStatus;
+    }
+
     public String getTotalMarks() {
         return totalMarks;
     }
