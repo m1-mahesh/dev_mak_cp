@@ -33,6 +33,7 @@ public class Constant {
 
     public static int RESULT_LOAD_IMAGE = 100;
     public static int CAMERA_REQUEST = 200;
+    public static int PICKFILE_RESULT_CODE = 300;
 
     public final static int TAB_INDEX_0 = 0;
     public final static int TAB_INDEX_1 = 1;
