@@ -32,7 +32,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Konstantin on 22.12.2014.
@@ -89,6 +92,7 @@ public class HomeworkFragment extends Fragment {
         getHomeworkList();
         return rootView;
     }
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     void parseHomeworkList(JSONObject jsonObject){
         try {
             homeworkData.clear();
@@ -98,14 +102,25 @@ public class HomeworkFragment extends Fragment {
                 JSONObject object = jsonArray.getJSONObject(i);
                 NoticeData notice = new NoticeData();
                 notice.setId(object.getString("homework_id"));
-//                notice.setTitle(object.getString("homework_subject"));
-//                notice.setTitle(object.getString("title"));
+                notice.setTitle(object.getString("subject_name"));
+                notice.setTitle(object.getString("title"));
                 notice.setMediaUrl(object.getString("media_attachment"));
                 notice.setDescription(object.getString("homework_message"));
                 notice.setCreatedOn(object.getString("submission_date"));
                 notice.setCreatedBy(object.getString("send_by"));
                 homeworkData.add(notice);
             }
+            Collections.sort(homeworkData, new Comparator<NoticeData>() {
+                @Override
+                public int compare(NoticeData o1, NoticeData o2) {
+                    try {
+                        return dateFormat.parse(o2.getCreatedOn()).compareTo(dateFormat.parse(o1.getCreatedOn()));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    return 0;
+                }
+            });
             HomeworkAd adapter1 = new HomeworkAd(getContext(), homeworkData);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
             mRecyclerView.setAdapter(adapter1);

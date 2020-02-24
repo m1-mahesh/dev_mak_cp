@@ -35,7 +35,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="15dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/cross_" />
+            android:src="@drawable/icn_close" />
 
         <View
             android:id="@+id/view"
@@ -53,7 +53,7 @@
             android:layout_marginTop="16dp"
             android:fontFamily="@font/opensansbold"
             android:text="You want upload this file?"
-            android:textColor="@color/textcolor"
+            android:textColor="@color/colorPrimary"
             android:textSize="17sp" />
 
         <TextView
@@ -66,7 +66,7 @@
             android:layout_marginRight="30dp"
             android:fontFamily="@font/opensansregular"
             android:text="Add Your Available Time Slots"
-            android:textColor="@color/textcolor"
+            android:textColor="@color/colorPrimary"
             android:textSize="15sp" />
 
         <LinearLayout

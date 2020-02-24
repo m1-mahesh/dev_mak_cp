@@ -67,7 +67,6 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
     LayoutInflater inflater;
     View tostLayout;
     Calendar c;
-
     Spinner classSpinner, subjectSpinner;
     AppSingleTone appSingleTone;
     UserSession userSession;
@@ -80,6 +79,8 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
     String picturePath = "";
     String imgBase64Str = "";
     String extension;
+    ImageView attachmentIc;
+    TextView selectedFileText;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     @Override
@@ -99,6 +100,10 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         appSingleTone = new AppSingleTone(this);
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
+        attachmentIc = findViewById(R.id.attachmentIcon);
+        selectedFileText = findViewById(R.id.selectedFileText);
+        attachmentText.setOnClickListener(this);
+        attachmentIc.setOnClickListener(this);
         attachmentText.setOnClickListener(this);
         txtDate.setOnClickListener(this);
         txtDate.setTag(txtDate.getKeyListener());
@@ -164,6 +169,10 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.attachment:
                 showPicPopup();
+                break;
+            case R.id.attachmentIcon:
+                if (true)
+                    showPicPopup();
                 break;
 
         }
@@ -377,9 +386,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                         isCamera = false;
                         //Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         //startActivityForResult(i, Constant.RESULT_LOAD_IMAGE);
-                        Intent i = new Intent(
-                                Intent.ACTION_PICK,
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         i.setType("image/*");
                         startActivityForResult(i, Constant.RESULT_LOAD_IMAGE);
                     } else if (item == 1) {
@@ -476,11 +483,13 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                     AlertDialog alert = builder1.create();
                     alert.show();
                 } else isValidFile = true;
+
             }
         } else if (requestCode == Constant.CAMERA_REQUEST && resultCode == RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             Uri tempUri = getImageUri(getApplicationContext(), photo);
             File finalFile = new File(getRealPathFromURI(tempUri));
+            selectedFileText.setText(finalFile.getName());
             picturePath = finalFile.toString();
             fileName = tempUri.getLastPathSegment();
             int file_size = Integer.parseInt(String.valueOf(finalFile.length() / 1024));
@@ -492,17 +501,13 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             Uri uri = data.getData();
             if (uri.getScheme().compareTo("content") == 0) {
                 String[] projection = {MediaStore.Images.Media.DATA};
-
                 Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
                 if (cursor.moveToFirst()) {
                     int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
                     final Uri filePathUri = Uri.parse(cursor.getString(column_index));
                     fileName = filePathUri.getLastPathSegment();
                     picturePath = filePathUri.getPath();
                     int file_size = Integer.parseInt(String.valueOf(picturePath.length() / 1024));
-                    Log.e("file_size", "file_size" + file_size);
-                    // Toast.makeText(getApplicationContext(), "path"+file_path, Toast.LENGTH_SHORT).show();
 
                     int lastDotPosition = fileName.lastIndexOf('.');
                     if (lastDotPosition > 0) {
@@ -548,6 +553,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
 
         }
         if (isValidFile) {
+            selectedFileText.setText(fileName);
             popUp("");
         }
     }
@@ -634,6 +640,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
             executeAPI.addPostParam("class_id", selectedClass);
             executeAPI.addPostParam("homework_subject", selectedSubject);
+            executeAPI.addPostParam("title", titleEditText.getText().toString());
             executeAPI.addPostParam("homework_message", descriptionEditText.getText().toString());
             executeAPI.addPostParam("submission_date", txtDate.getText().toString());
             executeAPI.addPostParam("media_attachment", imgBase64Str);

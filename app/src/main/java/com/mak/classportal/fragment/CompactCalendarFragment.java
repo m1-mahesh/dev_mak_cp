@@ -176,7 +176,7 @@ public class CompactCalendarFragment extends Fragment {
         // uncomment below to open onCreate
         //openCalendarOnCreate(v);
 
-        getStudentAttendance(currentCalender.get(Calendar.MONTH));
+        getStudentAttendance(Integer.parseInt(monthFormat.format(compactCalendarView.getFirstDayOfCurrentMonth())));
         return mainTabView;
     }
 
@@ -275,7 +275,7 @@ public class CompactCalendarFragment extends Fragment {
                         if (events != null)
                             compactCalendarView.addEvents(events);
                     }else totalPresent++;
-                }
+                }else break;
             }
             compactCalendarView.invalidate();
             totalPresentText.setText("Total Present: "+totalPresent+" days");
@@ -310,6 +310,7 @@ public class CompactCalendarFragment extends Fragment {
     public void getStudentAttendance(int month) {
 
         try {
+            Log.e("Selected Month"+month, "");
             String url = appSingleTone.studentAttendance;
             ExecuteAPI executeAPI = new ExecuteAPI(getContext(), url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));

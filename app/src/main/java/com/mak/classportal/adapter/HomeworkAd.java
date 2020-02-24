@@ -43,7 +43,7 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
 
         final NoticeData singleItem = itemsList.get(i);
 
-        holder.tvTitle.setText("HomeWork For Monday");
+        holder.tvTitle.setText(singleItem.getTitle());
         holder.descriptionText.setText(singleItem.getDescription());
         holder.homeworkDate.setText(singleItem.getCreatedOn());
         holder.cardView.setOnClickListener(new View.OnClickListener() {

@@ -137,7 +137,7 @@ public class NewNoticeActivity extends AppCompatActivity implements View.OnClick
                 if (NoticeStepOneFragment.selectedOption == 0){
                     SelectStudents.selectedStudents.clear();
                     FinaliseNotice.NOTICE_TYPE = Constant.NOTICE_TYPE_ALL;
-                    startActivity(new Intent(this, FinaliseNotice.class));
+                    startActivityForResult(new Intent(this, FinaliseNotice.class), Constant.ACTIVITY_FINISH_REQUEST_CODE);
                     overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }else if (NoticeStepOneFragment.selectedOption == 1) {
                     if (mViewPager.getCurrentItem() == 0)
@@ -148,7 +148,7 @@ public class NewNoticeActivity extends AppCompatActivity implements View.OnClick
                                 SelectStudents.selectedStudents.clear();
                                 FinaliseNotice.NOTICE_TYPE = Constant.NOTICE_TYPE_DIVISION;
                                 FinaliseNotice.CLASS_ID = NoticeStepTwoFragment.selectedClass;
-                                startActivity(new Intent(this, FinaliseNotice.class));
+                                startActivityForResult(new Intent(this, FinaliseNotice.class), Constant.ACTIVITY_FINISH_REQUEST_CODE);
                                 overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                             } else {
                                 showToast("Please Select Division(S)");

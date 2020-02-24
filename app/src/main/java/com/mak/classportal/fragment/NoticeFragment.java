@@ -24,6 +24,7 @@ import com.mak.classportal.RootActivity;
 import com.mak.classportal.TestsList;
 import com.mak.classportal.adapter.NoticeListAd;
 import com.mak.classportal.modales.NoticeData;
+import com.mak.classportal.modales.StudentData;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.ExecuteAPI;
 import com.mak.classportal.utilities.UserSession;
@@ -32,7 +33,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Konstantin on 22.12.2014.
@@ -83,6 +87,7 @@ public class NoticeFragment extends Fragment {
 
         return rootView;
     }
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     void parseNoticeList(JSONObject jsonObject){
         try {
             noticeData.clear();
@@ -99,6 +104,17 @@ public class NoticeFragment extends Fragment {
                 notice.setCreatedBy(object.getString("send_by"));
                 noticeData.add(notice);
             }
+            Collections.sort(noticeData, new Comparator<NoticeData>() {
+                @Override
+                public int compare(NoticeData o1, NoticeData o2) {
+                    try {
+                        return dateFormat.parse(o2.getCreatedOn()).compareTo(dateFormat.parse(o1.getCreatedOn()));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    return 0;
+                }
+            });
             NoticeListAd adapter1 = new NoticeListAd(getContext(), noticeData);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
             mRecyclerView.setAdapter(adapter1);

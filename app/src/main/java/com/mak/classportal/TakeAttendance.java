@@ -54,6 +54,7 @@ public class TakeAttendance extends AppCompatActivity {
     public static String CLASS_NAME = "";
     public static String DIVISION_ID = "";
     public static String DIVISION_NAME = "";
+    public static String ATTENDANCE_DATE = "";
 
 
 
@@ -94,6 +95,7 @@ public class TakeAttendance extends AppCompatActivity {
                 StudentData studentData = new StudentData();
                 studentData.setId(classObj.getString("student_id"));
                 studentData.setName(classObj.getString("name"));
+                studentAttendance.put(studentData.getId(), "1");
                 students.add(studentData);
             }
             StudentListAdapter adapter1 = new StudentListAdapter(this,students, true);
@@ -175,9 +177,6 @@ public class TakeAttendance extends AppCompatActivity {
                 String value = entry.getValue();
                 jsonObject.put(key, value);
             }
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat ff= new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy", Locale.ENGLISH);
-            Date current = ff.parse(new Date().toString());
 
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
@@ -185,7 +184,7 @@ public class TakeAttendance extends AppCompatActivity {
             executeAPI.addPostParam("class_id", CLASS_ID);
             executeAPI.addPostParam("division_id", DIVISION_ID);
             executeAPI.addPostParam("attendances_marked_by_teacher_id", userSession.getAttribute("user_id"));
-            executeAPI.addPostParam("attendance_date", dateFormat.format(current));
+            executeAPI.addPostParam("attendance_date", ATTENDANCE_DATE);
             executeAPI.addPostParam("attendance_data_array", jsonObject.toString());
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override

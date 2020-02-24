@@ -85,6 +85,7 @@ public class AppSingleTone {
     public String submitClassAttendance = "http://nikvay.com/demo/schoolApp/ws-submit-attendence";
     public String studentAttendance = "http://nikvay.com/demo/schoolApp/ws-student-attendence-list";
     public String attendanceByClass = "http://nikvay.com/demo/schoolApp/ws-teacher-attendence-list";
+    public String attendanceStatusByClass = "http://nikvay.com/demo/schoolApp/ws-check-attendence-status";
 
     Context context;
     UserSession userSession;

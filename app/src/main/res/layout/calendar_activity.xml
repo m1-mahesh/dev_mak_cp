@@ -72,11 +72,8 @@
         app:compactCalendarTextColor="#000"
         android:fontFamily="@font/proximanovaregular"
         app:compactCalendarCurrentSelectedDayBackgroundColor="#fff"
-        app:compactCalendarCurrentDayBackgroundColor="@color/colorPrimary"
-        app:compactCalendarCurrentDayIndicatorStyle="fill_large_indicator"
-        app:compactCalendarEventIndicatorStyle="small_indicator"
-        app:compactCalendarOtherMonthDaysTextColor="#534c4c"
-        app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="true"
+        app:compactCalendarCurrentDayBackgroundColor="#fff"
+        app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="false"
         />
 
     <TextView

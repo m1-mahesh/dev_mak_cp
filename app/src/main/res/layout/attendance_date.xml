@@ -38,7 +38,7 @@
             android:layout_weight=".5"
             android:background="@color/twitter"
             android:fontFamily="@font/proximanovaregular"
-            android:text="OK"
+            android:text="Check"
             android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>

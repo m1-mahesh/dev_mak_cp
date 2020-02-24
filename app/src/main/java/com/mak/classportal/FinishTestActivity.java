@@ -138,8 +138,8 @@ public class FinishTestActivity extends AppCompatActivity {
                     Log.d("Result", errorResponse.toString());
                 }
             });
-//            executeAPI.showProcessBar(true);
-//            executeAPI.executeStringRequest(Request.Method.POST);
+            executeAPI.showProcessBar(true);
+            executeAPI.executeStringRequest(Request.Method.POST);
         } catch (Exception e) {
             e.printStackTrace();
         }

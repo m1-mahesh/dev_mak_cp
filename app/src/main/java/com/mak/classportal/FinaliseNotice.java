@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -39,6 +40,7 @@ import com.mak.classportal.swap_plugin.CustomViewPager;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.ExecuteAPI;
+import com.mak.classportal.utilities.FileUtils;
 import com.mak.classportal.utilities.UserSession;
 
 import org.json.JSONArray;
@@ -67,6 +69,8 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
     TextView attachmentText;
     EditText titleEditText, descriptionEditText;
     Button saveButton;
+    ImageView attachmentIc;
+    TextView selectedFileText;
     // Will be one_class divisions, division students, all(divisions, students, all)
     public static String NOTICE_TYPE = "";
     public static String CLASS_ID = "";
@@ -82,11 +86,14 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         ((TextView) findViewById(R.id.tvTitle)).setText(R.string.new_notice);
         attachmentText = findViewById(R.id.attachment);
-        attachmentText.setOnClickListener(this);
         imageView = findViewById(R.id.imageView);
         descriptionEditText = findViewById(R.id.descriptionEditText);
         titleEditText = findViewById(R.id.title_edit_text);
         saveButton = findViewById(R.id.saveButton);
+        attachmentIc = findViewById(R.id.attachmentIcon);
+        selectedFileText = findViewById(R.id.selectedFileText);
+        attachmentText.setOnClickListener(this);
+        attachmentIc.setOnClickListener(this);
         saveButton.setOnClickListener(this);
         prepareSubmitData();
 
@@ -154,7 +161,10 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
             case R.id.attachment:
                 showPicPopup();
                 break;
-
+            case R.id.attachmentIcon:
+                if (true)
+                    showPicPopup();
+                break;
 
         }
 
@@ -183,12 +193,13 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
         if (appSingleTone.checkAndRequestPermissions()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
             builder.setTitle("Select option");
-            final CharSequence[] items = {"Gallery", "Camera"};
+            final CharSequence[] items = {"Browse File", "Camera"};
             builder.setItems(items, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int item) {
                     if (item == 0) {
                         isCamera = false;
-                        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                        i.setType("file/*");
                         startActivityForResult(i, Constant.RESULT_LOAD_IMAGE);
                     } else if (item == 1) {
                         isCamera = true;
@@ -218,10 +229,11 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
                 picturePath = cursor.getString(idx);
                 cursor.close();
             }
+
             Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
             if (bitmap!=null) {
                 imageView.setImageBitmap(bitmap);
-                //toBase64(bitmap);
+                new MakeBitmap().execute(bitmap);
             }
 
         } else if (requestCode == Constant.CAMERA_REQUEST && resultCode == RESULT_OK) {
@@ -233,7 +245,7 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
 
             // CALL THIS METHOD TO GET THE ACTUAL PATH
             File finalFile = new File(getRealPathFromURI(tempUri));
-
+            selectedFileText.setText(finalFile.getName());
             picturePath = finalFile.toString();
             imageView.setImageBitmap(photo);
 
@@ -246,16 +258,17 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
 
     }
     String imgBase64Str = "";
-    void toBase64(Bitmap bitmap){
+    String toBase64(Bitmap bitmap) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
             imgBase64Str = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        }catch (Exception e){
+            return imgBase64Str;
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return null;
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -313,5 +326,22 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    class MakeBitmap extends AsyncTask<Bitmap, Boolean, String> {
+
+        protected void onPreExecute() {
+
+        }
+
+        protected String doInBackground(Bitmap... params) {
+            Bitmap bitmap = params[0];
+            return toBase64(bitmap);
+        }
+
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+        }
+
     }
 }
