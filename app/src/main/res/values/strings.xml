@@ -21,6 +21,13 @@
     <string name="title_activity_tests_list">Scheduled Tests</string>
     <string name="select_class_prompt">Select Class</string>
 
+    <string name="validation_image_size_msg">cannot upload more than 5 MB image file</string>
+    <string name="validation_video_size_msg">cannot upload more than 15 MB video file</string>
+    <string name="file_size_is_large_validation">File is more than 10 MB may be it take more time to
+        upload
+    </string>
+    <string name="extension_validation">Invalid file format</string>
+
     <string-array name="class_arrays">
         <item>Select Class</item>
         <item>All</item>
