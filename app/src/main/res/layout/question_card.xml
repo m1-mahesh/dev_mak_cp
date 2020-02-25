@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/qImage"
             android:src="@drawable/maths_im"
             android:layout_width="match_parent"

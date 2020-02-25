@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mak.classportal"
-    android:targetSandboxVersion="1">
+    package="com.mak.classportal" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -61,6 +60,7 @@
         <activity android:name=".FinaliseTest" />
         <activity android:name=".NewTestActivity" />
         <activity android:name=".SelectQuestionsActivity" />
+        <activity android:name=".OtpActivity" />
         <activity
             android:name=".TakeAttendance"
             android:label="@string/title_activity_take_attendance"

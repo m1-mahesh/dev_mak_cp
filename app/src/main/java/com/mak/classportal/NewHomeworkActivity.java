@@ -3,6 +3,7 @@ package com.mak.classportal;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +22,7 @@ import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -53,6 +54,9 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -77,7 +81,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
     boolean isCamera;
     ImageView imageView;
     String picturePath = "";
-    String imgBase64Str = "";
+    String fileBase64Str = "";
     String extension;
     ImageView attachmentIc;
     TextView selectedFileText;
@@ -396,8 +400,8 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                     } else {
                         try {
 
-                            String folderPath = Environment.getExternalStorageDirectory() + "";
-                            Intent intent = new Intent();
+                            String folderPath = Environment.getRootDirectory() + "";
+                            Intent intent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
                             intent.setAction(Intent.ACTION_GET_CONTENT);
                             Uri myUri = Uri.parse(folderPath);
                             intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
@@ -583,7 +587,8 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new AddAttachment().execute("");
+                if (picturePath!=null && !picturePath.equals(""))
+                    new MakeBase64().execute(picturePath);
                 alertDialog.cancel();
             }
         });
@@ -597,14 +602,39 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         alertDialog.show();
 
     }
+    public static String convertFileToByteArray(String picturePath) {
+        byte[] byteArray = null;
+        try {
+            String extension = picturePath.substring(picturePath.lastIndexOf("."));
+            String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
+            String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
+            File file = new File(picturePath);
+            InputStream inputStream = new FileInputStream(file);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] b = new byte[1024 * 11];
+            int bytesRead = 0;
+
+            while ((bytesRead = inputStream.read(b)) != -1) {
+                bos.write(b, 0, bytesRead);
+            }
+
+            byteArray = bos.toByteArray();
+
+            Log.e("Byte array", ">" + byteArray);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP);
+    }
 
     String toBase64(Bitmap bitmap) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
-            imgBase64Str = Base64.encodeToString(byteArray, Base64.DEFAULT);
-            return imgBase64Str;
+            fileBase64Str = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            return fileBase64Str;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -643,7 +673,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             executeAPI.addPostParam("title", titleEditText.getText().toString());
             executeAPI.addPostParam("homework_message", descriptionEditText.getText().toString());
             executeAPI.addPostParam("submission_date", txtDate.getText().toString());
-            executeAPI.addPostParam("media_attachment", imgBase64Str);
+            executeAPI.addPostParam("media_attachment", fileBase64Str);
             executeAPI.addPostParam("sender_user_id", userSession.getAttribute("user_id"));
             executeAPI.addPostParam("division_id_array", jsonArray.toString());
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
@@ -675,15 +705,15 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    class MakeBitmap extends AsyncTask<Bitmap, Boolean, String> {
+    class MakeBase64 extends AsyncTask<String, Boolean, String> {
 
         protected void onPreExecute() {
 
         }
 
-        protected String doInBackground(Bitmap... params) {
-            Bitmap bitmap = params[0];
-            return toBase64(bitmap);
+        protected String doInBackground(String... params) {
+            fileBase64Str = convertFileToByteArray(params[0]);
+            return fileBase64Str;
         }
 
         protected void onPostExecute(String result) {

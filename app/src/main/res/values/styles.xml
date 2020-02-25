@@ -23,7 +23,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textColorHint">@color/gray</item>
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:tint">@color/gray</item>
     </style>
 
@@ -58,5 +58,15 @@
     <style name="Dialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">false</item>
         <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="pin_edittext_style">
+        <item name="android:gravity">center</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:minEms">2</item>
+        <item name="android:inputType">text</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
     </style>
 </resources>

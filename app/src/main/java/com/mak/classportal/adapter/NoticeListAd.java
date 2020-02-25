@@ -1,13 +1,17 @@
 package com.mak.classportal.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mak.classportal.HomeWorkDetails;
 import com.mak.classportal.R;
 import com.mak.classportal.modales.NoticeData;
 import com.mak.classportal.utilities.OnClassClick;
@@ -53,7 +57,15 @@ public class NoticeListAd extends RecyclerView.Adapter<NoticeListAd.SingleItemRo
             formatter = new SimpleDateFormat("dd");
             String dateStr = formatter.format(date);
 
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HomeWorkDetails.noticeData = notice;
 
+                    mContext.startActivity(new Intent(mContext, HomeWorkDetails.class));
+                    ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,6 +84,7 @@ public class NoticeListAd extends RecyclerView.Adapter<NoticeListAd.SingleItemRo
         protected TextView tvTitle, noticeDate;
         protected TextView description;
         protected View hrView;
+        protected CardView cardView;
 
 
         public SingleItemRowHolder(View view) {
@@ -80,6 +93,7 @@ public class NoticeListAd extends RecyclerView.Adapter<NoticeListAd.SingleItemRo
             this.hrView = view.findViewById(R.id.hrView);
             this.tvTitle = view.findViewById(R.id.tvTitle);
             this.noticeDate = view.findViewById(R.id.noticeDate);
+            this.cardView = view.findViewById(R.id.cardView);
 //            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
 
         }

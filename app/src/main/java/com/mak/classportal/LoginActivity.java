@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                                 userSession.setAttribute("mobile", object.getString("mobile"));
 
                                 RootActivity.defaultMenu = 0;
-                                Intent intent = new Intent(LoginActivity.this, RootActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, OtpActivity.class);
                                 LoginActivity.this.startActivity(intent);
                                 overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                                 finish();
