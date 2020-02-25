@@ -33,14 +33,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp">
+            android:layout_height="300dp">
 
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/homeworkAttachment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:src="@drawable/homework" />
+                android:src="@drawable/placeholder" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
