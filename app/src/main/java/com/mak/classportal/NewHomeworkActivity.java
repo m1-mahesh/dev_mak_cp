@@ -419,6 +419,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
     }
     Dialog dialog1;
     boolean isValidFile = false;
+    String mediaType="";
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         isValidFile = false;
@@ -447,6 +448,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                 Log.e("extension", "extension" + extension);
             }
             if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
+                mediaType = "Image";
                 if (file_size > 5120) {
                     showToast(getString(R.string.validation_image_size_msg));
                 } else isValidFile = true;
@@ -495,6 +497,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             File finalFile = new File(getRealPathFromURI(tempUri));
             selectedFileText.setText(finalFile.getName());
             picturePath = finalFile.toString();
+            mediaType = "Image";
             fileName = tempUri.getLastPathSegment();
             int file_size = Integer.parseInt(String.valueOf(finalFile.length() / 1024));
             if (file_size > 5120) {
@@ -520,7 +523,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                         if (extension.equalsIgnoreCase("pdf")) {
                             isValidFile = true;
                         } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
-
+                            mediaType = "Image";
                             if (file_size > 5120) {
                                 showToast(getString(R.string.validation_image_size_msg));
                             } else isValidFile = true;
@@ -542,9 +545,10 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                     String string3 = fileName.substring(lastDotPosition + 1);
                     extension = string3.toLowerCase();
                     if (extension.equalsIgnoreCase("pdf")) {
+                        mediaType = "Pdf";
                         isValidFile = true;
                     } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
-
+                        mediaType = "Image";
                         if (file_size > 5120) {
                             showToast(getString(R.string.validation_image_size_msg));
                         } else isValidFile = true;
@@ -674,6 +678,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             executeAPI.addPostParam("homework_message", descriptionEditText.getText().toString());
             executeAPI.addPostParam("submission_date", txtDate.getText().toString());
             executeAPI.addPostParam("media_attachment", fileBase64Str);
+            executeAPI.addPostParam("media_type", mediaType);
             executeAPI.addPostParam("sender_user_id", userSession.getAttribute("user_id"));
             executeAPI.addPostParam("division_id_array", jsonArray.toString());
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {

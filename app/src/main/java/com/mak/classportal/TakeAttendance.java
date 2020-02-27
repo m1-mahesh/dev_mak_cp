@@ -4,19 +4,27 @@ import android.annotation.SuppressLint;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,18 +77,23 @@ public class TakeAttendance extends AppCompatActivity {
     UserSession userSession;
     SharedPreferences sharedPreferences;
     public static HashMap<String, String> studentAttendance = new HashMap<>();
+    private SearchView searchView;
+    StudentListAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_attendance);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Class: "+CLASS_NAME+"("+ DIVISION_NAME+")");
         appSingleTone = new AppSingleTone(this);
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
-        topTitle = findViewById(R.id.tvTitle);
-        topTitle.setText("Class: "+CLASS_NAME+"("+ DIVISION_NAME+")");
+
         mRecyclerView = findViewById(R.id.studentList);
         mRecyclerView.setHasFixedSize(true);
         studentAttendance.clear();
+        mAdapter = new StudentListAdapter(this,students, true);
         getStudents();
 
     }
@@ -98,11 +111,10 @@ public class TakeAttendance extends AppCompatActivity {
                 studentAttendance.put(studentData.getId(), "1");
                 students.add(studentData);
             }
-            StudentListAdapter adapter1 = new StudentListAdapter(this,students, true);
+            mAdapter = new StudentListAdapter(this,students, true);
 
             mRecyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-
-            mRecyclerView.setAdapter(adapter1);
+            mRecyclerView.setAdapter(mAdapter);
 
         }catch (JSONException e){
             e.printStackTrace();
@@ -211,5 +223,57 @@ public class TakeAttendance extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.app_bar_search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                mAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                mAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
+        return true;
+    }
+    private void whiteNotificationBar(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int flags = view.getSystemUiVisibility();
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            view.setSystemUiVisibility(flags);
+            getWindow().setStatusBarColor(Color.WHITE);
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.app_bar_search) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -239,7 +239,8 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
     Dialog dialog1;
     boolean isValidFile = false;
     String fileBase64Str = "";
-    String extension;
+    String extension, mediaType="";
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         isValidFile = false;
@@ -268,6 +269,7 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
                 Log.e("extension", "extension" + extension);
             }
             if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
+                mediaType = "Image";
                 if (file_size > 5120) {
                     showToast(getString(R.string.validation_image_size_msg));
                 } else isValidFile = true;
@@ -314,6 +316,7 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             Uri tempUri = getImageUri(getApplicationContext(), photo);
             File finalFile = new File(getRealPathFromURI(tempUri));
+            mediaType = "Image";
             selectedFileText.setText(finalFile.getName());
             picturePath = finalFile.toString();
             fileName = tempUri.getLastPathSegment();
@@ -340,8 +343,9 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
                         extension = string3.toLowerCase();
                         if (extension.equalsIgnoreCase("pdf")) {
                             isValidFile = true;
+                            mediaType = "Pdf";
                         } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
-
+                            mediaType = "Image";
                             if (file_size > 5120) {
                                 showToast(getString(R.string.validation_image_size_msg));
                             } else isValidFile = true;
@@ -364,8 +368,9 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
                     extension = string3.toLowerCase();
                     if (extension.equalsIgnoreCase("pdf")) {
                         isValidFile = true;
+                        mediaType = "Pdf";
                     } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
-
+                        mediaType = "Image";
                         if (file_size > 5120) {
                             showToast(getString(R.string.validation_image_size_msg));
                         } else isValidFile = true;
@@ -473,6 +478,7 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
             executeAPI.addPostParam("title", titleEditText.getText().toString());
             executeAPI.addPostParam("description", descriptionEditText.getText().toString());
             executeAPI.addPostParam("media_base64", fileBase64Str);
+            executeAPI.addPostParam("media_type", mediaType);
             executeAPI.addPostParam("send_by_user_id", userSession.getAttribute("user_id"));
             executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
             executeAPI.addPostParam("type", noticeType);

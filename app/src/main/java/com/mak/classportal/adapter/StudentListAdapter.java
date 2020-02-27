@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -20,15 +22,18 @@ import com.mak.classportal.TakeAttendance;
 import com.mak.classportal.modales.StudentData;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.SingleItemRowHolder> {
+public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.SingleItemRowHolder> implements Filterable {
 
     String className = "";
     private ArrayList<StudentData> itemsList;
+    private ArrayList<StudentData> oldData;
     private Context mContext;
     private boolean isAttendance;
     public StudentListAdapter(Context context, ArrayList<StudentData> itemsList, boolean isAttendance) {
         this.itemsList = itemsList;
+        this.oldData = itemsList;
         this.mContext = context;
         this.isAttendance = isAttendance;
     }
@@ -61,7 +66,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
                 }
             });
         }else {
-            holder.tvTitle.setText(singleItem.getName() + " (" + singleItem.getRollNumber() + ")");
+            holder.tvTitle.setText(singleItem.getName() + " (" + singleItem.getId() + ")");
             holder.checkLayout.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -87,6 +92,42 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
     public int getItemCount() {
         return (null != itemsList ? itemsList.size() : 0);
     }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    itemsList = oldData;
+                } else {
+                    ArrayList<StudentData> filteredList = new ArrayList<>();
+                    for (StudentData row : oldData) {
+
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getId().contains(charString)) {
+                            filteredList.add(row);
+                        }
+                    }
+
+                    itemsList = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = itemsList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                itemsList = (ArrayList<StudentData>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
@@ -114,5 +155,6 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
         }
 
     }
+
 
 }
