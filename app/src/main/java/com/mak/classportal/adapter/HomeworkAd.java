@@ -53,7 +53,7 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
     public HomeworkAd(Context context, ArrayList<NoticeData> itemsList) {
         this.itemsList = itemsList;
         this.mContext = context;
-        sharedPreferences = context.getSharedPreferences("USer", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         appSingleTone = new AppSingleTone(mContext);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
 
@@ -83,13 +83,15 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
             }
         });
 
-        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                showPopupMenu(singleItem.getId(), i);
-                return false;
-            }
-        });
+        if (userSession.isTeacher()) {
+            holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showPopupMenu(singleItem.getId(), i);
+                    return false;
+                }
+            });
+        }
     }
 
     void showPopupMenu(String id, int pos) {

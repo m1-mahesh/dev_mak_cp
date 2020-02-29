@@ -49,6 +49,7 @@ public class NoticeFragment extends Fragment {
     AppSingleTone appSingleTone;
     UserSession userSession;
     SharedPreferences sharedPreferences;
+    public static boolean IS_ADD = false;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -61,6 +62,14 @@ public class NoticeFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (IS_ADD) {
+            IS_ADD = false;
+            getNoticeList();
+        }
+    }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -102,6 +111,7 @@ public class NoticeFragment extends Fragment {
                 notice.setDescription(object.getString("description"));
                 notice.setCreatedOn(object.getString("received_date"));
                 notice.setCreatedBy(object.getString("send_by"));
+                notice.setType(object.getString("media_type"));
                 noticeData.add(notice);
             }
             Collections.sort(noticeData, new Comparator<NoticeData>() {

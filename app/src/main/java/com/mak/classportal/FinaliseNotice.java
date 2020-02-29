@@ -38,6 +38,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.mak.classportal.fragment.NoticeFragment;
 import com.mak.classportal.fragment.NoticeStepTwoFragment;
 import com.mak.classportal.modales.Question;
 import com.mak.classportal.modales.StudentClass;
@@ -493,6 +494,7 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
                         if (result.getInt("error_code") == 200) {
                             showToast("New Notice Created");
                             setResult(Constant.ACTIVITY_FINISH_REQUEST_CODE);
+                            NoticeFragment.IS_ADD = true;
                             finish();
                         }
                     }catch (Exception e){

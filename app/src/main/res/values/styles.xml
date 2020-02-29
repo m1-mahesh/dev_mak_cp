@@ -55,9 +55,11 @@
     <string name="string_permission_quit">Exit App</string>
     <string name="string_settings">Settings</string>
 
-    <style name="Dialog" parent="Theme.AppCompat.Dialog">
+    <style name="Dialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:windowNoTitle">false</item>
         <item name="android:windowIsFloating">true</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+
     </style>
 
     <style name="pin_edittext_style">

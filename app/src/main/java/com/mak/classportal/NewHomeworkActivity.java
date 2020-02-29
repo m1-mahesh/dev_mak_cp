@@ -41,6 +41,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.mak.classportal.fragment.HomeworkFragment;
 import com.mak.classportal.modales.StudentClass;
 import com.mak.classportal.modales.SubjectData;
 import com.mak.classportal.utilities.AppSingleTone;
@@ -688,6 +689,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                     try {
                         if (result.getInt("error_code") == 200) {
                             showToast("New Homework Created");
+                            HomeworkFragment.IS_ADD = true;
                             finish();
                         } else {
                             showToast("Something went wrong, Please try again later");

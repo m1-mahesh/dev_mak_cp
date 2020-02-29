@@ -48,6 +48,7 @@ public class HomeworkFragment extends Fragment {
     AppSingleTone appSingleTone;
     UserSession userSession;
     SharedPreferences sharedPreferences;
+    public static boolean IS_ADD = false;
 
 
     @Override
@@ -65,7 +66,10 @@ public class HomeworkFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getHomeworkList();
+        if (IS_ADD) {
+            IS_ADD = false;
+            getHomeworkList();
+        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -108,6 +112,7 @@ public class HomeworkFragment extends Fragment {
                 notice.setDescription(object.getString("homework_message"));
                 notice.setCreatedOn(object.getString("submission_date"));
                 notice.setCreatedBy(object.getString("send_by"));
+                notice.setType(object.getString("media_type"));
                 homeworkData.add(notice);
             }
             Collections.sort(homeworkData, new Comparator<NoticeData>() {
