@@ -67,6 +67,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class NewHomeworkActivity extends AppCompatActivity implements View.OnClickListener {
@@ -630,8 +631,8 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (picturePath != null && !picturePath.equals(""))
-                    new MakeBase64().execute(picturePath);
+                //if (picturePath != null && !picturePath.equals(""))
+                    //new MakeBase64().execute(picturePath);
                 alertDialog.cancel();
             }
         });
@@ -679,12 +680,15 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         try {
             String url = appSingleTone.submitHomework;
 
+            Bitmap[] bitmaps = new Bitmap[1];
+            bitmaps[0] = BitmapFactory.decodeFile(picturePath);
+            submitHomeworkWithAttachment(bitmaps);
+
             JSONArray jsonArray = new JSONArray();
             for (Map.Entry<String, String> entry : selectedDivisions.entrySet()) {
                 String key = entry.getKey();
                 jsonArray.put(key);
             }
-//            fileBase64Str
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
             executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
@@ -694,6 +698,33 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             executeAPI.addPostParam("homework_message", descriptionEditText.getText().toString());
             executeAPI.addPostParam("submission_date", txtDate.getText().toString());
             executeAPI.addPostParam("media_attachment", fileBase64Str);
+            executeAPI.addPostParam("media_type", Constant.mediaTypes.get(mediaType.toLowerCase()));
+            executeAPI.addPostParam("sender_user_id", userSession.getAttribute("user_id"));
+            executeAPI.addPostParam("division_id_array", jsonArray.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void submitHomeworkWithAttachment(final Bitmap[] bitmaps) {
+
+        try {
+            JSONArray jsonArray = new JSONArray();
+            for (Map.Entry<String, String> entry : selectedDivisions.entrySet()) {
+                String key = entry.getKey();
+                jsonArray.put(key);
+            }
+
+            final String URL = appSingleTone.submitHomework;
+            ExecuteAPI executeAPI = new ExecuteAPI(this, URL, null);
+            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
+            executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
+            executeAPI.addPostParam("class_id", selectedClass);
+            executeAPI.addPostParam("homework_subject", selectedSubject);
+            executeAPI.addPostParam("title", titleEditText.getText().toString());
+            executeAPI.addPostParam("homework_message", descriptionEditText.getText().toString());
+            executeAPI.addPostParam("submission_date", txtDate.getText().toString());
             executeAPI.addPostParam("media_type", Constant.mediaTypes.get(mediaType.toLowerCase()));
             executeAPI.addPostParam("sender_user_id", userSession.getAttribute("user_id"));
             executeAPI.addPostParam("division_id_array", jsonArray.toString());
@@ -717,16 +748,15 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
 
                 @Override
                 public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
-                    Log.d("Result", errorResponse.toString());
+                    Log.d("Result", result.toString());
                 }
             });
             executeAPI.showProcessBar(true);
-            executeAPI.executeStringRequest(Request.Method.POST);
+            executeAPI.executeMultiPartRequest(Request.Method.POST, bitmaps, "media_attachment");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     class MakeBase64 extends AsyncTask<String, Boolean, String> {
 
         protected void onPreExecute() {

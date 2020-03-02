@@ -1,7 +1,6 @@
 package com.mak.classportal.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +12,6 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -28,11 +26,9 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mak.classportal.AppController;
-import com.mak.classportal.HomeWorkDetails;
 import com.mak.classportal.NewTimetableActivity;
 import com.mak.classportal.R;
 import com.mak.classportal.RootActivity;
-import com.mak.classportal.adapter.HomeworkAd;
 import com.mak.classportal.modales.NoticeData;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.ExecuteAPI;
@@ -107,7 +103,7 @@ public class TimeTableFragment extends Fragment {
     }
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    void parseHomeworkList(JSONObject jsonObject){
+    void parseTimetableList(JSONObject jsonObject){
         try {
             timeTableData.clear();
             Log.e("", jsonObject.toString());
@@ -115,14 +111,13 @@ public class TimeTableFragment extends Fragment {
             for(int i = 0;i<jsonArray.length();i++){
                 JSONObject object = jsonArray.getJSONObject(i);
                 NoticeData notice = new NoticeData();
-                /*notice.setId(object.getString("homework_id"));
-                notice.setTitle(object.getString("subject_name"));
+                notice.setId(object.getString("id"));
                 notice.setTitle(object.getString("title"));
-                notice.setMediaUrl(object.getString("media_attachment"));
-                notice.setDescription(object.getString("homework_message"));
-                notice.setCreatedOn(object.getString("submission_date"));
-                notice.setCreatedBy(object.getString("send_by"));
-                notice.setType(object.getString("media_type"));*/
+                notice.setMediaUrl(object.getString("media_name"));
+                notice.setCreatedBy(object.getString("sender_id"));
+                notice.setType(object.getString("media_type"));
+                notice.setClassName(object.getString("class_name"));
+                notice.setDivisionName(object.getString("division_name"));
                 timeTableData.add(notice);
             }
             Collections.sort(timeTableData, new Comparator<NoticeData>() {
@@ -165,7 +160,7 @@ public class TimeTableFragment extends Fragment {
                 @Override
                 public void onResponse(JSONObject result) {
                     Log.d("Result", result.toString());
-                    parseHomeworkList(result);
+                    parseTimetableList(result);
                 }
 
                 @Override
@@ -210,7 +205,7 @@ public class TimeTableFragment extends Fragment {
 
             ImageLoader imageLoader = AppController.getInstance().getImageLoader();
             holder.imageView.setImageUrl(singleItem.getMediaUrl(), imageLoader);
-            holder.createdOnDateTxt.setText(singleItem.getCreatedOn());
+            holder.createdOnDateTxt.setText(singleItem.getClassName()+"("+singleItem.getDivisionName()+")");
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

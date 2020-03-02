@@ -2,6 +2,7 @@ package com.mak.classportal.utilities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,11 +23,13 @@ import com.android.volley.toolbox.Volley;
 import com.mak.classportal.AppController;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -272,6 +275,92 @@ public class ExecuteAPI {
 
         return "";
     }
+
+    public void executeMultiPartRequest(int METHOD, final Bitmap[] bitmapArray, final String attribute) {
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(METHOD, requestUrl,
+                new Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        try {
+                            JSONObject obj = new JSONObject(new String(response.data));
+                            if (obj.getString("error_code").contains("200"))
+                                obj.put("code", 200);
+                            Log.e("response", "response" + response.toString());
+
+                            if (pDialog != null)
+                                pDialog.dismiss();
+                            onTaskCompleted.onResponse(obj);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        try {
+                            JSONObject obj = new JSONObject(new String(error.networkResponse.data));
+                            if (pDialog != null)
+                                pDialog.dismiss();
+                            onTaskCompleted.onErrorResponse(error, 400, obj);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }) {
+
+            /*
+             * If you want to add more parameters with the image
+             * you can do it here
+             * here we have only one parameter with the image
+             * which is tags
+             * */
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+//                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            /*
+             * Here we are passing image by renaming it with a unique name
+             * */
+            @Override
+            protected Map<String, VolleyMultipartRequest.DataPart[]> getByteData() {
+                DataPart[] dataParts = new DataPart[bitmapArray.length];
+                Map<String, DataPart[]> params = new HashMap<>();
+                if (bitmapArray.length>0) {
+                    long imageName = System.currentTimeMillis();
+                    for (int i = 0; i < bitmapArray.length; i++) {
+                        Bitmap bitmap = bitmapArray[i];
+                        dataParts[i] = new DataPart(imageName + ".jpeg", getFileDataFromDrawable(bitmap));
+                    }
+                    params.put(attribute, dataParts);
+                }
+                return params;
+            }
+        };
+
+        //adding the request to volley
+        RetryPolicy mRetryPolicy = new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        volleyMultipartRequest.setRetryPolicy(mRetryPolicy);
+        AppController.getInstance().addToRequestQueue(volleyMultipartRequest);
+
+    }
+//    https://www.simplifiedcoding.net/upload-pdf-file-server-android/
+    public byte[] getFileDataFromDrawable(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
+    }
+
     public void downloadFileRequest(){
         final InputStreamVolleyRequest request = new InputStreamVolleyRequest(Request.Method.GET, requestUrl,
                 new Response.Listener<byte[]>() {

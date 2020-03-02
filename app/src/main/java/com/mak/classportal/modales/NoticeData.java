@@ -8,7 +8,24 @@ public class NoticeData {
     public String mediaUrl;
     public String type;
     public String createdBy;
+    public String className, divisionName;
 
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getDivisionName() {
+        return divisionName;
+    }
+
+    public void setDivisionName(String divisionName) {
+        this.divisionName = divisionName;
+    }
 
     public String getTitle() {
         return title;
