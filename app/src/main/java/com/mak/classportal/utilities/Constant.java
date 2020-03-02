@@ -43,6 +43,9 @@ public class Constant {
     public static final String NOTICE_TYPE_DIVISION = "divisions";
     public static final String NOTICE_TYPE_STUDENTS = "students";
     public static final String NOTICE_TYPE_ALL = "all";
+
+    public static final String CONTENT_TYPE_IMAGE = "image";
+    public static final String CONTENT_TYPE_PDF_DOC = "pdf/doc";
     /*
         Student attempted test with result
         Teacher Created List with class name and id

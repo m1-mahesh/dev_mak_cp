@@ -275,8 +275,15 @@ public class ExecuteAPI {
 
         return "";
     }
-
-    public void executeMultiPartRequest(int METHOD, final Bitmap[] bitmapArray, final String attribute) {
+    String contentType = "";
+    String fileName = "";
+    public void setContentType(String contentType){
+        this.contentType = contentType;
+    }
+    public void setFileName(String fileName){
+        this.fileName = fileName;
+    }
+    public void executeMultiPartRequest(int METHOD, final Bitmap[] bitmapArray, final String attribute, InputStream pdfIStream) {
         VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(METHOD, requestUrl,
                 new Response.Listener<NetworkResponse>() {
                     @Override
@@ -331,15 +338,26 @@ public class ExecuteAPI {
              * */
             @Override
             protected Map<String, VolleyMultipartRequest.DataPart[]> getByteData() {
-                DataPart[] dataParts = new DataPart[bitmapArray.length];
+
                 Map<String, DataPart[]> params = new HashMap<>();
-                if (bitmapArray.length>0) {
-                    long imageName = System.currentTimeMillis();
-                    for (int i = 0; i < bitmapArray.length; i++) {
-                        Bitmap bitmap = bitmapArray[i];
-                        dataParts[i] = new DataPart(imageName + ".jpeg", getFileDataFromDrawable(bitmap));
+                if (contentType.equals(Constant.CONTENT_TYPE_IMAGE)) {
+                    DataPart[] dataParts = new DataPart[bitmapArray.length];
+                    if (bitmapArray.length > 0) {
+                        long imageName = System.currentTimeMillis();
+                        for (int i = 0; i < bitmapArray.length; i++) {
+                            Bitmap bitmap = bitmapArray[i];
+                            dataParts[i] = new DataPart(imageName + ".jpeg", getFileDataFromDrawable(bitmap));
+                        }
+                        params.put(attribute, dataParts);
                     }
-                    params.put(attribute, dataParts);
+                }else if (contentType.equals(Constant.CONTENT_TYPE_PDF_DOC)){
+                    DataPart[] dataParts = new DataPart[1];
+                    try {
+                        dataParts[0] = new DataPart(fileName , getBytes(pdfIStream));
+                        params.put(attribute, dataParts);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
                 }
                 return params;
             }
@@ -355,10 +373,23 @@ public class ExecuteAPI {
 
     }
 //    https://www.simplifiedcoding.net/upload-pdf-file-server-android/
+
     public byte[] getFileDataFromDrawable(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
+    }
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
     }
 
     public void downloadFileRequest(){
@@ -402,6 +433,8 @@ public class ExecuteAPI {
 
                                     output.close();
                                     input.close();
+                                    Log.e("file path", file.getAbsolutePath());
+                                    FileUtils.openFile(context, file);
                                 }catch(IOException e){
                                     e.printStackTrace();
 

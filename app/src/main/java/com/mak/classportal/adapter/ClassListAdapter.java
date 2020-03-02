@@ -13,19 +13,16 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
-import com.mak.classportal.TakeAttendance;
 import com.mak.classportal.TestsList;
 import com.mak.classportal.ViewAttendanceActivity;
 import com.mak.classportal.modales.StudentClass;
 import com.mak.classportal.utilities.Constant;
-import com.mak.classportal.utilities.OnClassClick;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.SingleItemRowHolder> {
 
-    public static OnClassClick onClassClick;
     public static String menuId = "";
     String className = "";
     private ArrayList<StudentClass> itemsList;

@@ -89,6 +89,7 @@
                         android:textColor="@android:color/black"
                         android:textSize="15sp" />
                     <TextView
+                        android:id="@+id/fileType"
                         android:layout_toRightOf="@id/tvTitle"
                         android:layout_marginLeft="10dp"
                         android:fontFamily="sans-serif-thin"

@@ -1,8 +1,6 @@
 package com.mak.classportal.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +11,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mak.classportal.R;
-import com.mak.classportal.TestIntroActivity;
-import com.mak.classportal.TestResultActivity;
 import com.mak.classportal.modales.Question;
-import com.mak.classportal.modales.TestData;
-import com.mak.classportal.utilities.OnClassClick;
 import com.mak.classportal.utilities.UserSession;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class TestResults extends RecyclerView.Adapter<TestResults.SingleItemRowHolder> {
 
-    public static OnClassClick onClassClick;
     boolean isAttemptedTest = false;
     String className = "";
     private ArrayList<Question> itemsList;

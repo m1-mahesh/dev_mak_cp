@@ -19,7 +19,6 @@ import com.mak.classportal.TestResultActivity;
 import com.mak.classportal.ViewTestQuestions;
 import com.mak.classportal.modales.TestData;
 import com.mak.classportal.utilities.Constant;
-import com.mak.classportal.utilities.OnClassClick;
 import com.mak.classportal.utilities.UserSession;
 
 import java.text.ParseException;
@@ -30,9 +29,6 @@ import java.util.Date;
 
 public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAdapter.SingleItemRowHolder> {
 
-    public static OnClassClick onClassClick;
-    public static String menuId = "";
-    String className = "";
     UserSession userSession;
     private ArrayList<TestData> itemsList;
     private Context mContext;

@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -89,6 +90,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
     boolean isCamera;
     ImageView imageView;
     String picturePath = "";
+    Uri fileUri;
     String fileBase64Str = "";
     String extension;
     ImageView attachmentIc;
@@ -100,32 +102,6 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
     String fileName = "";
     ProgressDialog progressDialog;
     private int mYear, mMonth, mDay, mHour, mMinute;
-
-    public static String convertFileToByteArray(String picturePath) {
-        byte[] byteArray = null;
-        try {
-            String extension = picturePath.substring(picturePath.lastIndexOf("."));
-            String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
-            String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
-            File file = new File(picturePath);
-            InputStream inputStream = new FileInputStream(file);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            byte[] b = new byte[1024 * 11];
-            int bytesRead = 0;
-
-            while ((bytesRead = inputStream.read(b)) != -1) {
-                bos.write(b, 0, bytesRead);
-            }
-
-            byteArray = bos.toByteArray();
-
-            Log.e("Byte array", ">" + byteArray);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Base64.encodeToString(byteArray, Base64.NO_WRAP);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +164,10 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                                monthOfYear ++;
+                                String month = monthOfYear<10?"0"+monthOfYear:""+monthOfYear;
+                                String day = dayOfMonth<10?"0"+dayOfMonth:""+dayOfMonth;
+                                txtDate.setText(year + "-" + month  + "-" + day);
 
                             }
                         }, mYear, mMonth, mDay);
@@ -439,13 +418,9 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                         startActivityForResult(cameraIntent, Constant.CAMERA_REQUEST);
                     } else {
                         try {
-
-                            String folderPath = Environment.getRootDirectory() + "";
                             Intent intent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
                             intent.setAction(Intent.ACTION_GET_CONTENT);
-                            Uri myUri = Uri.parse(folderPath);
-                            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                            intent.setDataAndType(myUri, "file/*");
+                            intent.setType("application/pdf images/*");
                             startActivityForResult(intent, Constant.PICKFILE_RESULT_CODE);
                         } catch (ActivityNotFoundException e) {
                             e.printStackTrace();
@@ -462,11 +437,11 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         isValidFile = false;
         if (requestCode == Constant.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
+            fileUri = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            Cursor cursor = getContentResolver().query(fileUri, filePathColumn, null, null, null);
             if (cursor == null) { // Source is Dropbox or other similar local file path
-                picturePath = selectedImage.getPath();
+                picturePath = fileUri.getPath();
                 isValidFile = true;
             } else {
                 int idx = cursor.getColumnIndex(MediaStore.Images.Media.DATA); // Is this the wrong way to get the image cursor?
@@ -477,7 +452,6 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                 cursor.close();
             }
             File f = new File(picturePath);
-            imageView.setImageURI(selectedImage);
             int file_size = Integer.parseInt(String.valueOf(f.length() / 1024));
             fileName = picturePath.substring(picturePath.lastIndexOf("/") + 1);
             int lastDotPosition = fileName.lastIndexOf('.');
@@ -488,6 +462,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             }
             if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
                 mediaType = "Image";
+                imageView.setImageURI(fileUri);
                 if (file_size > 5120) {
                     showToast(getString(R.string.validation_image_size_msg));
                 } else isValidFile = true;
@@ -532,12 +507,12 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             }
         } else if (requestCode == Constant.CAMERA_REQUEST && resultCode == RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            Uri tempUri = getImageUri(getApplicationContext(), photo);
-            File finalFile = new File(getRealPathFromURI(tempUri));
+            fileUri = getImageUri(getApplicationContext(), photo);
+            File finalFile = new File(getRealPathFromURI(fileUri));
             selectedFileText.setText(finalFile.getName());
             picturePath = finalFile.toString();
             mediaType = "Image";
-            fileName = tempUri.getLastPathSegment();
+            fileName = fileUri.getLastPathSegment();
             imageView.setImageBitmap(photo);
             int file_size = Integer.parseInt(String.valueOf(finalFile.length() / 1024));
             if (file_size > 5120) {
@@ -545,58 +520,18 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             } else isValidFile = true;
         } else if (requestCode == Constant.PICKFILE_RESULT_CODE && resultCode == RESULT_OK) {
 
-            Uri uri = data.getData();
-            if (uri.getScheme().compareTo("content") == 0) {
-                String[] projection = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-                if (cursor.moveToFirst()) {
-                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    final Uri filePathUri = Uri.parse(cursor.getString(column_index));
-                    fileName = filePathUri.getLastPathSegment();
-                    picturePath = filePathUri.getPath();
-                    int file_size = Integer.parseInt(String.valueOf(picturePath.length() / 1024));
-
-                    int lastDotPosition = fileName.lastIndexOf('.');
-                    if (lastDotPosition > 0) {
-                        String string3 = fileName.substring(lastDotPosition + 1);
-                        extension = string3.toLowerCase();
-                        if (extension.equalsIgnoreCase("pdf")) {
-                            isValidFile = true;
-                        } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
-                            mediaType = "Image";
-                            imageView.setImageURI(uri);
-                            if (file_size > 5120) {
-                                showToast(getString(R.string.validation_image_size_msg));
-                            } else isValidFile = true;
-
-                        } else {
-                            showToast(getString(R.string.extension_validation));
-                        }
-                    }
-                    cursor.close();
-                }
-            } else if (uri.getScheme().compareTo("file") == 0) {
-                picturePath = data.getData().getPath();
-                File f = new File(picturePath);
-                int file_size = Integer.parseInt(String.valueOf(f.length() / 1024));
-                Log.e("file_size", "file_size" + file_size);
-                fileName = data.getData().getLastPathSegment();
-                int lastDotPosition = fileName.lastIndexOf('.');
-                if (lastDotPosition > 0) {
-                    String string3 = fileName.substring(lastDotPosition + 1);
-                    extension = string3.toLowerCase();
-                    if (extension.equalsIgnoreCase("pdf")) {
+            fileUri = data.getData();
+            if (fileUri.getScheme().compareTo("content") == 0) {
+                Cursor cursor = null;
+                try {
+                    cursor = this.getContentResolver().query(fileUri, null, null, null, null);
+                    if (cursor != null && cursor.moveToFirst()) {
                         mediaType = "Pdf";
+                        fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                         isValidFile = true;
-                    } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
-                        mediaType = "Image";
-                        if (file_size > 5120) {
-                            showToast(getString(R.string.validation_image_size_msg));
-                        } else isValidFile = true;
-
-                    } else {
-                        showToast(getString(R.string.extension_validation));
                     }
+                } finally {
+                    cursor.close();
                 }
             }
 
@@ -647,20 +582,6 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    String toBase64(Bitmap bitmap) {
-        try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-
-            fileBase64Str = Base64.encodeToString(byteArray, Base64.DEFAULT);
-            return fileBase64Str;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -676,40 +597,16 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void submitHomework() {
-
         try {
-            String url = appSingleTone.submitHomework;
-
-            Bitmap[] bitmaps = new Bitmap[1];
-            bitmaps[0] = BitmapFactory.decodeFile(picturePath);
-            submitHomeworkWithAttachment(bitmaps);
-
-            JSONArray jsonArray = new JSONArray();
-            for (Map.Entry<String, String> entry : selectedDivisions.entrySet()) {
-                String key = entry.getKey();
-                jsonArray.put(key);
+            Bitmap[] bitmaps = null;
+            InputStream iStream = null;
+            if (mediaType.equalsIgnoreCase("pdf")||mediaType.equalsIgnoreCase("doc")) {
+                iStream = getContentResolver().openInputStream(fileUri);
+            }else {
+                bitmaps = new Bitmap[1];
+                bitmaps[0] = BitmapFactory.decodeFile(picturePath);
             }
-            ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
-            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
-            executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
-            executeAPI.addPostParam("class_id", selectedClass);
-            executeAPI.addPostParam("homework_subject", selectedSubject);
-            executeAPI.addPostParam("title", titleEditText.getText().toString());
-            executeAPI.addPostParam("homework_message", descriptionEditText.getText().toString());
-            executeAPI.addPostParam("submission_date", txtDate.getText().toString());
-            executeAPI.addPostParam("media_attachment", fileBase64Str);
-            executeAPI.addPostParam("media_type", Constant.mediaTypes.get(mediaType.toLowerCase()));
-            executeAPI.addPostParam("sender_user_id", userSession.getAttribute("user_id"));
-            executeAPI.addPostParam("division_id_array", jsonArray.toString());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void submitHomeworkWithAttachment(final Bitmap[] bitmaps) {
-
-        try {
             JSONArray jsonArray = new JSONArray();
             for (Map.Entry<String, String> entry : selectedDivisions.entrySet()) {
                 String key = entry.getKey();
@@ -751,78 +648,18 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                     Log.d("Result", result.toString());
                 }
             });
+
             executeAPI.showProcessBar(true);
-            executeAPI.executeMultiPartRequest(Request.Method.POST, bitmaps, "media_attachment");
+            if (bitmaps==null && iStream!=null) {
+                executeAPI.setContentType(Constant.CONTENT_TYPE_PDF_DOC);
+                executeAPI.setFileName(fileName);
+                executeAPI.executeMultiPartRequest(Request.Method.POST, null, "media_attachment", iStream);
+            }else if(bitmaps!=null) {
+                executeAPI.setContentType(Constant.CONTENT_TYPE_IMAGE);
+                executeAPI.executeMultiPartRequest(Request.Method.POST, bitmaps, "media_attachment", null);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    class MakeBase64 extends AsyncTask<String, Boolean, String> {
-
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(NewHomeworkActivity.this);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        protected String doInBackground(String... params) {
-            String filePath = params[0];
-            try {
-                if (filePath != null && !filePath.equals("")) {
-                    if (mediaType.equalsIgnoreCase("image")) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-//                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false);
-                        fileBase64Str = toBase64(bitmap);
-                    } else {
-                        fileBase64Str = encodeFileToBase64Binary(new File(filePath));
-                    }
-                }
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return fileBase64Str;
-        }
-
-        public String convertBitmapToString(Bitmap bitmap) {
-            String encodedImage = "";
-
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            try {
-                encodedImage = URLEncoder.encode(Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-            return encodedImage;
-        }
-
-        private String encodeFileToBase64Binary(File yourFile) {
-            int size = (int) yourFile.length();
-            byte[] bytes = new byte[size];
-            try {
-                BufferedInputStream buf = new BufferedInputStream(new FileInputStream(yourFile));
-                buf.read(bytes, 0, bytes.length);
-                buf.close();
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-            String encoded = Base64.encodeToString(bytes, Base64.NO_WRAP);
-            return encoded;
-        }
-
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (progressDialog != null)
-                progressDialog.dismiss();
-        }
-
     }
 }

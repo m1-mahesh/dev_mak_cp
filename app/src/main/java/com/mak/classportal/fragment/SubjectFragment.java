@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,15 +26,9 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.mak.classportal.R;
 import com.mak.classportal.VideoChapterListActivity;
-import com.mak.classportal.adapter.SubjectListAdapter;
-import com.mak.classportal.modales.HomeMenu;
-import com.mak.classportal.modales.NoticeData;
-import com.mak.classportal.modales.StudentData;
 import com.mak.classportal.modales.SubjectData;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.ExecuteAPI;
-import com.mak.classportal.utilities.FileUtils;
-import com.mak.classportal.utilities.OnClassClick;
 import com.mak.classportal.utilities.UserSession;
 
 import org.json.JSONArray;

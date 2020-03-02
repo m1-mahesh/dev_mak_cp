@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mak.classportal.R;
 import com.mak.classportal.modales.NoticeData;
 import com.mak.classportal.utilities.AppSingleTone;
-import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.FileUtils;
-import com.mak.classportal.utilities.OnClassClick;
 
 import java.util.ArrayList;
 
@@ -26,8 +24,6 @@ public class PaperListAd extends RecyclerView.Adapter<PaperListAd.SingleItemRowH
 
     private ArrayList<NoticeData> itemsList;
     private Context mContext;
-    public static OnClassClick onClassClick;
-    public static String menuId = "";
     TextView customToast;
     LayoutInflater inflater;
     View tostLayout;

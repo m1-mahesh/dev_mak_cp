@@ -14,9 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mak.classportal.PlayVideoActivity;
 import com.mak.classportal.R;
 import com.mak.classportal.modales.NoticeData;
-import com.mak.classportal.utilities.Constant;
-import com.mak.classportal.utilities.OnClassClick;
-import com.mak.classportal.video_player.AndExoPlayerView;
 
 import java.util.ArrayList;
 

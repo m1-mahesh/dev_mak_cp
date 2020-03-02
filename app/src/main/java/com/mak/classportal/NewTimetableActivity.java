@@ -96,9 +96,7 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
     String mediaType = "";
     Dialog alertDialog;
     String fileName = "";
-    ProgressDialog progressDialog;
-    private int mYear, mMonth, mDay, mHour, mMinute;
-
+    Uri fileUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -321,11 +319,11 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
         isValidFile = false;
         if (requestCode == Constant.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
+            fileUri = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            Cursor cursor = getContentResolver().query(fileUri, filePathColumn, null, null, null);
             if (cursor == null) { // Source is Dropbox or other similar local file path
-                picturePath = selectedImage.getPath();
+                picturePath = fileUri.getPath();
                 isValidFile = true;
             } else {
                 int idx = cursor.getColumnIndex(MediaStore.Images.Media.DATA); // Is this the wrong way to get the image cursor?
@@ -336,7 +334,7 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
                 cursor.close();
             }
             File f = new File(picturePath);
-            imageView.setImageURI(selectedImage);
+            imageView.setImageURI(fileUri);
             int file_size = Integer.parseInt(String.valueOf(f.length() / 1024));
             fileName = picturePath.substring(picturePath.lastIndexOf("/") + 1);
             int lastDotPosition = fileName.lastIndexOf('.');
@@ -391,12 +389,12 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
             }
         } else if (requestCode == Constant.CAMERA_REQUEST && resultCode == RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            Uri tempUri = getImageUri(getApplicationContext(), photo);
-            File finalFile = new File(getRealPathFromURI(tempUri));
+            fileUri = getImageUri(getApplicationContext(), photo);
+            File finalFile = new File(getRealPathFromURI(fileUri));
             selectedFileText.setText(finalFile.getName());
             picturePath = finalFile.toString();
             mediaType = "Image";
-            fileName = tempUri.getLastPathSegment();
+            fileName = fileUri.getLastPathSegment();
             imageView.setImageBitmap(photo);
             int file_size = Integer.parseInt(String.valueOf(finalFile.length() / 1024));
             if (file_size > 5120) {
@@ -404,10 +402,10 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
             } else isValidFile = true;
         } else if (requestCode == Constant.PICKFILE_RESULT_CODE && resultCode == RESULT_OK) {
 
-            Uri uri = data.getData();
-            if (uri.getScheme().compareTo("content") == 0) {
+            fileUri = data.getData();
+            if (fileUri.getScheme().compareTo("content") == 0) {
                 String[] projection = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+                Cursor cursor = getContentResolver().query(fileUri, projection, null, null, null);
                 if (cursor.moveToFirst()) {
                     int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                     final Uri filePathUri = Uri.parse(cursor.getString(column_index));
@@ -423,7 +421,7 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
                             isValidFile = true;
                         } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
                             mediaType = "Image";
-                            imageView.setImageURI(uri);
+                            imageView.setImageURI(fileUri);
                             if (file_size > 5120) {
                                 showToast(getString(R.string.validation_image_size_msg));
                             } else isValidFile = true;
@@ -434,7 +432,7 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
                     }
                     cursor.close();
                 }
-            } else if (uri.getScheme().compareTo("file") == 0) {
+            } else if (fileUri.getScheme().compareTo("file") == 0) {
                 picturePath = data.getData().getPath();
                 File f = new File(picturePath);
                 int file_size = Integer.parseInt(String.valueOf(f.length() / 1024));
@@ -490,8 +488,6 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (picturePath != null && !picturePath.equals(""))
-                    new MakeBase64().execute(picturePath);
                 alertDialog.cancel();
             }
         });
@@ -576,72 +572,4 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    class MakeBase64 extends AsyncTask<String, Boolean, String> {
-
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(NewTimetableActivity.this);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        protected String doInBackground(String... params) {
-            String filePath = params[0];
-            try {
-                if (filePath != null && !filePath.equals("")) {
-                    if (mediaType.equalsIgnoreCase("image")) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false);
-                        fileBase64Str = convertBitmapToString(resizedBitmap);
-                    } else {
-                        fileBase64Str = encodeFileToBase64Binary(new File(filePath));
-                    }
-                }
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return fileBase64Str;
-        }
-
-        public String convertBitmapToString(Bitmap bitmap) {
-            String encodedImage = "";
-
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            try {
-                encodedImage = URLEncoder.encode(Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-            return encodedImage;
-        }
-
-        private String encodeFileToBase64Binary(File yourFile) {
-            int size = (int) yourFile.length();
-            byte[] bytes = new byte[size];
-            try {
-                BufferedInputStream buf = new BufferedInputStream(new FileInputStream(yourFile));
-                buf.read(bytes, 0, bytes.length);
-                buf.close();
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-            String encoded = Base64.encodeToString(bytes, Base64.NO_WRAP);
-            return encoded;
-        }
-
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (progressDialog != null)
-                progressDialog.dismiss();
-        }
-
-    }
 }

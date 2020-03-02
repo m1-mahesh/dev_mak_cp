@@ -23,7 +23,6 @@ import com.mak.classportal.R;
 import com.mak.classportal.modales.NoticeData;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.ExecuteAPI;
-import com.mak.classportal.utilities.OnClassClick;
 import com.mak.classportal.utilities.UserSession;
 
 import org.json.JSONObject;
@@ -35,9 +34,6 @@ import java.util.Date;
 
 public class NoticeListAd extends RecyclerView.Adapter<NoticeListAd.SingleItemRowHolder> {
 
-    public static OnClassClick onClassClick;
-    public static String menuId = "";
-    String className = "";
     private ArrayList<NoticeData> itemsList;
     private Context mContext;
     AppSingleTone appSingleTone;
