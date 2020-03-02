@@ -103,7 +103,8 @@ public class DashboardFragment extends Fragment {
         menu6.setMenuId(4);
         menu6.setId("videos");
         menu6.setResourceId(R.drawable.menu_video);
-        allClassData.add(menu6);
+        if (userSession.isStudent())
+            allClassData.add(menu6);
 
         HomeMenu menu3 = new HomeMenu();
         menu3.setMenuId(9);

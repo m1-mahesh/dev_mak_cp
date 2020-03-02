@@ -19,6 +19,7 @@
     <string name="finalise_test">Finalise Test</string>
     <string name="new_notice">New Notice</string>
     <string name="new_homework">Homework</string>
+    <string name="new_timetable">New Timetable</string>
     <string name="title_activity_tests_list">Scheduled Tests</string>
     <string name="select_class_prompt">Select Class</string>
     <string name="error_message">Something Went Wrong Please Try Again Later...</string>

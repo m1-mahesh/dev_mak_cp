@@ -2,6 +2,7 @@ package com.mak.classportal.utilities;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Constant {
     public static final String CLOSE = "Close";
@@ -50,6 +51,7 @@ public class Constant {
         Active and upcoming test for student
 
     */
+   public static HashMap<String, String> mediaTypes = new HashMap<>();
 
 
 

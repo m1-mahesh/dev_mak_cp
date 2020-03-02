@@ -30,6 +30,7 @@ import com.mak.classportal.fragment.HomeworkFragment;
 import com.mak.classportal.fragment.NoticeFragment;
 import com.mak.classportal.fragment.PaperListFragment;
 import com.mak.classportal.fragment.ProfileFragment;
+import com.mak.classportal.fragment.SubjectFragment;
 import com.mak.classportal.fragment.TestResultFragment;
 import com.mak.classportal.fragment.TimeTableFragment;
 import com.mak.classportal.fragment.VideosFragment;
@@ -38,6 +39,7 @@ import com.mak.classportal.permission.PermissionsChecker;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.FileUtils;
+import com.mak.classportal.utilities.MethodPlugins;
 import com.mak.classportal.utilities.UserSession;
 
 import static com.mak.classportal.permission.PermissionsActivity.PERMISSION_REQUEST_CODE;
@@ -70,6 +72,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         appSingleTone = new AppSingleTone(this);
+        MethodPlugins.initMediaType();
         if (checker.lacksPermissions(REQUIRED_PERMISSION)) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -195,11 +198,10 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 closeDrawer();
                 break;
             case R.id.videos:
-                toolbar.setTitle("Videos");
-                /*getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new VideosFragment())
-                        .commit();*/
-                startActivity(new Intent(RootActivity.this, ViewAttendanceActivity.class));
-                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                toolbar.setTitle("Subjects");
+                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new SubjectFragment())
+                        .commit();
+
                 closeDrawer();
                 break;
             case R.id.testSchedule:

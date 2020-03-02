@@ -52,10 +52,10 @@ public class HomeWorkDetails extends AppCompatActivity {
         if (noticeData != null) {
             descriptionText.setText(noticeData.getDescription());
             if (noticeData.getType()!=null){
-                if (noticeData.getType().equalsIgnoreCase("pdf")||noticeData.getType().equalsIgnoreCase("doc")){
+                if (noticeData.getType().equalsIgnoreCase("2")||noticeData.getType().equalsIgnoreCase("3")){
                     forDownloadView.setVisibility(View.VISIBLE);
                     forImageViewLayout.setVisibility(View.GONE);
-                }else if (noticeData.getType().equalsIgnoreCase("image")){
+                }else if (noticeData.getType().equalsIgnoreCase("1")){
                     forDownloadView.setVisibility(View.GONE);
                     forImageViewLayout.setVisibility(View.VISIBLE);
                 }else {

@@ -25,10 +25,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,14 +43,17 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
-import com.mak.classportal.fragment.NoticeFragment;
-import com.mak.classportal.fragment.NoticeStepTwoFragment;
+import com.mak.classportal.fragment.HomeworkFragment;
+import com.mak.classportal.fragment.TimeTableFragment;
+import com.mak.classportal.modales.StudentClass;
+import com.mak.classportal.modales.SubjectData;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
 import com.mak.classportal.utilities.ExecuteAPI;
 import com.mak.classportal.utilities.UserSession;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -59,109 +67,60 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
-public class FinaliseNotice extends AppCompatActivity implements View.OnClickListener {
+public class NewTimetableActivity extends AppCompatActivity implements View.OnClickListener {
 
-    // Will be one_class divisions, division students, all(divisions, students, all)
-    public static String NOTICE_TYPE = "";
-    public static String CLASS_ID = "";
-    public static ArrayList<String> selectedStudents = new ArrayList<>();
-    public static ArrayList<String> selectedDivisions = new ArrayList<>();
-    EditText txtDate;
-    TextView customToast;
+    EditText titleEditText;
+    TextView customToast, attachmentText;
     LayoutInflater inflater;
     View tostLayout;
     Calendar c;
+    Spinner classSpinner, divisionSpinner;
+    AppSingleTone appSingleTone;
+    UserSession userSession;
+    SharedPreferences sharedPreferences;
+    ArrayList<StudentClass> classes = new ArrayList<>();
+    ArrayList<SubjectData> subjects = new ArrayList<>();
+    String selectedClass = "", selectedDivision = "";
     boolean isCamera;
     ImageView imageView;
     String picturePath = "";
-    AppSingleTone appSingleTone;
-    SharedPreferences sharedPreferences;
-    UserSession userSession;
-    TextView attachmentText;
-    EditText titleEditText, descriptionEditText;
-    Button saveButton;
+    String fileBase64Str = "";
+    String extension;
     ImageView attachmentIc;
     TextView selectedFileText;
-    JSONArray studentIdArray = new JSONArray();
-    JSONArray divisionIdArray = new JSONArray();
-    String noticeType = "";
     Dialog dialog1;
     boolean isValidFile = false;
-    String fileBase64Str = "";
-    String extension, mediaType = "";
+    String mediaType = "";
     Dialog alertDialog;
     String fileName = "";
     ProgressDialog progressDialog;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
-    public static String convertFileToByteArray(String picturePath) {
-        byte[] byteArray = null;
-        try {
-            String extension = picturePath.substring(picturePath.lastIndexOf("."));
-            String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
-            String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
-            File file = new File(picturePath);
-            InputStream inputStream = new FileInputStream(file);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            byte[] b = new byte[1024 * 11];
-            int bytesRead = 0;
-
-            while ((bytesRead = inputStream.read(b)) != -1) {
-                bos.write(b, 0, bytesRead);
-            }
-
-            byteArray = bos.toByteArray();
-
-            Log.e("Byte array", ">" + byteArray);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Base64.encodeToString(byteArray, Base64.NO_WRAP);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_notice);
+        setContentView(R.layout.activity_new_time_table);
+        ((TextView) findViewById(R.id.tvTitle)).setText(R.string.new_timetable);
+        titleEditText = findViewById(R.id.title_edit_text);
+        attachmentText = findViewById(R.id.attachment);
+        classSpinner = findViewById(R.id.selectClass);
+        divisionSpinner = findViewById(R.id.selectDivision);
+        imageView = findViewById(R.id.imageView);
         appSingleTone = new AppSingleTone(this);
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
-        ((TextView) findViewById(R.id.tvTitle)).setText(R.string.new_notice);
-        attachmentText = findViewById(R.id.attachment);
-        imageView = findViewById(R.id.imageView);
-        descriptionEditText = findViewById(R.id.descriptionEditText);
-        titleEditText = findViewById(R.id.title_edit_text);
-        saveButton = findViewById(R.id.saveButton);
         attachmentIc = findViewById(R.id.attachmentIcon);
         selectedFileText = findViewById(R.id.selectedFileText);
         attachmentText.setOnClickListener(this);
         attachmentIc.setOnClickListener(this);
-        saveButton.setOnClickListener(this);
-        prepareSubmitData();
-
-    }
-
-    void prepareSubmitData() {
-        if (NOTICE_TYPE.equals(Constant.NOTICE_TYPE_STUDENTS)) {
-            CLASS_ID = "";
-            for (int i = 0; i < SelectStudents.selectedStudents.size(); i++) {
-                String q = SelectStudents.selectedStudents.get(i);
-                studentIdArray.put(q);
-            }
-            noticeType = "3";
-        } else if (NOTICE_TYPE.equals(Constant.NOTICE_TYPE_DIVISION)) {
-            noticeType = "1";
-            for (Map.Entry<String, String> entry : NoticeStepTwoFragment.selectedDivisions.entrySet()) {
-                String key = entry.getKey();
-                divisionIdArray.put(key);
-            }
-        } else {
-            noticeType = "2";
-            CLASS_ID = "";
-        }
+        attachmentText.setOnClickListener(this);
+        c = Calendar.getInstance();
+        findViewById(R.id.saveButton).setOnClickListener(this);
+        getClassDivision();
     }
 
     void showToast(String toastText) {
@@ -181,26 +140,15 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.date_edit_text:
-                mYear = c.get(Calendar.YEAR);
-                mMonth = c.get(Calendar.MONTH);
-                mDay = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                        new DatePickerDialog.OnDateSetListener() {
 
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-
-                                txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-
-                            }
-                        }, mYear, mMonth, mDay);
-                datePickerDialog.show();
-                break;
             case R.id.saveButton:
-                if (validateFields())
-                    saveNotice("");
+                if (selectedClass.equals(""))
+                    showToast("Please Select Class");
+                else if (selectedDivision.equals(""))
+                    showToast("Please Select Division");
+                else if (titleEditText.getText().toString().equals(""))
+                    showToast("Please Enter Timetabale Title");
+                else submitHomework();
                 break;
             case R.id.attachment:
                 showPicPopup();
@@ -214,25 +162,121 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    boolean validateFields() {
+    void spinnerImplementation(boolean isClass) {
+        if (isClass) {
+            ArrayAdapter<StudentClass> adapter = new ArrayAdapter<StudentClass>(this, android.R.layout.simple_spinner_dropdown_item, classes);
+            classSpinner.setAdapter(adapter);
+            classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    StudentClass sClass = (StudentClass) parent.getSelectedItem();
+                    selectedClass = sClass.getId();
+                    String[] divisionArrays = new String[sClass.getDivisions().size()+1];
+                    divisionSpinner.setVisibility(View.VISIBLE);
+                    int i = 0;
+                    divisionArrays[i++] = "Select Division";
+                    for (Map.Entry<String, String> entry : sClass.getDivisions().entrySet()) {
+                        String key = entry.getKey();
+                        String value = entry.getValue();
+                        divisionArrays[i++] = value;
+                    }
+                    ArrayAdapter<String> adapter1 = new ArrayAdapter(NewTimetableActivity.this, android.R.layout.simple_spinner_dropdown_item, divisionArrays);
+                    divisionSpinner.setAdapter(adapter1);
+                    divisionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            String sDiv = (String) adapterView.getSelectedItem();
+                            for (Map.Entry<String, String> entry : sClass.getDivisions().entrySet()) {
+                                String key = entry.getKey();
+                                String value = entry.getValue();
+                                if (sDiv.equals(value)){
+                                    selectedClass = sClass.getId();
+                                    selectedDivision = key;
+                                    break;
+                                }else {
+                                    selectedDivision = "";
+                                }
+                            }
 
-        boolean isValid = false;
-        if (!titleEditText.getText().toString().equals(""))
-            isValid = true;
-        else {
-            showToast("'Title' should not be empty, Please Enter Title");
-            isValid = false;
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
         }
-        if (isValid) {
-            if (!descriptionEditText.getText().toString().equals("")) {
-                isValid = true;
-            } else {
-                showToast("'Description' should not be empty, Please Enter Description");
-                isValid = false;
-            }
-        }
-        return isValid;
     }
+
+    public void getClassDivision() {
+
+        try {
+            String url = appSingleTone.classDivisionList;
+
+            ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
+            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
+            executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
+            executeAPI.addPostParam("teacher_id", userSession.getAttribute("user_id"));
+            executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                @Override
+                public void onResponse(JSONObject result) {
+                    Log.d("Result", result.toString());
+                    try {
+                        if (result.has("class_list")) {
+                            JSONArray object = result.getJSONArray("class_list");
+                            prepareClassData(object);
+                        } else {
+                            showToast("Something went wrong, Please try again later");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                    Log.d("Result", errorResponse.toString());
+                }
+            });
+            executeAPI.showProcessBar(true);
+            executeAPI.executeStringRequest(Request.Method.POST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void prepareClassData(JSONArray apiResponse) {
+        try {
+            classes.clear();
+            StudentClass aClass1 = new StudentClass();
+            aClass1.setName("Select Class");
+            aClass1.setId("");
+            classes.add(aClass1);
+            for (int i = 0; i < apiResponse.length(); i++) {
+                JSONObject classObj = apiResponse.getJSONObject(i);
+                StudentClass aClass = new StudentClass();
+                aClass.setId(classObj.getString("class_id"));
+                aClass.setName(classObj.getString("class_name"));
+                for (int j = 0; j < classObj.getJSONArray("division_list").length(); j++) {
+                    JSONObject obj = classObj.getJSONArray("division_list").getJSONObject(j);
+                    aClass.addDivision(obj.getString("division_id"), obj.getString("division_name"));
+                }
+                classes.add(aClass);
+            }
+            spinnerImplementation(true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     void showPicPopup() {
         if (appSingleTone.checkAndRequestPermissions()) {
@@ -303,7 +347,6 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
             }
             if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
                 mediaType = "Image";
-                imageView.setImageURI(selectedImage);
                 if (file_size > 5120) {
                     showToast(getString(R.string.validation_image_size_msg));
                 } else isValidFile = true;
@@ -314,13 +357,13 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
                 } else if (file_size > 10240) {
 
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(
-                            FinaliseNotice.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+                            NewTimetableActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
                     builder1.setTitle("Warning")
                             .setMessage(
                                     getString(R.string.file_size_is_large_validation))
                             .setPositiveButton(
                                     "YES",
-                                    new android.content.DialogInterface.OnClickListener() {
+                                    new DialogInterface.OnClickListener() {
                                         @Override
 
                                         public void onClick(
@@ -331,7 +374,7 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
                                     })
                             .setNegativeButton(
                                     "NO",
-                                    new android.content.DialogInterface.OnClickListener() {
+                                    new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(
                                                 DialogInterface dialog,
@@ -350,9 +393,9 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             Uri tempUri = getImageUri(getApplicationContext(), photo);
             File finalFile = new File(getRealPathFromURI(tempUri));
-            mediaType = "Image";
             selectedFileText.setText(finalFile.getName());
             picturePath = finalFile.toString();
+            mediaType = "Image";
             fileName = tempUri.getLastPathSegment();
             imageView.setImageBitmap(photo);
             int file_size = Integer.parseInt(String.valueOf(finalFile.length() / 1024));
@@ -378,9 +421,9 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
                         extension = string3.toLowerCase();
                         if (extension.equalsIgnoreCase("pdf")) {
                             isValidFile = true;
-                            mediaType = "Pdf";
                         } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
                             mediaType = "Image";
+                            imageView.setImageURI(uri);
                             if (file_size > 5120) {
                                 showToast(getString(R.string.validation_image_size_msg));
                             } else isValidFile = true;
@@ -402,8 +445,8 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
                     String string3 = fileName.substring(lastDotPosition + 1);
                     extension = string3.toLowerCase();
                     if (extension.equalsIgnoreCase("pdf")) {
-                        isValidFile = true;
                         mediaType = "Pdf";
+                        isValidFile = true;
                     } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
                         mediaType = "Image";
                         if (file_size > 5120) {
@@ -449,8 +492,7 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
             public void onClick(View v) {
                 if (picturePath != null && !picturePath.equals(""))
                     new MakeBase64().execute(picturePath);
-                if (alertDialog != null)
-                    alertDialog.cancel();
+                alertDialog.cancel();
             }
         });
         yesButton.setOnClickListener(new View.OnClickListener() {
@@ -462,6 +504,19 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
         alertDialog = builder.create();
         alertDialog.show();
 
+    }
+
+    String toBase64(Bitmap bitmap) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            fileBase64Str = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            return fileBase64Str;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -478,35 +533,32 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
         return cursor.getString(idx);
     }
 
-    public void saveNotice(String test_id) {
+    public void submitHomework() {
 
         try {
-            String url = appSingleTone.submitNotice;
-
+            String url = appSingleTone.createTimetable;
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
-            executeAPI.addPostParam("title", titleEditText.getText().toString());
-            executeAPI.addPostParam("description", descriptionEditText.getText().toString());
-            executeAPI.addPostParam("media_base64", fileBase64Str);
-            executeAPI.addPostParam("media_type", Constant.mediaTypes.get(mediaType.toLowerCase()));
-            executeAPI.addPostParam("send_by_user_id", userSession.getAttribute("user_id"));
             executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
-            executeAPI.addPostParam("type", noticeType);
-            executeAPI.addPostParam("class_id", CLASS_ID);
-            executeAPI.addPostParam("division_id_array", divisionIdArray.toString());
-            executeAPI.addPostParam("student_id_array", studentIdArray.toString());
+            executeAPI.addPostParam("class_id", selectedClass);
+            executeAPI.addPostParam("title", titleEditText.getText().toString());
+            executeAPI.addPostParam("media_url", fileBase64Str);
+            executeAPI.addPostParam("media_type", Constant.mediaTypes.get(mediaType.toLowerCase()));
+            executeAPI.addPostParam("sender_user_id", userSession.getAttribute("user_id"));
+            executeAPI.addPostParam("division_id", selectedDivision);
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override
                 public void onResponse(JSONObject result) {
+                    Log.d("Result", result.toString());
                     try {
-                        Log.d("Result", result.toString());
                         if (result.getInt("error_code") == 200) {
-                            showToast("New Notice Created");
-                            setResult(Constant.ACTIVITY_FINISH_REQUEST_CODE);
-                            NoticeFragment.IS_ADD = true;
+                            showToast("New TimeTable Created");
+                            TimeTableFragment.IS_ADD = true;
                             finish();
+                        } else {
+                            showToast("Something went wrong, Please try again later");
                         }
-                    } catch (Exception e) {
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
@@ -523,22 +575,11 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
     }
-    String toBase64(Bitmap bitmap) {
-        try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            fileBase64Str = Base64.encodeToString(byteArray, Base64.DEFAULT);
-            return fileBase64Str;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+
     class MakeBase64 extends AsyncTask<String, Boolean, String> {
 
         protected void onPreExecute() {
-            progressDialog = new ProgressDialog(FinaliseNotice.this);
+            progressDialog = new ProgressDialog(NewTimetableActivity.this);
             progressDialog.setMessage("Loading...");
             progressDialog.setCancelable(false);
             progressDialog.show();
@@ -550,10 +591,10 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
                 if (filePath != null && !filePath.equals("")) {
                     if (mediaType.equalsIgnoreCase("image")) {
                         Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-//                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false);
-                        fileBase64Str = toBase64(bitmap);
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false);
+                        fileBase64Str = convertBitmapToString(resizedBitmap);
                     } else {
-                        fileBase64Str = convertFileToByteArray(filePath);
+                        fileBase64Str = encodeFileToBase64Binary(new File(filePath));
                     }
                 }
             } catch (Exception e) {

@@ -16,42 +16,32 @@
             android:id="@+id/topView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:padding="15dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/colorPrimary"
+            android:background="@color/light_cyan"
             android:orientation="horizontal"
             android:weightSum="1">
 
             <TextView
+                android:id="@+id/titleTxt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".5"
-                android:fontFamily="sans-serif-light"
+                android:layout_weight="1"
+                android:textColor="@color/twitter"
+                android:fontFamily="@font/proximanovaregular"
                 android:gravity="center"
                 android:text="10th STD"
                 android:textSize="15sp" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".5"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:text="Maths"
-                android:textSize="15sp" />
         </LinearLayout>
 
-        <com.mak.classportal.video_player.AndExoPlayerView
-
-            android:id="@+id/andExoPlayerView"
+        <ImageView
+            android:id="@+id/playerPlaceHolder"
+            android:scaleType="fitXY"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:andexo_aspect_ratio="aspect_16_9"
-            app:andexo_full_screen="true"
-            app:andexo_play_when_ready="true"
-            app:andexo_resize_mode="Fit"
-            app:andexo_show_controller="true" />
+            android:src="@drawable/video_play"
+            android:layout_height="190dp"
+             />
 
 
 

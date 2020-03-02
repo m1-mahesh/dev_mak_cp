@@ -1,5 +1,6 @@
 package com.mak.classportal.modales;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ public class SubjectData {
     public String divisionId;
     public Map<String, String> chapters = new HashMap<>();
     public Map<String, String> divisions = new HashMap<>();
+    ArrayList<SubjectData> chaptersList = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -73,5 +75,13 @@ public class SubjectData {
         }
 
         return false;
+    }
+
+    public ArrayList<SubjectData> getChaptersList() {
+        return chaptersList;
+    }
+
+    public void setChaptersList(ArrayList<SubjectData> chaptersList) {
+        this.chaptersList = chaptersList;
     }
 }

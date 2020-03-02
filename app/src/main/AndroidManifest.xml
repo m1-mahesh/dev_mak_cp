@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mak.classportal" >
+    package="com.mak.classportal">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -20,7 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".FinaliseNotice"></activity>
+        <activity android:name=".PlayVideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" />
+        <activity android:name=".FinaliseNotice" />
         <activity android:name=".SelectStudents" />
         <activity android:name=".ViewTestQuestions" />
         <activity
@@ -36,6 +38,9 @@
         <activity
             android:name=".TestsList"
             android:label="@string/title_activity_tests_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VideoChapterListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ViewAttendanceActivity"
@@ -55,6 +60,9 @@
             android:name=".NewHomeworkActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".NewTimetableActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".TestResultActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".FinaliseTest" />
@@ -64,7 +72,7 @@
         <activity
             android:name=".TakeAttendance"
             android:label="@string/title_activity_take_attendance"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

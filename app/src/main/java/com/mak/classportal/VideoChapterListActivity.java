@@ -1,10 +1,11 @@
-package com.mak.classportal.fragment;
+package com.mak.classportal;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -12,30 +13,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
-import com.mak.classportal.R;
-import com.mak.classportal.VideoChapterListActivity;
-import com.mak.classportal.adapter.SubjectListAdapter;
-import com.mak.classportal.modales.HomeMenu;
+import com.mak.classportal.adapter.VideoListAd;
 import com.mak.classportal.modales.NoticeData;
-import com.mak.classportal.modales.StudentData;
 import com.mak.classportal.modales.SubjectData;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.ExecuteAPI;
-import com.mak.classportal.utilities.FileUtils;
-import com.mak.classportal.utilities.OnClassClick;
 import com.mak.classportal.utilities.UserSession;
 
 import org.json.JSONArray;
@@ -43,76 +38,81 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- * Created by Konstantin on 22.12.2014.
- */
-public class SubjectFragment extends Fragment {
+public class VideoChapterListActivity extends AppCompatActivity {
 
-    static String menuId = "";
-    protected ImageView mImageView;
-    protected int res;
-    ArrayList<SubjectData> subjectData;
-    private View containerView;
-    private Bitmap bitmap;
     AppSingleTone appSingleTone;
-    SharedPreferences sharedPreferences;
     UserSession userSession;
-    RecyclerView subjectList;
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        this.containerView = view.findViewById(R.id.container);
-        appSingleTone = new AppSingleTone(getContext());
-        sharedPreferences = getContext().getSharedPreferences("User", Context.MODE_PRIVATE);
-        userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
-        subjectList = view.findViewById(R.id.subjectList);
-        subjectList.setHasFixedSize(true);
-        getSubjectChapters();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        subjectData = new ArrayList<>();
-
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_subject, container, false);
-
-        return rootView;
-    }
+    SharedPreferences sharedPreferences;
+    Typeface opensanssemibold;
+    Calendar c = Calendar.getInstance();
+    RecyclerView recyclerView;
+    LinearLayout notFoundView;
     TextView customToast;
     LayoutInflater inflater;
     View tostLayout;
-    void showToast(String toastText){
-        inflater = getActivity().getLayoutInflater();
+    public static SubjectData subjectData;
+    public static String CHAPTER_ID;
+    public static boolean IS_VIDEO;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.video_chapter_list);
+        appSingleTone = new AppSingleTone(this);
+        opensanssemibold = ResourcesCompat.getFont(this, R.font.opensanssemibold);
+        sharedPreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+        userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
+        recyclerView = findViewById(R.id.attendanceView);
+        notFoundView = findViewById(R.id.notFoundView);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Chapters");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        if (IS_VIDEO){
+            getSupportActionBar().setTitle("Videos");
+            getVideoList();
+        }else {
+            ChapterAd adapter1 = new ChapterAd(this);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter1);
+        }
+
+    }
+
+    void showToast(String toastText) {
+        inflater = getLayoutInflater();
         tostLayout = inflater.inflate(R.layout.toast_layout_file,
-                (ViewGroup) getActivity().findViewById(R.id.toast_layout_root));
+                findViewById(R.id.toast_layout_root));
         customToast = tostLayout.findViewById(R.id.text);
-        Toast toast = new Toast(getContext());
+        Toast toast = new Toast(getApplicationContext());
         customToast.setText(toastText);
-        customToast.setTypeface(ResourcesCompat.getFont(getContext(), R.font.opensansregular));
-        toast.setGravity(Gravity.NO_GRAVITY, 0, 0);
-        toast.setDuration(Toast.LENGTH_LONG);
+        customToast.setTypeface(ResourcesCompat.getFont(this, R.font.opensansregular));
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(tostLayout);
         toast.show();
     }
+    public class ChapterAd extends RecyclerView.Adapter<ChapterAd.SingleItemRowHolder> {
 
-    public class SubjectAd extends RecyclerView.Adapter<SubjectAd.SingleItemRowHolder> {
-
-        private ArrayList<SubjectData> itemsList;
         private Context mContext;
-
+        ArrayList<SubjectData> chapters = new ArrayList<>();
         AppSingleTone appSingleTone;
-        public SubjectAd(Context context, ArrayList<SubjectData> itemsList) {
-            this.itemsList = itemsList;
+        public ChapterAd(Context context) {
             this.mContext = context;
             appSingleTone = new AppSingleTone(mContext);
+            chapters = subjectData.getChaptersList();
         }
 
         @Override
@@ -124,14 +124,13 @@ public class SubjectFragment extends Fragment {
         }
         @Override
         public void onBindViewHolder(SingleItemRowHolder holder, int i) {
-
-            final SubjectData singleItem = itemsList.get(i);
-            holder.tvTitle.setText(singleItem.getName());
+            SubjectData chapterObj = chapters.get(i);
+            holder.tvTitle.setText(chapterObj.getName());
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    VideoChapterListActivity.subjectData = singleItem;
-                    VideoChapterListActivity.IS_VIDEO = false;
+                    VideoChapterListActivity.CHAPTER_ID = chapterObj.getId();
+                    VideoChapterListActivity.IS_VIDEO = true;
                     mContext.startActivity(new Intent(mContext, VideoChapterListActivity.class));
                     ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
@@ -142,7 +141,7 @@ public class SubjectFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return (null != itemsList ? itemsList.size() : 0);
+            return (null != chapters ? chapters.size() : 0);
         }
 
         public class SingleItemRowHolder extends RecyclerView.ViewHolder {
@@ -165,50 +164,48 @@ public class SubjectFragment extends Fragment {
         }
 
     }
+    ArrayList<NoticeData>  videosList = new ArrayList<>();
     void prepareSubjectChapter(JSONArray apiResponse){
         try {
-            subjectData.clear();
+            videosList.clear();
 
             for (int i = 0; i < apiResponse.length(); i++) {
                 JSONObject classObj = apiResponse.getJSONObject(i);
-                SubjectData aClass = new SubjectData();
-                aClass.setId(classObj.getString("id"));
-                aClass.setName(classObj.getString("subject_name"));
-                ArrayList<SubjectData> chapterList = new ArrayList<>();
-                for (int j =0; j< classObj.getJSONArray("chapter_list").length(); j++) {
-                    JSONObject obj = classObj.getJSONArray("chapter_list").getJSONObject(j);
-                    SubjectData chapter = new SubjectData();
-                    chapter.setId(obj.getString("id"));
-                    chapter.setName(obj.getString("chapter_name"));
-                    chapterList.add(chapter);
-                }
-                aClass.setChaptersList(chapterList);
-                Log.e("",aClass.id);
-                subjectData.add(aClass);
+                NoticeData aClass = new NoticeData();
+                aClass.setId(classObj.getString("video_id"));
+                aClass.setTitle(classObj.getString("title"));
+                aClass.setType(classObj.getString("video_type"));
+                aClass.setMediaUrl(classObj.getString("video_url"));
+                videosList.add(aClass);
             }
-            SubjectAd adapter1 = new SubjectAd(getContext(), subjectData);
-            subjectList.setLayoutManager(new LinearLayoutManager(getContext()));
-            subjectList.setAdapter(adapter1);
+            VideoListAd adapter1 = new VideoListAd(this, videosList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(adapter1);
+
         }catch (JSONException e){
             e.printStackTrace();
         }
     }
-    public void getSubjectChapters() {
+    public void getVideoList() {
 
         try {
-            String url = appSingleTone.subjectChapterList;
+            String url = appSingleTone.getVideos;
 
-            ExecuteAPI executeAPI = new ExecuteAPI(getContext(), url, null);
+            ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
             executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
+            executeAPI.addPostParam("student_id", userSession.getAttribute("user_id"));
             executeAPI.addPostParam("class_id", userSession.getAttribute("class_id"));
+            executeAPI.addPostParam("division_id", userSession.getAttribute("division_id"));
+            executeAPI.addPostParam("subject_id", subjectData.getId());
+            executeAPI.addPostParam("chapter_id", CHAPTER_ID);
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override
                 public void onResponse(JSONObject result) {
                     Log.d("Result", result.toString());
                     try {
-                        if (result.has("subject_list")) {
-                            JSONArray object = result.getJSONArray("subject_list");
+                        if (result.has("video_list")) {
+                            JSONArray object = result.getJSONArray("video_list");
                             prepareSubjectChapter(object);
                         } else {
                             showToast("Something went wrong, Please try again later");
@@ -231,4 +228,3 @@ public class SubjectFragment extends Fragment {
         }
     }
 }
-

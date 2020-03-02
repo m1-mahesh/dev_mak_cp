@@ -88,6 +88,12 @@ public class AppSingleTone {
     public String attendanceStatusByClass = "http://nikvay.com/demo/schoolApp/ws-check-attendence-status";
     public String deleteNotice = "http://nikvay.com/demo/schoolApp/ws-delete-notice-for-teacher";
     public String deleteHomework = "http://nikvay.com/demo/schoolApp/ws-delete-homework-for-teacher";
+    public String createTimetable = "http://nikvay.com/demo/schoolApp/ws-submit-timetable-for-teacher";
+    public String getTimetablesForStudent = "http://nikvay.com/demo/schoolApp/ws-timetable-list";
+    public String getTimetablesForTeacher = "http://nikvay.com/demo/schoolApp/ws-timetable-list-for-teacher";
+    public String deleteTimetable = "http://nikvay.com/demo/schoolApp/ws-delete-timetable-for-teacher";
+    public String getVideos = "http://nikvay.com/demo/schoolApp/ws-video-list";
+    public String getTopicVideos = "http://nikvay.com/demo/schoolApp/ws-topic-list";
 
     Context context;
     UserSession userSession;
