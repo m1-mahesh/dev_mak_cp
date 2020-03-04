@@ -372,7 +372,6 @@ public class ExecuteAPI {
         AppController.getInstance().addToRequestQueue(volleyMultipartRequest);
 
     }
-//    https://www.simplifiedcoding.net/upload-pdf-file-server-android/
 
     public byte[] getFileDataFromDrawable(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -390,72 +389,6 @@ public class ExecuteAPI {
             byteBuffer.write(buffer, 0, len);
         }
         return byteBuffer.toByteArray();
-    }
-
-    public void downloadFileRequest(){
-        final InputStreamVolleyRequest request = new InputStreamVolleyRequest(Request.Method.GET, requestUrl,
-                new Response.Listener<byte[]>() {
-                    @Override
-                    public void onResponse(byte[] response) {
-                        // TODO handle the response
-                        HashMap<String, Object> map = new HashMap<String, Object>();
-                        try {
-                            if (response!=null) {
-
-                                //Read file name from headers (We have configured API to send file name in "Content-Disposition" header in following format: "File-Name:File-Format" example "MyDoc:pdf"
-
-                                String filename = "downloadd";
-                                filename = filename.replace(":", ".");
-                                Log.d("DEBUG::FILE NAME", filename);
-
-                                try{
-                                    long lenghtOfFile = response.length;
-
-                                    //covert reponse to input stream
-                                    InputStream input = new ByteArrayInputStream(response);
-
-                                    //Create a file on desired path and write stream data to it
-                                    File path = Environment.getExternalStorageDirectory();
-                                    File file = new File(path, filename);
-                                    map.put("resume_path", file.toString());
-                                    BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(file));
-                                    byte data[] = new byte[1024];
-
-                                    long total = 0;
-
-                                    int count;
-                                    while ((count = input.read(data)) != -1) {
-                                        total += count;
-                                        output.write(data, 0, count);
-                                    }
-
-                                    output.flush();
-
-                                    output.close();
-                                    input.close();
-                                    Log.e("file path", file.getAbsolutePath());
-                                    FileUtils.openFile(context, file);
-                                }catch(IOException e){
-                                    e.printStackTrace();
-
-                                }
-                            }
-                        } catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            Log.d("KEY_ERROR", "UNABLE TO DOWNLOAD FILE");
-                            e.printStackTrace();
-                        }
-                    }
-                } ,new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // TODO handle the error
-                error.printStackTrace();
-            }
-        }, null);
-        RequestQueue mRequestQueue = Volley.newRequestQueue(context, new HurlStack());
-        mRequestQueue.add(request);
     }
 
 

@@ -37,7 +37,7 @@ public class HomeWorkDetails extends AppCompatActivity {
     Toolbar toolbar;
     NetworkImageView homeworkAttachment;
     LinearLayout containerView;
-    TextView descriptionText;
+    TextView descriptionText, titleTxt, fileTypeText;
     ProgressBar progressBar;
     ImageLoader imageLoader;
     ImageView downloadIcon, downloadPdfDoc;
@@ -54,6 +54,8 @@ public class HomeWorkDetails extends AppCompatActivity {
         setSupportActionBar(toolbar);
         containerView = findViewById(R.id.containerView);
         descriptionText = findViewById(R.id.descriptionText);
+        titleTxt = findViewById(R.id.tvTitle);
+        fileTypeText = findViewById(R.id.fileType);
         homeworkAttachment = findViewById(R.id.homeworkAttachment);
         progressBar = findViewById(R.id.progressBar);
         downloadIcon = findViewById(R.id.downloadIcon);
@@ -85,6 +87,8 @@ public class HomeWorkDetails extends AppCompatActivity {
                         fileExt = "pdf";
                     else fileExt = "doc";
                     forDownloadView.setVisibility(View.VISIBLE);
+                    fileTypeText.setText("("+fileExt+")");
+                    titleTxt.setText("Attachment");
                     forImageViewLayout.setVisibility(View.GONE);
                 }else if (noticeData.getType().equalsIgnoreCase("1")){
                     fileExt = "png";
@@ -126,9 +130,9 @@ public class HomeWorkDetails extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(HomeWorkDetails.this);
-            pDialog.setMax(100);
-            pDialog.setMessage("Its loading....");
-            pDialog.setTitle("Downloading");
+//            pDialog.setMax(100);
+            pDialog.setMessage("Downloading...");
+//            pDialog.setTitle("Downloading");
             pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             pDialog.show();
             pDialog.setCancelable(false);
@@ -152,7 +156,7 @@ public class HomeWorkDetails extends AppCompatActivity {
                 InputStream input = new BufferedInputStream(url.openStream(), 8192);
                 File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
                 // Output stream
-                OutputStream output = new FileOutputStream(path.getAbsolutePath()+"/downloadedfile."+ext);
+                OutputStream output = new FileOutputStream(path.getAbsolutePath()+"/"+noticeData.getId()+"."+ext);
 
                 byte data[] = new byte[1024];
 
@@ -205,7 +209,9 @@ public class HomeWorkDetails extends AppCompatActivity {
             // Reading image path from sdcard
 
             try{
-                String imagePath = Environment.getExternalStorageDirectory().toString() + "/downloadedfile."+fileExt;
+                File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                // Output stream
+                String imagePath = path.getAbsolutePath()+"/"+noticeData.getId()+"."+fileExt;
                 File file = new File(imagePath);
                 FileUtils.openFile(HomeWorkDetails.this, file);
             }catch (Exception e){
@@ -216,5 +222,6 @@ public class HomeWorkDetails extends AppCompatActivity {
         }
 
     }
+
 
 }

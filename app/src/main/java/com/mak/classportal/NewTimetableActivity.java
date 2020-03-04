@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -296,13 +297,9 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
                         startActivityForResult(cameraIntent, Constant.CAMERA_REQUEST);
                     } else {
                         try {
-
-                            String folderPath = Environment.getRootDirectory() + "";
                             Intent intent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
                             intent.setAction(Intent.ACTION_GET_CONTENT);
-                            Uri myUri = Uri.parse(folderPath);
-                            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                            intent.setDataAndType(myUri, "file/*");
+                            intent.setType("application/pdf images/*");
                             startActivityForResult(intent, Constant.PICKFILE_RESULT_CODE);
                         } catch (ActivityNotFoundException e) {
                             e.printStackTrace();
@@ -404,56 +401,40 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
 
             fileUri = data.getData();
             if (fileUri.getScheme().compareTo("content") == 0) {
-                String[] projection = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(fileUri, projection, null, null, null);
-                if (cursor.moveToFirst()) {
-                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    final Uri filePathUri = Uri.parse(cursor.getString(column_index));
-                    fileName = filePathUri.getLastPathSegment();
-                    picturePath = filePathUri.getPath();
-                    int file_size = Integer.parseInt(String.valueOf(picturePath.length() / 1024));
-
+                Cursor cursor = null;
+                try {
+                    File f = new File(fileUri.toString());
+                    int file_size = Integer.parseInt(String.valueOf(f.length() / 1024));
+                    cursor = this.getContentResolver().query(fileUri, null, null, null, null);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    }
                     int lastDotPosition = fileName.lastIndexOf('.');
                     if (lastDotPosition > 0) {
                         String string3 = fileName.substring(lastDotPosition + 1);
                         extension = string3.toLowerCase();
                         if (extension.equalsIgnoreCase("pdf")) {
-                            isValidFile = true;
+                            mediaType = "Pdf";
+                            if (file_size > 5120) {
+                                showToast(getString(R.string.validation_image_size_msg));
+                            } else isValidFile = true;
                         } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
                             mediaType = "Image";
-                            imageView.setImageURI(fileUri);
                             if (file_size > 5120) {
                                 showToast(getString(R.string.validation_image_size_msg));
                             } else isValidFile = true;
 
-                        } else {
+                        }  else if (extension.equalsIgnoreCase("doc") || extension.equalsIgnoreCase("docx") ) {
+                            mediaType = "Doc";
+                            if (file_size > 5120) {
+                                showToast(getString(R.string.validation_image_size_msg));
+                            } else isValidFile = true;
+                        }else{
                             showToast(getString(R.string.extension_validation));
                         }
                     }
+                } finally {
                     cursor.close();
-                }
-            } else if (fileUri.getScheme().compareTo("file") == 0) {
-                picturePath = data.getData().getPath();
-                File f = new File(picturePath);
-                int file_size = Integer.parseInt(String.valueOf(f.length() / 1024));
-                Log.e("file_size", "file_size" + file_size);
-                fileName = data.getData().getLastPathSegment();
-                int lastDotPosition = fileName.lastIndexOf('.');
-                if (lastDotPosition > 0) {
-                    String string3 = fileName.substring(lastDotPosition + 1);
-                    extension = string3.toLowerCase();
-                    if (extension.equalsIgnoreCase("pdf")) {
-                        mediaType = "Pdf";
-                        isValidFile = true;
-                    } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
-                        mediaType = "Image";
-                        if (file_size > 5120) {
-                            showToast(getString(R.string.validation_image_size_msg));
-                        } else isValidFile = true;
-
-                    } else {
-                        showToast(getString(R.string.extension_validation));
-                    }
                 }
             }
 
@@ -532,13 +513,24 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
     public void submitHomework() {
 
         try {
+            Bitmap[] bitmaps = null;
+            InputStream iStream = null;
+            if (mediaType.equalsIgnoreCase("pdf")||mediaType.equalsIgnoreCase("doc")) {
+                iStream = getContentResolver().openInputStream(fileUri);
+            }else if(!picturePath.equals("")){
+                bitmaps = new Bitmap[1];
+                bitmaps[0] = BitmapFactory.decodeFile(picturePath);
+            }else {
+                showToast("Select Attachment");
+                return;
+            }
+
             String url = appSingleTone.createTimetable;
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
             executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
             executeAPI.addPostParam("class_id", selectedClass);
             executeAPI.addPostParam("title", titleEditText.getText().toString());
-            executeAPI.addPostParam("media_url", fileBase64Str);
             executeAPI.addPostParam("media_type", Constant.mediaTypes.get(mediaType.toLowerCase()));
             executeAPI.addPostParam("sender_user_id", userSession.getAttribute("user_id"));
             executeAPI.addPostParam("division_id", selectedDivision);
@@ -566,7 +558,14 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
                 }
             });
             executeAPI.showProcessBar(true);
-            executeAPI.executeStringRequest(Request.Method.POST);
+            if (bitmaps==null && iStream!=null) {
+                executeAPI.setContentType(Constant.CONTENT_TYPE_PDF_DOC);
+                executeAPI.setFileName(fileName);
+                executeAPI.executeMultiPartRequest(Request.Method.POST, null, "media_url", iStream);
+            }else if(bitmaps!=null) {
+                executeAPI.setContentType(Constant.CONTENT_TYPE_IMAGE);
+                executeAPI.executeMultiPartRequest(Request.Method.POST, bitmaps, "media_url", null);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -524,11 +524,35 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             if (fileUri.getScheme().compareTo("content") == 0) {
                 Cursor cursor = null;
                 try {
+                    File f = new File(fileUri.toString());
+                    int file_size = Integer.parseInt(String.valueOf(f.length() / 1024));
                     cursor = this.getContentResolver().query(fileUri, null, null, null, null);
                     if (cursor != null && cursor.moveToFirst()) {
-                        mediaType = "Pdf";
                         fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                        isValidFile = true;
+                    }
+                    int lastDotPosition = fileName.lastIndexOf('.');
+                    if (lastDotPosition > 0) {
+                        String string3 = fileName.substring(lastDotPosition + 1);
+                        extension = string3.toLowerCase();
+                        if (extension.equalsIgnoreCase("pdf")) {
+                            mediaType = "Pdf";
+                            if (file_size > 5120) {
+                                showToast(getString(R.string.validation_image_size_msg));
+                            } else isValidFile = true;
+                        } else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
+                            mediaType = "Image";
+                            if (file_size > 5120) {
+                                showToast(getString(R.string.validation_image_size_msg));
+                            } else isValidFile = true;
+
+                        }  else if (extension.equalsIgnoreCase("doc") || extension.equalsIgnoreCase("docx") ) {
+                            mediaType = "Doc";
+                            if (file_size > 5120) {
+                                showToast(getString(R.string.validation_image_size_msg));
+                            } else isValidFile = true;
+                        }else{
+                            showToast(getString(R.string.extension_validation));
+                        }
                     }
                 } finally {
                     cursor.close();
@@ -602,9 +626,12 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             InputStream iStream = null;
             if (mediaType.equalsIgnoreCase("pdf")||mediaType.equalsIgnoreCase("doc")) {
                 iStream = getContentResolver().openInputStream(fileUri);
-            }else {
+            }else if(!picturePath.equals("")){
                 bitmaps = new Bitmap[1];
                 bitmaps[0] = BitmapFactory.decodeFile(picturePath);
+            }else {
+                showToast("Select Attachment");
+                return;
             }
 
             JSONArray jsonArray = new JSONArray();
