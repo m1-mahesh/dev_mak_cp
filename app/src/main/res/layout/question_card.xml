@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    card_view:cardCornerRadius="15dp"
+    card_view:cardElevation="0dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/qImage"
+            android:src="@drawable/maths_im"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"/>
+        <TextView
+            android:layout_below="@+id/qImage"
+            android:id="@+id/marksTxt"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/opensanssemibold"
+            android:textSize="15sp"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/textViewCard"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/marksTxt"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="7dp"
+            android:gravity="left"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="15sp"
+            android:text="@string/dummy_text"/>
+
+        <RadioGroup
+            android:id="@+id/optionView"
+            android:layout_below="@+id/textViewCard"
+            android:layout_width="match_parent"
+            android:padding="15dp"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+
+        </RadioGroup>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

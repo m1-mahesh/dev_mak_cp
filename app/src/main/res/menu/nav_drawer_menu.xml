@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/dashboard"
+            android:icon="@drawable/ic_dashboard_24dp"
+            android:title="Dashboard" />
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/ic_person_24dp"
+            android:title="Profile" />
+        <item
+            android:id="@+id/attendance"
+            android:icon="@drawable/ic_filter_24dp"
+            android:title="Attendance" />
+        <item
+            android:id="@+id/notice"
+            android:icon="@drawable/ic_notifications_24dp"
+            android:title="Notice" />
+        <item
+            android:id="@+id/videos"
+            android:icon="@drawable/ic_video_library_24dp"
+            android:title="Video Lecture" />
+        <item
+            android:id="@+id/testSchedule"
+            android:icon="@drawable/ic_schedule_black_24dp"
+            android:title="Online Test Schedule"
+            />
+        <item
+            android:id="@+id/testResult"
+            android:icon="@drawable/ic_assessment_24dp"
+            android:title="Test Results"
+            />
+        <item
+            android:id="@+id/homework"
+            android:icon="@drawable/ic_homework_24dp"
+            android:title="Homework"
+            />
+        <item
+            android:id="@+id/timeTable"
+            android:icon="@drawable/ic_view_week_24dp"
+            android:title="Timetable"
+            />
+        <item
+            android:id="@+id/paper"
+            android:title="Board Paper"
+            android:iconTint="@color/colorPrimaryDark"
+            android:icon="@drawable/ic_exposure_24dp"
+            />
+
+        <item
+            android:id="@+id/logout"
+            android:title="Logout"
+            android:iconTint="@color/colorPrimaryDark"
+            android:icon="@drawable/ic_logout_24dp"
+            />
+
+    </group>
+
+</menu>

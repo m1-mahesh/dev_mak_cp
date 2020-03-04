@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    tools:context=".RunTest">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/countDownText"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:text=""
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/skipButton"
+            android:layout_width="wrap_content"
+            android:layout_margin="7dp"
+            android:text="SKIP"
+            android:layout_alignParentEnd="true"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/rounded_bg"
+            android:fontFamily="@font/opensansbold"
+            android:textColor="@color/twitter"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_below="@+id/topBar"
+        android:id="@+id/questionCount"
+        android:layout_margin="05dp"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/opensansbold"
+        android:textSize="15sp"
+        android:text="05/26"
+        android:layout_height="wrap_content"/>
+    <com.mak.classportal.swap_plugin.CustomViewPager
+        android:layout_below="@+id/questionCount"
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <Button
+        android:id="@+id/buttonSwipeLeft"
+        android:layout_margin="7dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:text="Previous"
+        android:textColor="@color/white"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/twitter"
+        android:fontFamily="@font/opensansbold"
+        />
+    <Button
+        android:id="@+id/buttonSwipeRight"
+        android:padding="10dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:text="Next"
+        android:layout_width="wrap_content"
+        android:textColor="@color/white"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="7dp"
+        android:background="@color/twitter"
+        android:fontFamily="@font/opensansbold"
+        />
+
+</RelativeLayout>

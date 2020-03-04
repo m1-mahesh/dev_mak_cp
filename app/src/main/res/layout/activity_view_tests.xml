@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".NewTestActivity">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+    <RelativeLayout
+        android:id="@+id/fullscreen_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true"
+        >
+        <TextView
+            android:id="@+id/tvTitle"
+            android:padding="20dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:textStyle="bold"
+            android:fontFamily="serif-monospace"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/tvTitle"
+            android:layout_width="match_parent"
+            android:padding="20dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/selectClass"
+                android:background="@drawable/layout_border"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+            <TextView
+                android:id="@+id/classText"
+                android:fontFamily="@font/proximanovaregular"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/selectTxt"
+                android:layout_marginTop="20dp"
+                android:textSize="15dp"
+                android:visibility="gone"
+                android:layout_marginLeft="15dp"
+                android:fontFamily="@font/proximanovaregular"
+                android:layout_width="wrap_content"
+                android:text="Select Division:"
+                android:layout_height="wrap_content"/>
+
+            <GridLayout
+                android:id="@+id/divisionsLayout"
+                android:columnCount="3"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+            </GridLayout>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/selectSubject"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                android:background="@drawable/layout_border"
+                android:prompt="@string/select_division_prompt"
+                android:entries="@array/subject_arrays"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/selectLevel"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/layout_border"
+                android:prompt="@string/select_division_prompt"
+                android:entries="@array/level_arrays"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_alignParentBottom="true"
+            android:background="@color/twitter"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:onClick="next"
+            android:fontFamily="@font/opensansbold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dummy_button" />
+
+
+    </RelativeLayout>
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+</FrameLayout>

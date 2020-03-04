@@ -1,0 +1,112 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:id="@+id/main_content"
+    >
+    <View
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/circle"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:background="@drawable/circle"/>
+    <TextView
+        android:layout_toEndOf="@+id/circle"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/proximanovaregular"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:text="Absent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_below="@id/circle"
+        android:id="@+id/titleLayout"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_alignParentStart="true"
+            android:id="@+id/prev_button"
+            android:paddingLeft="8dp"
+            android:src="@drawable/button_previous_month_selector"
+            android:fontFamily="@font/proximanovaregular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:id="@+id/calTitle"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/proximanovaregular"
+            android:textSize="18sp"
+            android:text="ABCS"
+            android:textColor="@color/colorPrimary"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_alignParentEnd="true"
+            android:id="@+id/next_button"
+            android:fontFamily="@font/proximanovaregular"
+            android:paddingRight="8dp"
+            android:src="@drawable/button_next_month_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <com.github.sundeepk.compactcalendarview.CompactCalendarView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/compactcalendar_view"
+        android:layout_below="@+id/titleLayout"
+        android:layout_marginTop="3dp"
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
+        app:compactCalendarTargetHeight="250dp"
+        app:compactCalendarTextSize="15sp"
+        app:compactCalendarTextColor="#000"
+        android:fontFamily="@font/proximanovaregular"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#fff"
+        app:compactCalendarCurrentDayBackgroundColor="#fff"
+        app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="false"
+        />
+
+    <TextView
+        android:id="@+id/reportText"
+        android:layout_below="@+id/compactcalendar_view"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/proximanovaregular"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Report of month:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/absentCount"
+        android:layout_below="@+id/reportText"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="15dp"
+        android:fontFamily="@font/proximanovaregular"
+        android:textSize="15sp"
+        android:text="Total Absent: 2 days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/presentCount"
+        android:layout_below="@+id/absentCount"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="15dp"
+        android:fontFamily="@font/proximanovaregular"
+        android:textSize="15sp"
+        android:text="Total Present : 20 days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+</RelativeLayout>

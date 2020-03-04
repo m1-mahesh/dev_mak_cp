@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".TakeAttendance">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+    <include
+        android:id="@+id/toolBar"
+        layout="@layout/toolbar_layout" />
+    <RelativeLayout
+        android:layout_marginTop="56dp"
+        android:id="@+id/fullscreen_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/studentList"
+
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:layout_above="@id/saveButton"
+            android:layout_centerHorizontal="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_alignParentBottom="true"
+            android:background="@color/twitter"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:onClick="submitAttendance"
+            android:fontFamily="@font/opensansbold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dummy_button" />
+
+    </RelativeLayout>
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+</FrameLayout>
