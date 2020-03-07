@@ -5,11 +5,27 @@ public class NoticeData {
     public String id;
     public String description;
     public String createdOn;
+    public String submissionDate;
     public String mediaUrl;
     public String type;
     public String createdBy;
-    public String className, divisionName;
+    public String className, divisionName, subjectName;
 
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public String getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public void setSubmissionDate(String submissionDate) {
+        this.submissionDate = submissionDate;
+    }
 
     public String getClassName() {
         return className;

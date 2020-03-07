@@ -8,41 +8,34 @@
     app:cardCornerRadius="8dp"
     app:cardUseCompatPadding="true">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:selectableItemBackground"
-        android:orientation="horizontal"
-        >
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/topPart"
-            android:padding="15dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:background="?android:selectableItemBackground"
+            android:orientation="horizontal"
+            android:padding="15dp">
+
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:fontFamily="@font/opensanssemibold"
                 android:text="Sample title"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />
-
-            <ImageView
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_more_vert_black_24dp" />
 
             <LinearLayout
                 android:id="@+id/divisions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvTitle"
-                android:layout_alignParentBottom="true"
                 android:layout_marginTop="10dp"
                 android:gravity="left"
                 android:orientation="vertical">
@@ -63,51 +56,97 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/divisionsView"
+                    android:id="@+id/descriptionText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:ellipsize="end"
                     android:fontFamily="@font/opensansregular"
                     android:maxLines="3"
                     android:orientation="horizontal"
-                    android:text="Description is the pattern of narrative development that aims to make vivid a place, object, character, or group. Description is one of four rhetorical modes, along with exposition, argumentation, and narration. In practice it would be difficult to write literature that drew on just one of the four basic modes."
+                    android:text="Please complete your homework"
                     android:textColor="@color/twitter"
                     android:textSize="15sp">
 
                 </TextView>
+
             </LinearLayout>
+
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/topView"
             android:layout_width="match_parent"
-            android:layout_below="@+id/topPart"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorPrimary"
+            android:layout_below="@+id/divisions"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@color/light_cyan"
+            android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="1">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight=".5"
-                android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:text="10th STD"
-                android:textSize="15sp" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/noticeDate"
+                <TextView
+                    android:id="@+id/createdOnDateTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/opensanssemibold"
+                    android:text="Sample title"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/createdOnDateTxt"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:text="Created on"
+                    android:textSize="7sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight=".5"
-                android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:text="12-Dec"
-                android:textSize="15sp" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/createdByText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/opensanssemibold"
+                    android:text="Sample title"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/noticeDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/createdByText"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:text="Created By"
+                    android:textSize="7sp" />
+            </LinearLayout>
+
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

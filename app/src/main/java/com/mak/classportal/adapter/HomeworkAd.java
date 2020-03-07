@@ -59,7 +59,10 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
 
         holder.tvTitle.setText(singleItem.getTitle());
         holder.descriptionText.setText(singleItem.getDescription());
-        holder.homeworkDate.setText(singleItem.getCreatedOn());
+        holder.homeworkDate.setText("Date of submission: "+ singleItem.getSubmissionDate());
+        holder.createdOnDateTxt.setText(singleItem.getCreatedOn());
+        holder.createdByText.setText(singleItem.getCreatedBy());
+        holder.subjectNameTxt.setText(singleItem.getSubjectName());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +105,7 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
-        protected TextView tvTitle, homeworkDate;
+        protected TextView tvTitle, homeworkDate, createdOnDateTxt, createdByText, subjectNameTxt;
         protected TextView descriptionText;
         protected View hrView;
         protected CardView cardView;
@@ -115,6 +118,9 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
             this.tvTitle = view.findViewById(R.id.tvTitle);
             this.homeworkDate = view.findViewById(R.id.workDate);
             this.cardView = view.findViewById(R.id.cardView);
+            this.createdOnDateTxt = view.findViewById(R.id.createdOnDateTxt);
+            this.createdByText = view.findViewById(R.id.createdByText);
+            this.subjectNameTxt = view.findViewById(R.id.subjectNameTxt);
 //            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
 
         }

@@ -289,14 +289,16 @@ public class ExecuteAPI {
                     @Override
                     public void onResponse(NetworkResponse response) {
                         try {
-                            JSONObject obj = new JSONObject(new String(response.data));
-                            if (obj.getString("error_code").contains("200"))
-                                obj.put("code", 200);
-                            Log.e("response", "response" + response.toString());
+                            if (response!=null) {
+                                JSONObject obj = new JSONObject(new String(response.data));
+                                if (obj.getString("error_code").contains("200"))
+                                    obj.put("code", 200);
+                                Log.e("response", "response" + response.toString());
 
-                            if (pDialog != null)
+                                onTaskCompleted.onResponse(obj);
+                            }
+                            if (pDialog != null && pDialog.isShowing())
                                 pDialog.dismiss();
-                            onTaskCompleted.onResponse(obj);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -306,10 +308,12 @@ public class ExecuteAPI {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         try {
-                            JSONObject obj = new JSONObject(new String(error.networkResponse.data));
-                            if (pDialog != null)
+                            if (error!=null && error.networkResponse!=null) {
+                                JSONObject obj = new JSONObject(new String(error.networkResponse.data));
+                                onTaskCompleted.onErrorResponse(error, 400, obj);
+                            }
+                            if (pDialog != null && pDialog.isShowing())
                                 pDialog.dismiss();
-                            onTaskCompleted.onErrorResponse(error, 400, obj);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -369,6 +373,7 @@ public class ExecuteAPI {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         volleyMultipartRequest.setRetryPolicy(mRetryPolicy);
+        volleyMultipartRequest.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(volleyMultipartRequest);
 
     }

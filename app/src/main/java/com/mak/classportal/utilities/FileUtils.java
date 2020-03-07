@@ -8,9 +8,12 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
 
 import androidx.core.content.FileProvider;
 
+import com.mak.classportal.BuildConfig;
 import com.mak.classportal.R;
 
 import java.io.File;
@@ -23,6 +26,8 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 import static com.mak.classportal.utilities.LogUtils.LOGD;
 import static com.mak.classportal.utilities.LogUtils.LOGE;
 
@@ -46,7 +51,7 @@ public class FileUtils {
 
         //TODO you want to use this method then create file provider in androidmanifest.xml with fileprovider name
 
-        Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".fileprovider", url);
+        Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider",url);
 
         String urlString = url.toString().toLowerCase();
 
@@ -58,12 +63,13 @@ public class FileUtils {
         List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         for (ResolveInfo resolveInfo : resInfoList) {
             String packageName = resolveInfo.activityInfo.packageName;
-            context.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            context.grantUriPermission(packageName, uri, FLAG_GRANT_WRITE_URI_PERMISSION | FLAG_GRANT_READ_URI_PERMISSION);
         }
-
+        intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION | FLAG_GRANT_WRITE_URI_PERMISSION);
         // Check what kind of file you are trying to open, by comparing the url with extensions.
         // When the if condition is matched, plugin sets the correct intent (mime) type,
         // so Android knew what application to use to open the file
+        Log.e("File path", urlString);
         if (urlString.toLowerCase().toLowerCase().contains(".doc")
                 || urlString.toLowerCase().contains(".docx")) {
             // Word document
@@ -97,7 +103,7 @@ public class FileUtils {
                 || urlString.toLowerCase().contains(".jpeg")
                 || urlString.toLowerCase().contains(".png")) {
             // JPG file
-            intent.setDataAndType(uri, "image/jpeg");
+            intent.setDataAndType(uri, "image/*");
         } else if (urlString.toLowerCase().contains(".txt")) {
             // Text file
             intent.setDataAndType(uri, "text/plain");
@@ -115,7 +121,7 @@ public class FileUtils {
             // additionally use else clause below, to manage other unknown extensions
             // in this case, Android will show all applications installed on the device
             // so you can choose which application to use
-            intent.setDataAndType(uri, "*/*");
+            //intent.setDataAndType(uri, "*/*");
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -92,7 +92,9 @@ public class NoticeListAd extends RecyclerView.Adapter<NoticeListAd.SingleItemRo
         } catch (Exception e) {
             e.printStackTrace();
         }
-        holder.noticeDate.setText(notice.getCreatedOn());
+        holder.createdOnDateTxt.setText(notice.getCreatedOn());
+        holder.noticeDate.setText("Created by");
+        holder.createdByText.setText(notice.getCreatedBy());
 
     }
     void showPopupMenu(String id, int pos) {
@@ -116,7 +118,7 @@ public class NoticeListAd extends RecyclerView.Adapter<NoticeListAd.SingleItemRo
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
-        protected TextView tvTitle, noticeDate;
+        protected TextView tvTitle, noticeDate, createdOnDateTxt, createdByText;
         protected TextView description;
         protected View hrView;
         protected CardView cardView;
@@ -124,11 +126,13 @@ public class NoticeListAd extends RecyclerView.Adapter<NoticeListAd.SingleItemRo
 
         public SingleItemRowHolder(View view) {
             super(view);
-            this.description = view.findViewById(R.id.divisionsView);
+            this.description = view.findViewById(R.id.descriptionText);
             this.hrView = view.findViewById(R.id.hrView);
             this.tvTitle = view.findViewById(R.id.tvTitle);
             this.noticeDate = view.findViewById(R.id.noticeDate);
             this.cardView = view.findViewById(R.id.cardView);
+            this.createdOnDateTxt = view.findViewById(R.id.createdOnDateTxt);
+            this.createdByText = view.findViewById(R.id.createdByText);
 //            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
 
         }

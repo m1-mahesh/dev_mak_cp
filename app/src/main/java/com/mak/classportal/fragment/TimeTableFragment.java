@@ -114,13 +114,13 @@ public class TimeTableFragment extends Fragment {
                 notice.setId(object.getString("id"));
                 notice.setTitle(object.getString("title"));
                 notice.setMediaUrl(object.getString("media_name"));
-                notice.setCreatedBy(object.getString("sender_id"));
+                notice.setCreatedBy(object.getString("send_by"));
                 notice.setType(object.getString("media_type"));
                 notice.setClassName(object.getString("class_name"));
                 notice.setDivisionName(object.getString("division_name"));
                 timeTableData.add(notice);
             }
-            Collections.sort(timeTableData, new Comparator<NoticeData>() {
+            /*Collections.sort(timeTableData, new Comparator<NoticeData>() {
                 @Override
                 public int compare(NoticeData o1, NoticeData o2) {
                     try {
@@ -130,7 +130,7 @@ public class TimeTableFragment extends Fragment {
                     }
                     return 0;
                 }
-            });
+            });*/
             TimetableAd adapter1 = new TimetableAd(getContext(), timeTableData);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
             mRecyclerView.setAdapter(adapter1);
@@ -206,6 +206,7 @@ public class TimeTableFragment extends Fragment {
             ImageLoader imageLoader = AppController.getInstance().getImageLoader();
             holder.imageView.setImageUrl(singleItem.getMediaUrl(), imageLoader);
             holder.createdOnDateTxt.setText(singleItem.getClassName()+"("+singleItem.getDivisionName()+")");
+            holder.createdByText.setText(singleItem.getCreatedBy());
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -246,7 +247,7 @@ public class TimeTableFragment extends Fragment {
 
         public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
-            protected TextView createdOnDateTxt, statusTxt;
+            protected TextView createdOnDateTxt, createdByText;
             protected NetworkImageView imageView;
             protected CardView cardView;
 
@@ -254,7 +255,7 @@ public class TimeTableFragment extends Fragment {
             public SingleItemRowHolder(View view) {
                 super(view);
                 this.createdOnDateTxt = view.findViewById(R.id.createdOnDateTxt);
-                this.statusTxt = view.findViewById(R.id.statusText);
+                this.createdByText = view.findViewById(R.id.createdByText);
                 this.imageView = view.findViewById(R.id.topImage);
                 this.cardView = view.findViewById(R.id.cardView);
             }

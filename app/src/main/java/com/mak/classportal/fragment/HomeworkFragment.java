@@ -96,7 +96,7 @@ public class HomeworkFragment extends Fragment {
         getHomeworkList();
         return rootView;
     }
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     void parseHomeworkList(JSONObject jsonObject){
         try {
             homeworkData.clear();
@@ -106,11 +106,12 @@ public class HomeworkFragment extends Fragment {
                 JSONObject object = jsonArray.getJSONObject(i);
                 NoticeData notice = new NoticeData();
                 notice.setId(object.getString("homework_id"));
-                notice.setTitle(object.getString("subject_name"));
+                notice.setSubjectName(object.getString("subject_name"));
                 notice.setTitle(object.getString("title"));
                 notice.setMediaUrl(object.getString("media_attachment"));
                 notice.setDescription(object.getString("homework_message"));
-                notice.setCreatedOn(object.getString("submission_date"));
+                notice.setSubmissionDate(object.getString("submission_date"));
+                notice.setCreatedOn(object.getString("date_time"));
                 notice.setCreatedBy(object.getString("send_by"));
                 notice.setType(object.getString("media_type"));
                 homeworkData.add(notice);

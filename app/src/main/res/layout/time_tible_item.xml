@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/cardView"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     app:cardCornerRadius="1dp"
-    app:cardUseCompatPadding="true"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    app:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/topImage"
             android:layout_width="match_parent"
-            android:layout_height="150dp"/>
+            android:layout_height="150dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_below="@id/topImage"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:background="@color/colorPrimary"
+            android:layout_below="@id/topImage"
+            android:background="@color/light_cyan"
             android:orientation="horizontal"
+            android:padding="15dp"
             android:weightSum="1">
 
             <TextView
@@ -35,20 +33,42 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
-                android:fontFamily="sans-serif-light"
+                android:fontFamily="@font/opensanssemibold"
                 android:gravity="center"
                 android:text="Created On: 12-Dec-19"
-                android:textSize="15sp" />
+                android:textColor="@android:color/black"
+                android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/statusText"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight=".5"
-                android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:text="Active"
-                android:textSize="15sp" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/createdByText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/opensanssemibold"
+                    android:text="Sample title"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/noticeDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/createdByText"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:text="Created By"
+                    android:textSize="7sp" />
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

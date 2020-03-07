@@ -198,10 +198,12 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 closeDrawer();
                 break;
             case R.id.videos:
-                toolbar.setTitle("Subjects");
-                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new SubjectFragment())
-                        .commit();
+                if (userSession.isStudent()) {
+                    toolbar.setTitle("Subjects");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new SubjectFragment())
+                            .commit();
 
+                }
                 closeDrawer();
                 break;
             case R.id.testSchedule:
