@@ -1,10 +1,18 @@
 package com.mak.classportal.utilities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -21,6 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.mak.classportal.AppController;
+import com.mak.classportal.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -277,6 +286,7 @@ public class ExecuteAPI {
     }
     String contentType = "";
     String fileName = "";
+    Dialog dialog1;
     public void setContentType(String contentType){
         this.contentType = contentType;
     }
@@ -344,17 +354,17 @@ public class ExecuteAPI {
             protected Map<String, VolleyMultipartRequest.DataPart[]> getByteData() {
 
                 Map<String, DataPart[]> params = new HashMap<>();
-                if (contentType.equals(Constant.CONTENT_TYPE_IMAGE)) {
+                if (contentType.equals(Constant.CONTENT_TYPE_IMAGE)&& bitmapArray!=null) {
                     DataPart[] dataParts = new DataPart[bitmapArray.length];
                     if (bitmapArray.length > 0) {
                         long imageName = System.currentTimeMillis();
                         for (int i = 0; i < bitmapArray.length; i++) {
                             Bitmap bitmap = bitmapArray[i];
-                            dataParts[i] = new DataPart(imageName + ".jpeg", getFileDataFromDrawable(bitmap));
+                            dataParts[i] = new DataPart(imageName + ".png", getFileDataFromDrawable(bitmap));
                         }
                         params.put(attribute, dataParts);
                     }
-                }else if (contentType.equals(Constant.CONTENT_TYPE_PDF_DOC)){
+                }else if (contentType.equals(Constant.CONTENT_TYPE_PDF_DOC)&& pdfIStream!=null){
                     DataPart[] dataParts = new DataPart[1];
                     try {
                         dataParts[0] = new DataPart(fileName , getBytes(pdfIStream));
@@ -362,6 +372,12 @@ public class ExecuteAPI {
                     }catch (IOException e){
                         e.printStackTrace();
                     }
+                }else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogStyle));
+                    builder.setTitle("Error");
+                    builder.setMessage("Invalid File");
+                    AlertDialog alert = builder.create();
+                    alert.show();
                 }
                 return params;
             }
@@ -374,13 +390,15 @@ public class ExecuteAPI {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         volleyMultipartRequest.setRetryPolicy(mRetryPolicy);
         volleyMultipartRequest.setShouldCache(false);
-        AppController.getInstance().addToRequestQueue(volleyMultipartRequest);
+        RequestQueue rQueue;
+        rQueue = Volley.newRequestQueue(context);
+        rQueue.add(volleyMultipartRequest);
 
     }
 
     public byte[] getFileDataFromDrawable(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 

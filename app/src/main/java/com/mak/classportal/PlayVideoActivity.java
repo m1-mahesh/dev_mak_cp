@@ -12,13 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.mak.classportal.modales.NoticeData;
-import com.mak.classportal.modales.SubjectData;
-import com.mak.classportal.video_player.AndExoPlayerView;
 
 public class PlayVideoActivity extends AppCompatActivity {
 
     public static NoticeData videoData;
-    AndExoPlayerView andExoPlayerView;
     MyWebChromeClient mWebChromeClient;
     RelativeLayout mContentView;
     FrameLayout mCustomViewContainer;
@@ -29,8 +26,6 @@ public class PlayVideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_video);
-        andExoPlayerView = findViewById(R.id.andExoPlayerView);
-        andExoPlayerView.setSource(videoData.getMediaUrl());
 
         webView = findViewById(R.id.webView);
         mWebChromeClient = new MyWebChromeClient();

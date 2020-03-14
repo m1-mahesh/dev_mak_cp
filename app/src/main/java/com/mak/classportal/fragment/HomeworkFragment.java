@@ -114,6 +114,7 @@ public class HomeworkFragment extends Fragment {
                 notice.setCreatedOn(object.getString("date_time"));
                 notice.setCreatedBy(object.getString("send_by"));
                 notice.setType(object.getString("media_type"));
+                notice.setClassName(object.getString("class_name"));
                 homeworkData.add(notice);
             }
             Collections.sort(homeworkData, new Comparator<NoticeData>() {

@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText userId, password;
+    EditText userId;
     TextView customToast;
     LayoutInflater inflater;
     View tostLayout;
@@ -45,7 +45,6 @@ public class LoginActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         userId = findViewById(R.id.username_edit_text);
-        password = findViewById(R.id.password_edit_text);
         appSingleTone = new AppSingleTone(this);
         /*
         This activity is created and opened when SplashScreen finishes its animations.
@@ -75,12 +74,9 @@ public class LoginActivity extends AppCompatActivity {
     boolean validateFields(){
 
         if (!userId.getText().toString().equals("")){
-            if (!password.getText().toString().equals(""))
-                return true;
-            else
-                showToast("'Password' should not be empty, Please Enter Password");
+            return true;
         }else{
-            showToast("'UserId' should not be empty, Please Enter UserId");
+            showToast("'Mobile Number' should not be empty, Please Enter UserId");
         }
         return false;
     }
@@ -92,45 +88,18 @@ public class LoginActivity extends AppCompatActivity {
                 String url = appSingleTone.signIn;
 
                 ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
-                executeAPI.addPostParam("user_name", userId.getText().toString());
-                executeAPI.addPostParam("password", password.getText().toString());
+                executeAPI.addPostParam("mobile", userId.getText().toString());
                 executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                     @Override
                     public void onResponse(JSONObject result) {
                         Log.d("Result", result.toString());
                         try {
-                            if (result.has("user_details")) {
-                                JSONObject object = result.getJSONArray("user_details").getJSONObject(0);
-                                userSession.setAttribute("auth_token", object.getString("auth_code"));
-                                userSession.setAttribute("user_id", object.getString("user_id"));
-                                userSession.setAttribute("role_id", ""+object.getInt("role_id"));
-                                userSession.setAttribute("org_id", ""+object.getInt("org_id"));
-                                if (object.getInt("role_id") == 1)
-                                    userSession.setAttribute("userRole", "Admin");
-                                else if (object.getInt("role_id") == 2)
-                                    userSession.setAttribute("userRole", "Teacher");
-                                else {
-                                    userSession.setAttribute("userRole", "Student");
-                                    userSession.setAttribute("class_name", object.getString("class_name"));
-                                    userSession.setAttribute("class_id", object.getString("class_id"));
-                                    userSession.setAttribute("division", object.getString("division_name"));
-                                    userSession.setAttribute("division_id", object.getString("division_id"));
-                                }
-                                userSession.setAttribute("name", object.getString("name"));
-                                userSession.setAttribute("email", object.getString("email"));
-                                userSession.setAttribute("mobile", object.getString("mobile"));
-
-                                RootActivity.defaultMenu = 0;
-                                Intent intent = new Intent(LoginActivity.this, OtpActivity.class);
-                                LoginActivity.this.startActivity(intent);
-                                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
-                                finish();
-                            }else if (result.getInt("error_code") == 401){
-                                showToast("Username and Password are Incorrect!");
-                            }else {
-                                showToast("Something went wrong, Please try again later");
-                            }
-                        }catch (JSONException e){
+                            OtpActivity.MOBILE_NUMBER = userId.getText().toString();
+                            Intent intent = new Intent(LoginActivity.this, OtpActivity.class);
+                            LoginActivity.this.startActivity(intent);
+                            overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                            finish();
+                        }catch (Exception e){
                             e.printStackTrace();
                         }
 

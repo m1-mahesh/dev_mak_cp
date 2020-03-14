@@ -33,7 +33,7 @@
             android:paddingLeft="@dimen/login_layout_padding"
             android:paddingRight="@dimen/login_layout_padding"
             android:paddingTop="@dimen/login_layout_padding_top"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/player_controller_base_height"
             android:weightSum="1">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -45,44 +45,29 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username_edit_text"
                     android:singleLine="true"
+                    android:inputType="number"
                     style="@style/RegistrationEditTextStyle"
                     android:layout_gravity="center_horizontal"
-                    android:hint="Username" />
+                    android:hint="Mobile Number" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/password_edit_text"
-                    style="@style/RegistrationEditTextStyle"
-                    android:layout_gravity="center_horizontal"
-                    android:singleLine="true"
-                    android:hint="Password"
-                    android:inputType="textPassword" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/login_button_margin"
-                android:layout_marginRight="@dimen/login_button_margin"
-                android:onClick="loginView"
-                android:layout_marginTop="@dimen/image_header_top_margin"
-                android:background="@color/twitter"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:fontFamily="@font/opensansbold"
-                android:text="Log in"/>
 
         </LinearLayout>
-
+        <Button
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/login_button_margin"
+            android:layout_marginRight="@dimen/login_button_margin"
+            android:onClick="loginView"
+            android:layout_marginBottom="@dimen/image_header_top_margin"
+            android:background="@color/twitter"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:fontFamily="@font/opensansbold"
+            android:text="Get OTP" />
     </RelativeLayout>
 
 </RelativeLayout>

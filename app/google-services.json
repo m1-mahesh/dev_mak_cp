@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "565809857667",
+    "firebase_url": "https://class-portal-4677a.firebaseio.com",
+    "project_id": "class-portal-4677a",
+    "storage_bucket": "class-portal-4677a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:565809857667:android:af5b7d91a6eb752d1707b6",
+        "android_client_info": {
+          "package_name": "com.mak.classportal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "565809857667-arts179fgfmuelk3hfmuoolg44v8h7fv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbH5H8bsGyd5VB-ukdjisDqp0uowWW-94"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "565809857667-arts179fgfmuelk3hfmuoolg44v8h7fv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

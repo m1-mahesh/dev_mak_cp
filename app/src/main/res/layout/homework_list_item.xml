@@ -44,10 +44,17 @@
                 android:layout_below="@+id/subjectNameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:fontFamily="@font/opensanssemibold"
                 android:text="30-Dec-2019"
                 android:textSize="10sp" />
+            <TextView
+                android:id="@+id/classNameTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:fontFamily="@font/opensanssemibold"
+                android:textStyle="bold"
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:id="@+id/divisions"

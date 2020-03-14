@@ -22,7 +22,7 @@ public class PermissionsActivity extends AppCompatActivity {
 
     public static final int PERMISSION_REQUEST_CODE = 0;
 
-    private static final String EXTRA_PERMISSIONS = "com.koops.sales.EXTRA_PERMISSIONS";
+    private static final String EXTRA_PERMISSIONS = "com.mak.classportal.EXTRA_PERMISSIONS";
     private static final String PACKAGE_URL_SCHEME = "package:";
 
     private PermissionsChecker checker;

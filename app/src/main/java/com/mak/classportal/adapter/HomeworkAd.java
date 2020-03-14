@@ -36,13 +36,13 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
     AppSingleTone appSingleTone;
     UserSession userSession;
     SharedPreferences sharedPreferences;
+
     public HomeworkAd(Context context, ArrayList<NoticeData> itemsList) {
         this.itemsList = itemsList;
         this.mContext = context;
         sharedPreferences = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         appSingleTone = new AppSingleTone(mContext);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
-
     }
 
     @Override
@@ -63,6 +63,7 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
         holder.createdOnDateTxt.setText(singleItem.getCreatedOn());
         holder.createdByText.setText(singleItem.getCreatedBy());
         holder.subjectNameTxt.setText(singleItem.getSubjectName());
+        holder.classNameTxt.setText(singleItem.getClassName());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,10 +107,9 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
         protected TextView tvTitle, homeworkDate, createdOnDateTxt, createdByText, subjectNameTxt;
-        protected TextView descriptionText;
+        protected TextView descriptionText, classNameTxt;
         protected View hrView;
         protected CardView cardView;
-
 
         public SingleItemRowHolder(View view) {
             super(view);
@@ -121,7 +121,7 @@ public class HomeworkAd extends RecyclerView.Adapter<HomeworkAd.SingleItemRowHol
             this.createdOnDateTxt = view.findViewById(R.id.createdOnDateTxt);
             this.createdByText = view.findViewById(R.id.createdByText);
             this.subjectNameTxt = view.findViewById(R.id.subjectNameTxt);
-//            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
+            this.classNameTxt = view.findViewById(R.id.classNameTxt);
 
         }
 

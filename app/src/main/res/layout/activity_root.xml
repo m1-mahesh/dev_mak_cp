@@ -48,7 +48,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:itemTextColor="@color/colorPrimaryDark"
-        app:menu="@menu/nav_drawer_menu"
         app:headerLayout="@layout/nav_header_layout"/>
 
 

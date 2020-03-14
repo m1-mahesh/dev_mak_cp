@@ -7,12 +7,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,7 +25,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.google.android.material.navigation.NavigationView;
+import com.mak.classportal.adapter.NoticeListAd;
 import com.mak.classportal.fragment.ClassFragment;
 import com.mak.classportal.fragment.CompactCalendarFragment;
 import com.mak.classportal.fragment.DashboardFragment;
@@ -34,13 +40,23 @@ import com.mak.classportal.fragment.SubjectFragment;
 import com.mak.classportal.fragment.TestResultFragment;
 import com.mak.classportal.fragment.TimeTableFragment;
 import com.mak.classportal.fragment.VideosFragment;
+import com.mak.classportal.modales.NoticeData;
 import com.mak.classportal.permission.PermissionsActivity;
 import com.mak.classportal.permission.PermissionsChecker;
 import com.mak.classportal.utilities.AppSingleTone;
 import com.mak.classportal.utilities.Constant;
+import com.mak.classportal.utilities.ExecuteAPI;
 import com.mak.classportal.utilities.FileUtils;
 import com.mak.classportal.utilities.MethodPlugins;
 import com.mak.classportal.utilities.UserSession;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static com.mak.classportal.permission.PermissionsActivity.PERMISSION_REQUEST_CODE;
 import static com.mak.classportal.permission.PermissionsChecker.REQUIRED_PERMISSION;
@@ -103,10 +119,12 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         View hView = null;
         if (userSession.isTeacher()) {
             navigationView.inflateHeaderView(R.layout.teacher_header_layout);
+            navigationView.inflateMenu(R.menu.nav_drawer_menu);
             hView = navigationView.getHeaderView(0);
         }
         else if (userSession.isStudent()){
             navigationView.inflateHeaderView(R.layout.nav_header_layout);
+            navigationView.inflateMenu(R.menu.student_menu);
             hView = navigationView.getHeaderView(0);
             ((TextView) hView.findViewById(R.id.classText)).setText(userSession.getAttribute("class_name"));
             ((TextView) hView.findViewById(R.id.division)).setText(userSession.getAttribute("division"));
@@ -219,24 +237,18 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 }
                 closeDrawer();
                 break;
-            case R.id.testResult:
-//                toolbar.setTitle("Results");
-//                getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new TestResultFragment())
-//                        .commit();
-//                closeDrawer();
-                break;
             case R.id.timeTable:
                 toolbar.setTitle("Time Table");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new TimeTableFragment())
                         .commit();
                 closeDrawer();
                 break;
-            case R.id.paper:
+            /*case R.id.paper:
                 toolbar.setTitle("Board Papers");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new PaperListFragment())
                         .commit();
                 closeDrawer();
-                break;
+                break;*/
             case R.id.profile:
                 toolbar.setTitle("Profile");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new ProfileFragment())

@@ -19,11 +19,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -111,6 +113,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         txtDate = findViewById(R.id.date_edit_text);
         titleEditText = findViewById(R.id.title_edit_text);
         descriptionEditText = findViewById(R.id.descriptionEditText);
+
         attachmentText = findViewById(R.id.attachment);
         classSpinner = findViewById(R.id.selectClass);
         subjectSpinner = findViewById(R.id.selectSubject);
@@ -128,10 +131,31 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
         txtDate.setOnClickListener(this);
         txtDate.setTag(txtDate.getKeyListener());
         txtDate.setKeyListener(null);
-
+        initScrollerToEditText(descriptionEditText);
         c = Calendar.getInstance();
         findViewById(R.id.saveButton).setOnClickListener(this);
         getClassDivision();
+    }
+    void initScrollerToEditText(EditText descriptionEditText){
+        descriptionEditText.setVerticalScrollBarEnabled(true);
+        descriptionEditText.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+        descriptionEditText.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
+        descriptionEditText.setMovementMethod(ScrollingMovementMethod.getInstance());
+
+        descriptionEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                view.getParent().requestDisallowInterceptTouchEvent(true);
+                if ((motionEvent.getAction() & MotionEvent.ACTION_UP) != 0 && (motionEvent.getActionMasked() & MotionEvent.ACTION_UP) != 0)
+                {
+                    view.getParent().requestDisallowInterceptTouchEvent(false);
+                }
+                return false;
+            }
+
+
+        });
     }
 
     void showToast(String toastText) {
@@ -628,7 +652,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                 iStream = getContentResolver().openInputStream(fileUri);
             }else if(!picturePath.equals("")){
                 bitmaps = new Bitmap[1];
-                bitmaps[0] = BitmapFactory.decodeFile(picturePath);
+                bitmaps[0] = MediaStore.Images.Media.getBitmap(NewHomeworkActivity.this.getContentResolver() , fileUri);
             }else {
                 showToast("Select Attachment");
                 return;
@@ -677,7 +701,7 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             });
 
             executeAPI.showProcessBar(true);
-            if (bitmaps==null && iStream!=null) {
+            if (iStream!=null) {
                 executeAPI.setContentType(Constant.CONTENT_TYPE_PDF_DOC);
                 executeAPI.setFileName(fileName);
                 executeAPI.executeMultiPartRequest(Request.Method.POST, null, "media_attachment", iStream);

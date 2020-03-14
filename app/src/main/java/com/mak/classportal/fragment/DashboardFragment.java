@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.google.android.material.tabs.TabLayout;
 import com.mak.classportal.R;
 import com.mak.classportal.adapter.MenuAdapter;
 import com.mak.classportal.adapter.SliderAdapter;
 import com.mak.classportal.modales.HomeMenu;
+import com.mak.classportal.modales.NoticeData;
+import com.mak.classportal.utilities.AppSingleTone;
+import com.mak.classportal.utilities.ExecuteAPI;
 import com.mak.classportal.utilities.UserSession;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +50,7 @@ public class DashboardFragment extends Fragment {
 
     ViewPager viewPager;
     TabLayout indicator;
+    AppSingleTone appSingleTone;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -48,6 +59,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appSingleTone = new AppSingleTone(getContext());
         sharedPreferences = getActivity().getSharedPreferences("User", Context.MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         allClassData = new ArrayList<>();
@@ -62,22 +74,10 @@ public class DashboardFragment extends Fragment {
         viewPager = rootView.findViewById(R.id.viewPager);
         indicator = rootView.findViewById(R.id.indicator);
         mRecyclerView = rootView.findViewById(R.id.details_list);
-
         mRecyclerView.setHasFixedSize(true);
-        initializeSlider();
+        getBanners();
         parseMenuList();
         return rootView;
-    }
-    public void initializeSlider(){
-        sliderUrls = new ArrayList<>();
-        sliderUrls.add("https://thumbs.dreamstime.com/z/back-to-school-sale-banner-offer-back-to-school-sale-leaves-colored-hand-drawn-doodle-icons-education-symbols-business-banners-123250117.jpg");
-        sliderUrls.add("https://c8.alamy.com/comp/PJDXPN/big-sale-banner-vector-school-children-pupil-template-for-advertising-discount-tag-special-offer-banner-isolated-illustration-PJDXPN.jpg");
-        sliderUrls.add("https://st4.depositphotos.com/1001941/19880/i/1600/depositphotos_198809040-stock-photo-back-school-super-sale-header.jpg");
-        viewPager.setAdapter(new SliderAdapter(getContext(), sliderUrls));
-        indicator.setupWithViewPager(viewPager, true);
-
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new SliderTimer(), 4000, 6000);
     }
 
     public void parseMenuList() {
@@ -160,5 +160,55 @@ public class DashboardFragment extends Fragment {
         }
     }
 
+    void parseBanners(JSONObject jsonObject){
+        try {
+            sliderUrls = new ArrayList<>();
+            JSONArray jsonArray = jsonObject.getJSONArray("slider_list");
+            if(jsonArray.length() == 0){
+                viewPager.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.GONE);
+                indicator.setVisibility(View.GONE);
+            }
+            for(int i = 0;i<jsonArray.length();i++){
+                JSONObject object = jsonArray.getJSONObject(i);
+                NoticeData notice = new NoticeData();
+                notice.setId(object.getString("id"));
+                sliderUrls.add(object.getString("image"));
+            }
+            viewPager.setAdapter(new SliderAdapter(getContext(), sliderUrls));
+            indicator.setupWithViewPager(viewPager, true);
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(new SliderTimer(), 4000, 6000);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+    public void  getBanners() {
+
+        try {
+            String url = null;
+            url = appSingleTone.getBanners;
+            ExecuteAPI executeAPI = new ExecuteAPI(getContext(), url, null);
+            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
+            executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
+            executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                @Override
+                public void onResponse(JSONObject result) {
+                    Log.d("Result", result.toString());
+                    parseBanners(result);
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                    Log.d("Result", errorResponse.toString());
+                }
+            });
+            executeAPI.showProcessBar(true);
+            executeAPI.executeStringRequest(Request.Method.POST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 

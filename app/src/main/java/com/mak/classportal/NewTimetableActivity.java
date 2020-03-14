@@ -519,7 +519,7 @@ public class NewTimetableActivity extends AppCompatActivity implements View.OnCl
                 iStream = getContentResolver().openInputStream(fileUri);
             }else if(!picturePath.equals("")){
                 bitmaps = new Bitmap[1];
-                bitmaps[0] = BitmapFactory.decodeFile(picturePath);
+                bitmaps[0] = MediaStore.Images.Media.getBitmap(NewTimetableActivity.this.getContentResolver() , fileUri);
             }else {
                 showToast("Select Attachment");
                 return;

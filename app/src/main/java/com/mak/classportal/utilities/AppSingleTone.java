@@ -63,6 +63,7 @@ public class AppSingleTone {
     //    https://github.com/wasabeef/awesome-android-ui
 
     public String signIn = "http://nikvay.com/demo/schoolApp/ws-login";
+    public String submitOTP = "http://nikvay.com/demo/schoolApp/ws-submit-otp";
     public String classList = "http://nikvay.com/demo/schoolApp/ws-class-list";
     public String testList = "http://nikvay.com/demo/schoolApp/ws-online-test-list";
     public String questionList = "http://nikvay.com/demo/schoolApp/ws-online-test-question-list";
@@ -94,6 +95,7 @@ public class AppSingleTone {
     public String deleteTimetable = "http://nikvay.com/demo/schoolApp/ws-delete-timetable-for-teacher";
     public String getVideos = "http://nikvay.com/demo/schoolApp/ws-video-list";
     public String getTopicVideos = "http://nikvay.com/demo/schoolApp/ws-topic-list";
+    public String getBanners = "http://nikvay.com/demo/schoolApp/ws-slider-list";
 
     Context context;
     UserSession userSession;

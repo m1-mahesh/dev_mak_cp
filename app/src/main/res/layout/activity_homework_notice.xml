@@ -119,6 +119,8 @@
                     android:background="@drawable/layout_border"
                     android:fontFamily="@font/opensansregular"
                     android:hint="@string/notice_description"
+                    android:lines="5"
+                    android:scrollbars="vertical"
                     android:inputType="text|textMultiLine"
                     android:textSize="15sp" />
 
