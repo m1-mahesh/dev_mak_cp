@@ -64,7 +64,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (homeMenu.getMenuId() == 5) {
+                if (homeMenu.getMenuId() == 4) {
                     TestsList.CLASS_ID = userSession.getAttribute("class_id");
                     TestsList.CLASS_NAME = userSession.getAttribute("class_name");
                     TestsList.DIVISION_ID = userSession.getAttribute("division_id");

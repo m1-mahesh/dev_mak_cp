@@ -14,11 +14,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.nikvay.drnitingroup.utilities.AppSingleTone;
 import com.nikvay.drnitingroup.utilities.ExecuteAPI;
 import com.nikvay.drnitingroup.utilities.UserSession;
@@ -34,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     AppSingleTone appSingleTone;
     UserSession userSession;
     SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,15 +55,17 @@ public class LoginActivity extends AppCompatActivity {
         RelativeLayout with EditTexts and Button is animated with a default fade in.
          */
 
-        overridePendingTransition(0,0);
-        View relativeLayout=findViewById(R.id.login_container);
-        Animation animation= AnimationUtils.loadAnimation(this,android.R.anim.fade_in);
+        overridePendingTransition(0, 0);
+        View relativeLayout = findViewById(R.id.login_container);
+        Animation animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
         relativeLayout.startAnimation(animation);
+        refreshToken();
     }
-    void showToast(String toastText){
+
+    void showToast(String toastText) {
         inflater = getLayoutInflater();
         tostLayout = inflater.inflate(R.layout.toast_layout_file,
-                (ViewGroup) findViewById(R.id.toast_layout_root));
+                findViewById(R.id.toast_layout_root));
         customToast = tostLayout.findViewById(R.id.text);
         Toast toast = new Toast(getApplicationContext());
         customToast.setText(toastText);
@@ -67,15 +75,17 @@ public class LoginActivity extends AppCompatActivity {
         toast.setView(tostLayout);
         toast.show();
     }
-    boolean validateFields(){
 
-        if (!userId.getText().toString().equals("")){
+    boolean validateFields() {
+
+        if (!userId.getText().toString().equals("")) {
             return true;
-        }else{
+        } else {
             showToast("'Mobile Number' should not be empty, Please Enter UserId");
         }
         return false;
     }
+
     public void loginView(View view) {
 
         if (validateFields() && !userSession.getAttribute("firebaseToken").equals("")) {
@@ -95,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                             LoginActivity.this.startActivity(intent);
                             overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                             finish();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -111,8 +121,28 @@ public class LoginActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else if (userSession.getAttribute("firebaseToken").equals("")){
+        } else if (userSession.getAttribute("firebaseToken").equals("")) {
             showToast("Your device could not connected to our server, Please try again later.");
+        }
+    }
+
+    void refreshToken() {
+        if (userSession.getAttribute("firebaseToken").equals("")) {
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (!task.isSuccessful()) {
+                                Log.w(AppController.TAG, "getInstanceId failed", task.getException());
+                                return;
+                            }
+
+                            // Get new Instance ID token
+                            String token = task.getResult().getToken();
+                            userSession.setAttribute("firebaseToken", token);
+
+                        }
+                    });
         }
     }
 }

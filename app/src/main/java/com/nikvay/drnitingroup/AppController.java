@@ -2,6 +2,8 @@ package com.nikvay.drnitingroup;
 
 import android.app.Application;
 
+import androidx.multidex.MultiDexApplication;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -9,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 import com.nikvay.drnitingroup.utilities.LruBitmapCache;
 
 
-public class AppController extends Application {
+public class AppController extends MultiDexApplication {
 
     public static final String TAG = AppController.class.getSimpleName();
     private ImageLoader mImageLoader;
