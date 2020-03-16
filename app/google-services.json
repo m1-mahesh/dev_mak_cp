@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "565809857667",
-    "firebase_url": "https://class-portal-4677a.firebaseio.com",
-    "project_id": "class-portal-4677a",
-    "storage_bucket": "class-portal-4677a.appspot.com"
+    "project_number": "951071438051",
+    "firebase_url": "https://drnitin-44fe8.firebaseio.com",
+    "project_id": "drnitin-44fe8",
+    "storage_bucket": "drnitin-44fe8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:565809857667:android:af5b7d91a6eb752d1707b6",
+        "mobilesdk_app_id": "1:951071438051:android:0d899ee0b32befa5e5c1d6",
         "android_client_info": {
-          "package_name": "com.mak.classportal"
+          "package_name": "com.nikvay.drnitingroup"
         }
       },
       "oauth_client": [
         {
-          "client_id": "565809857667-arts179fgfmuelk3hfmuoolg44v8h7fv.apps.googleusercontent.com",
+          "client_id": "951071438051-href0ir6fsvpm8tj7gfqa8gbce3gfsgm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAbH5H8bsGyd5VB-ukdjisDqp0uowWW-94"
+          "current_key": "AIzaSyDd-MPb0l1Oh2maIpo2brlXWzRFbZF0Stk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "565809857667-arts179fgfmuelk3hfmuoolg44v8h7fv.apps.googleusercontent.com",
+              "client_id": "951071438051-href0ir6fsvpm8tj7gfqa8gbce3gfsgm.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

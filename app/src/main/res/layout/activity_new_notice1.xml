@@ -37,7 +37,7 @@
             android:orientation="vertical">
 
 
-            <com.mak.classportal.swap_plugin.CustomViewPager
+            <com.nikvay.drnitingroup.swap_plugin.CustomViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

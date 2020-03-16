@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mak.classportal">
+    package="com.nikvay.drnitingroup">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name=".AppController"
+        android:name="com.nikvay.drnitingroup.AppController"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,57 +21,57 @@
         android:theme="@style/AppTheme"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PlayVideoActivity"
+        <activity android:name="com.nikvay.drnitingroup.PlayVideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" />
-        <activity android:name=".FinaliseNotice" />
-        <activity android:name=".SelectStudents" />
-        <activity android:name=".ViewTestQuestions" />
+        <activity android:name="com.nikvay.drnitingroup.FinaliseNotice" />
+        <activity android:name="com.nikvay.drnitingroup.SelectStudents" />
+        <activity android:name="com.nikvay.drnitingroup.ViewTestQuestions" />
         <activity
-            android:name=".HomeWorkDetails"
+            android:name="com.nikvay.drnitingroup.HomeWorkDetails"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FinalisePaperActivity" />
-        <activity android:name=".RootActivity" />
-        <activity android:name=".permission.PermissionsActivity" />
-        <activity android:name=".BoardSelectActivity" />
-        <activity android:name=".TimetableActivity" />
-        <activity android:name=".FinishTestActivity" />
-        <activity android:name=".RunTest" />
+        <activity android:name="com.nikvay.drnitingroup.FinalisePaperActivity" />
+        <activity android:name="com.nikvay.drnitingroup.RootActivity" />
+        <activity android:name="com.nikvay.drnitingroup.permission.PermissionsActivity" />
+        <activity android:name="com.nikvay.drnitingroup.BoardSelectActivity" />
+        <activity android:name="com.nikvay.drnitingroup.TimetableActivity" />
+        <activity android:name="com.nikvay.drnitingroup.FinishTestActivity" />
+        <activity android:name="com.nikvay.drnitingroup.RunTest" />
         <activity
-            android:name=".TestsList"
+            android:name="com.nikvay.drnitingroup.TestsList"
             android:label="@string/title_activity_tests_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".VideoChapterListActivity"
+            android:name="com.nikvay.drnitingroup.VideoChapterListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ViewAttendanceActivity"
+            android:name="com.nikvay.drnitingroup.ViewAttendanceActivity"
             android:label="@string/title_activity_tests_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".QuickTestResult"
+            android:name="com.nikvay.drnitingroup.QuickTestResult"
             android:label="@string/title_activity_tests_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TestIntroActivity"
+            android:name="com.nikvay.drnitingroup.TestIntroActivity"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".NewNoticeActivity"
+            android:name="com.nikvay.drnitingroup.NewNoticeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".NewHomeworkActivity"
+            android:name="com.nikvay.drnitingroup.NewHomeworkActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".NewTimetableActivity"
+            android:name="com.nikvay.drnitingroup.NewTimetableActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TestResultActivity"
+            android:name="com.nikvay.drnitingroup.TestResultActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FinaliseTest" />
-        <activity android:name=".NewTestActivity" />
-        <activity android:name=".SelectQuestionsActivity" />
-        <activity android:name=".OtpActivity" />
+        <activity android:name="com.nikvay.drnitingroup.FinaliseTest" />
+        <activity android:name="com.nikvay.drnitingroup.NewTestActivity" />
+        <activity android:name="com.nikvay.drnitingroup.SelectQuestionsActivity" />
+        <activity android:name="com.nikvay.drnitingroup.OtpActivity" />
         <activity
-            android:name=".TakeAttendance"
+            android:name="com.nikvay.drnitingroup.TakeAttendance"
             android:label="@string/title_activity_take_attendance"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -82,8 +82,8 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SplashScreen">
+        <activity android:name="com.nikvay.drnitingroup.LoginActivity" />
+        <activity android:name="com.nikvay.drnitingroup.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -94,7 +94,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.mak.classportal.fileprovider"
+            android:authorities="com.nikvay.drnitingroup.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -102,18 +102,14 @@
                 android:resource="@xml/provider_paths" />
         </provider>
         <!-- Firebase Notifications -->
-        <service android:name=".firebase.FirebaseMessageService">
+        <service android:name="com.nikvay.drnitingroup.firebase.FirebaseMessageService"
+            android:permission="false"
+            >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service android:name=".firebase.FirebaseInstanceIService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-        <!-- ./Firebase Notifications -->
     </application>
 
 </manifest>

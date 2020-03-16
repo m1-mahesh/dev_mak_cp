@@ -20,15 +20,18 @@
             android:id="@+id/notice"
             android:icon="@drawable/ic_notifications_24dp"
             android:title="Notice" />
-        <item
-            android:id="@+id/videos"
-            android:icon="@drawable/ic_video_library_24dp"
-            android:title="Video Lecture" />
+
         <item
             android:id="@+id/testSchedule"
             android:icon="@drawable/ic_schedule_black_24dp"
             android:title="Online Test Schedule"
             />
+
+        <item
+            android:id="@+id/videos"
+            android:icon="@drawable/ic_video_library_24dp"
+            android:title="Video Lecture" />
+
         <item
             android:id="@+id/homework"
             android:icon="@drawable/ic_homework_24dp"
