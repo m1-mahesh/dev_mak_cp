@@ -1,17 +1,20 @@
 package com.nikvay.drnitingroup.modales;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Question {
-    public String questionId;
+    public String questionId, paperID;
     public String question;
     public String correctAns;
     public int marks;
     public String status;
     public String imageUrl;
     public String selectedAns = null;
+    public String answerDescription = null;
     public boolean isChecked;
+    public ArrayList<Question> sectionData = new ArrayList<>();
     public Map<String,String> options = new HashMap<>();
 
     public String getCorrectAns() {
@@ -81,5 +84,12 @@ public class Question {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    public String getAnswerDescription(){
+        return this.answerDescription;
+    }
+    public void setAnswerDescription(String answerDescription){
+        this.answerDescription = answerDescription;
     }
 }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.nikvay.drnitingroup.adapter.ViewQuestionListAd;
+import com.nikvay.drnitingroup.modales.NoticeData;
 import com.nikvay.drnitingroup.modales.Question;
 import com.nikvay.drnitingroup.utilities.AppSingleTone;
 import com.nikvay.drnitingroup.utilities.Constant;
@@ -33,7 +34,9 @@ public class ViewTestQuestions extends AppCompatActivity {
 
     RecyclerView mRecyclerView1;
     public static ArrayList<Question> selectedQ = new ArrayList<>();
+    public static NoticeData apiData;
     public static boolean IS_VIEW_CREATED_TEST = false;
+    public static boolean IS_TEST = false;
 
     UserSession userSession;
     SharedPreferences sharedPreferences;
@@ -42,13 +45,13 @@ public class ViewTestQuestions extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appSingleTone = new AppSingleTone(this);
+        sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
+        userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         if (IS_VIEW_CREATED_TEST){
             setContentView(R.layout.activity_quick_result);
-            appSingleTone = new AppSingleTone(this);
             mRecyclerView1 = findViewById(R.id.scheduledTest);
             ((TextView)findViewById(R.id.tvTitle)).setText("Questions");
-            sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
-            userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
             mRecyclerView1.setHasFixedSize(true);
             getTestQuestions();
             ((ImageButton) findViewById(R.id.closeBtn)).setOnClickListener(new View.OnClickListener() {
@@ -63,9 +66,12 @@ public class ViewTestQuestions extends AppCompatActivity {
             findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (Constant.IS_PAPER)
-                        startActivity(new Intent(ViewTestQuestions.this, FinalisePaperActivity.class));
-                    else
+                    if (Constant.IS_PAPER) {
+                        if (Constant.ADD_Q_IN_PAPER)
+                            editAddQuestion(apiData.getId());
+                        else
+                            addQuestion(apiData.getId());
+                    }else
                         startActivityForResult(new Intent(ViewTestQuestions.this, FinaliseTest.class), Constant.ACTIVITY_FINISH_REQUEST_CODE);
                     overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 }
@@ -141,6 +147,89 @@ public class ViewTestQuestions extends AppCompatActivity {
         if (requestCode == Constant.ACTIVITY_FINISH_REQUEST_CODE && resultCode == Constant.ACTIVITY_FINISH_REQUEST_CODE) {
             setResult(Constant.ACTIVITY_FINISH_REQUEST_CODE);
             finish();
+        }
+    }
+    public void addQuestion(String test_id) {
+        try {
+            String url = appSingleTone.addPaperQuestions;
+            JSONArray jsonArray = new JSONArray();
+            for(int i=0;i<selectedQ.size();i++){
+                jsonArray.put(selectedQ.get(i).getQuestionId());
+            }
+            ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
+            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
+            executeAPI.addPostParam("paper_id", apiData.getId());
+            executeAPI.addPostParam("question_heading", apiData.getTitle());
+            executeAPI.addPostParam("marks", apiData.totalMarks);
+            executeAPI.addPostParam("question_id_array", jsonArray.toString());
+            executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                @Override
+                public void onResponse(JSONObject result) {
+                    try {
+                        Log.d("Result", result.toString());
+                        if (result.getInt("error_code") == 200) {
+                            SelectQuestionsActivity.chapterQuestions.clear();
+                            SelectQuestionsActivity.subjectData = null;
+                            ViewTestQuestions.selectedQ.clear();
+                            setResult(Constant.ACTIVITY_FINISH_REQUEST_CODE);
+                            finish();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                    Log.d("Result", errorResponse.toString());
+                }
+            });
+            executeAPI.showProcessBar(true);
+            executeAPI.executeStringRequest(Request.Method.POST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void editAddQuestion(String test_id) {
+        try {
+            String url = appSingleTone.editPaperAddQuestions;
+            JSONArray jsonArray = new JSONArray();
+            for(int i=0;i<selectedQ.size();i++){
+                jsonArray.put(selectedQ.get(i).getQuestionId());
+            }
+            ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
+            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
+            executeAPI.addPostParam("paper_id", apiData.getId());
+            executeAPI.addPostParam("heading_id", Constant.headQuestion.getQuestionId());
+            executeAPI.addPostParam("question_id_array", jsonArray.toString());
+            executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                @Override
+                public void onResponse(JSONObject result) {
+                    try {
+                        Log.d("Result", result.toString());
+                        if (result.getInt("error_code") == 200) {
+                            SelectQuestionsActivity.chapterQuestions.clear();
+                            SelectQuestionsActivity.subjectData = null;
+                            ViewTestQuestions.selectedQ.clear();
+                            setResult(Constant.ACTIVITY_FINISH_REQUEST_CODE);
+                            finish();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                    Log.d("Result", errorResponse.toString());
+                }
+            });
+            executeAPI.showProcessBar(true);
+            executeAPI.executeStringRequest(Request.Method.POST);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

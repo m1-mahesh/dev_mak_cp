@@ -47,11 +47,10 @@ public class CustomPagerAdapter extends PagerAdapter {
         textViewCard.setText(question.getQuestion());
         marksTextView.setText("Marks: " + question.getMarks());
         RadioGroup optionView = view.findViewById(R.id.optionView);
-
-        String imgUrl = "https://d1m6qo1ndegqmm.cloudfront.net/uploadimages/sales_offer_mainpic_20110622120613Impart_Banner.jpg";
-
-        imageLoader = AppController.getInstance().getImageLoader();
-        imageView.setImageUrl(imgUrl, imageLoader);
+        if (question.getImageUrl()!=null && !question.getImageUrl().equals("null") && !question.getImageUrl().equals("")){
+            imageLoader = AppController.getInstance().getImageLoader();
+            imageView.setImageUrl(question.getImageUrl(), imageLoader);
+        }else imageView.setVisibility(View.GONE);
         for (Map.Entry<String, String> entry : question.getOptions().entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
@@ -63,7 +62,6 @@ public class CustomPagerAdapter extends PagerAdapter {
             button.setBackgroundResource(R.drawable.layout_border);
             button.setTag(key);
             button.setLayoutParams(params);
-
             ColorStateList colorStateList = new ColorStateList(
                     new int[][]{
                             new int[]{-android.R.attr.state_checked}, // unchecked

@@ -48,6 +48,7 @@ public class TestResults extends RecyclerView.Adapter<TestResults.SingleItemRowH
         final Question question = itemsList.get(i);
         holder.tvTitle.setText(question.getQuestion());
         holder.marksTxt.setText("" + question.getMarks());
+        holder.textDescription.setText(question.getAnswerDescription());
         if (question.getSelectedAns() != null && question.getSelectedAns().equals(question.getCorrectAns())) {
             holder.correctAnsView.setVisibility(View.GONE);
             holder.wrongAnsView.setVisibility(View.VISIBLE);
@@ -88,7 +89,7 @@ public class TestResults extends RecyclerView.Adapter<TestResults.SingleItemRowH
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
-        protected TextView tvTitle, marksTxt;
+        protected TextView tvTitle, marksTxt, textDescription;
         protected TextView yourAnsVTxt, correctAnsVTxt;
         protected LinearLayout wrongAnsView, correctAnsView;
         protected ImageView statusImg;
@@ -103,6 +104,7 @@ public class TestResults extends RecyclerView.Adapter<TestResults.SingleItemRowH
             this.correctAnsView = view.findViewById(R.id.correctAnsView);
             this.marksTxt = view.findViewById(R.id.marksTxt);
             this.statusImg = view.findViewById(R.id.ansStatus);
+            this.textDescription = view.findViewById(R.id.descriptionText);
 
         }
 

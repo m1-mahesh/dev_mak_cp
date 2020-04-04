@@ -1,5 +1,8 @@
 package com.nikvay.drnitingroup.utilities;
 
+import com.nikvay.drnitingroup.modales.NoticeData;
+import com.nikvay.drnitingroup.modales.Question;
+
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -26,6 +29,11 @@ public class Constant {
     public static final String ROLE_TEACHER = "Teacher";
     public static final String ROLE_ADMIN = "Admin";
     public static boolean IS_PAPER = false;
+    public static boolean ADD_Q_IN_PAPER = false;
+    public static boolean DELETE_Q_IN_PAPER = false;
+    public static Question headQuestion;
+    public static NoticeData paperData;
+    public static String PAPER_ID = "";
     public static int ACTIVITY_FINISH_REQUEST_CODE = 1919;
     public static int ACTIVITY_BACK_REQUEST_CODE = 2929;
     public static Calendar startTime = null;
@@ -45,6 +53,8 @@ public class Constant {
 
     public static final String CONTENT_TYPE_IMAGE = "image";
     public static final String CONTENT_TYPE_PDF_DOC = "pdf/doc";
+    public static final long UNDEFINED_TIME = 9999999;
+
     /*
         Student attempted test with result
         Teacher Created List with class name and id

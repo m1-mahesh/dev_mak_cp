@@ -26,10 +26,16 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <ScrollView
+            android:layout_below="@id/tvTitle"
+            android:layout_above="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/tvTitle"
+
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:orientation="vertical"
             android:padding="20dp"
@@ -75,8 +81,25 @@
                     android:id="@+id/time_edit_text"
                     style="@style/RegistrationEditTextStyle"
                     android:layout_gravity="center_horizontal"
+                    android:editable="false"
                     android:fontFamily="@font/opensansregular"
-                    android:hint="Test Time"
+                    android:hint="Test Start Time"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/end_time_edit_text"
+                    style="@style/RegistrationEditTextStyle"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/opensansregular"
+                    android:editable="false"
+                    android:hint="Test End Time"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -129,7 +152,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
-
+        </ScrollView>
         <Button
             android:id="@+id/saveButton"
             android:layout_width="match_parent"

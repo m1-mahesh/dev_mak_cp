@@ -81,7 +81,7 @@ public class ActiveTestsTabFragment extends Fragment {
                 testData.setClassName(object.getString("class_name"));
                 testData.setClassId(object.getString("class_id"));
                 testData.totalQuestions = object.getInt("num_of_question");
-
+                testData.endTime = object.getString("test_end_time");
                 testData.setTestStatus("Pending");
                 if (userSession.isStudent()) {
                     if (object.has("total_marks") && !object.getString("total_marks").equals("null"))

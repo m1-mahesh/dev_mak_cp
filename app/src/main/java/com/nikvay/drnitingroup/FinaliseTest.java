@@ -29,12 +29,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 public class FinaliseTest extends AppCompatActivity implements View.OnClickListener {
 
-    EditText txtDate, txtTime, titleET, durationET, totalMarksET, instructionET;
+    EditText txtDate, txtTime, titleET, durationET, totalMarksET, instructionET, txtEndTime;
     Calendar c;
     TextView customToast;
     LayoutInflater inflater;
@@ -54,12 +57,14 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
         ((TextView) findViewById(R.id.tvTitle)).setText(R.string.finalise_test);
         txtDate = findViewById(R.id.date_edit_text);
         txtTime = findViewById(R.id.time_edit_text);
+        txtEndTime = findViewById(R.id.end_time_edit_text);
         titleET = findViewById(R.id.title_edit_text);
         durationET = findViewById(R.id.duration_text);
         totalMarksET = findViewById(R.id.total_marks_text);
         totalMarksET.setVisibility(View.GONE);
         instructionET = findViewById(R.id.instructionET);
         txtTime.setOnClickListener(this);
+        txtEndTime.setOnClickListener(this);
         txtDate.setOnClickListener(this);
         txtDate.setTag(txtDate.getKeyListener());
         txtDate.setKeyListener(null);
@@ -151,13 +156,66 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
+                                String am_pm = (hourOfDay < 12) ? "AM" : "PM";
+                                if (hourOfDay == 0) {
+                                    hourOfDay += 12;
+                                    am_pm = "AM";
+                                }
+                                else if (hourOfDay == 12) {
+                                    am_pm = "PM";
+                                }
+                                else if (hourOfDay > 12) {
+                                    hourOfDay -= 12;
+                                    am_pm = "PM";
+                                }
+                                else {
+                                    am_pm = "AM";
+                                }
+
                                 String hr = hourOfDay<10?"0"+hourOfDay:""+hourOfDay;
                                 String minuteStr = minute<10?"0"+minute:""+minute;
 
-                                txtTime.setText(hr + ":" + minuteStr);
+                                txtTime.setText(hr + ":" + minuteStr+":"+am_pm);
                             }
-                        }, mHour, mMinute, false);
+                        }, mHour, mMinute, true);
                 timePickerDialog.show();
+                break;
+            case R.id.end_time_edit_text:
+                Log.e("End","Time");
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMinute = c.get(Calendar.MINUTE);
+
+                // Launch Time Picker Dialog
+                TimePickerDialog timePickerDialog1 = new TimePickerDialog(this,
+                        new TimePickerDialog.OnTimeSetListener() {
+
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay,
+                                                  int minute) {
+
+                                String am_pm = (hourOfDay < 12) ? "AM" : "PM";
+                                if (hourOfDay == 0) {
+                                    hourOfDay += 12;
+                                    am_pm = "AM";
+                                }
+                                else if (hourOfDay == 12) {
+                                    am_pm = "PM";
+                                }
+                                else if (hourOfDay > 12) {
+                                    hourOfDay -= 12;
+                                    am_pm = "PM";
+                                }
+                                else {
+                                    am_pm = "AM";
+                                }
+
+                                String hr = hourOfDay<10?"0"+hourOfDay:""+hourOfDay;
+                                String minuteStr = minute<10?"0"+minute:""+minute;
+
+                                txtEndTime.setText(hr + ":" + minuteStr+":"+am_pm);
+                            }
+                        }, mHour, mMinute, true);
+                timePickerDialog1.show();
                 break;
             case R.id.saveButton:
                 //showToast("New Test Created Successfully");
@@ -168,6 +226,25 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
 
         }
 
+    }
+
+
+    public int timeDiff(String startTime, String endTime) {
+        int hoursDiff = 0;
+        SimpleDateFormat format = new SimpleDateFormat("hh:mma");
+        Date date1 = null;
+        Date date2 = null;
+        try {
+            date1 = format.parse(startTime);
+            date2 = format.parse(endTime);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long difference = date2.getTime() - date1.getTime();
+        hoursDiff = (int) difference / (1000 * 60 * 60);
+        return hoursDiff;
     }
 
     public void createNewTest() {
@@ -191,6 +268,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
             executeAPI.addPostParam("test_time_in_mints", durationET.getText().toString());
             executeAPI.addPostParam("test_date", txtDate.getText().toString());
             executeAPI.addPostParam("test_time", txtTime.getText().toString());
+            executeAPI.addPostParam("test_end_time", txtEndTime.getText().toString());
             executeAPI.addPostParam("test_instructions", instructionET.getText().toString());
             executeAPI.addPostParam("total_marks", ""+totalMarks);
             executeAPI.addPostParam("subject_id", SelectQuestionsActivity.subjectData.getId());

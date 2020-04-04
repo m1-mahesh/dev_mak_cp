@@ -52,7 +52,7 @@ public class OtpActivity extends AppCompatActivity implements View.OnFocusChange
     String Otp = "";
     LayoutInflater inflater, toastInflater;
     View layout;
-    TextView text;
+    TextView text, resendButtonText;
     String error_message;
     UserSession userSession;
     SharedPreferences sharedPreferences;
@@ -118,6 +118,7 @@ public class OtpActivity extends AppCompatActivity implements View.OnFocusChange
         super.onCreate(savedInstanceState);
         setContentView(new MainLayout(this, null));
 
+        resendButtonText = findViewById(R.id.resendButton);
         enter_codetxt = findViewById(R.id.entercode_txt);
         attempterror = findViewById(R.id.attempterror);
         clinic_code_layout = findViewById(R.id.clinic_code_layout);
@@ -141,6 +142,12 @@ public class OtpActivity extends AppCompatActivity implements View.OnFocusChange
             public void onClick(View view) {
 
 
+            }
+        });
+        resendButtonText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resendOtp();
             }
         });
 
@@ -438,9 +445,11 @@ public class OtpActivity extends AppCompatActivity implements View.OnFocusChange
                                 userSession.setAttribute("role_id", ""+object.getInt("role_id"));
                                 userSession.setAttribute("org_id", ""+object.getInt("org_id"));
                                 userSession.setAttribute("orgName", ""+object.getString("org_name"));
-                                if (object.getInt("role_id") == 1)
-                                    userSession.setAttribute("userRole", "Admin");
-                                else if (object.getInt("role_id") == 2)
+                                userSession.setBoolean("isAdmin", false);
+                                if (object.getInt("role_id") == 1) {
+                                    userSession.setBoolean("isAdmin", true);
+                                    userSession.setAttribute("userRole", "Teacher");
+                                }else if (object.getInt("role_id") == 2)
                                     userSession.setAttribute("userRole", "Teacher");
                                 else {
                                     userSession.setAttribute("userRole", "Student");
@@ -480,5 +489,43 @@ public class OtpActivity extends AppCompatActivity implements View.OnFocusChange
                 e.printStackTrace();
             }
     }
+    public void resendOtp() {
 
+        if (!userSession.getAttribute("firebaseToken").equals("")) {
+
+            try {
+                String url = appSingleTone.signIn;
+
+                ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
+                executeAPI.addPostParam("mobile", MOBILE_NUMBER);
+                executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                    @Override
+                    public void onResponse(JSONObject result) {
+                        Log.d("Result", result.toString());
+                        try {
+                            if(result.getInt("error_code") == 200) {
+                                showToast("OTP Send");
+                            }else if(result.getInt("error_code") == 401){
+                                showToast("Mobile Number Does Not Exist");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                        Log.d("Result", errorResponse.toString());
+                    }
+                });
+                executeAPI.showProcessBar(true);
+                executeAPI.executeStringRequest(Request.Method.POST);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (userSession.getAttribute("firebaseToken").equals("")) {
+            showToast("Your device could not connected to our server, Please try again later.");
+        }
+    }
 }

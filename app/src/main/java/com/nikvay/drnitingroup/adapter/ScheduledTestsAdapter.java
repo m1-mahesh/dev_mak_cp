@@ -3,13 +3,18 @@ package com.nikvay.drnitingroup.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nikvay.drnitingroup.QuickTestResult;
@@ -18,9 +23,11 @@ import com.nikvay.drnitingroup.TestIntroActivity;
 import com.nikvay.drnitingroup.TestResultActivity;
 import com.nikvay.drnitingroup.ViewTestQuestions;
 import com.nikvay.drnitingroup.modales.TestData;
+import com.nikvay.drnitingroup.utilities.AppSingleTone;
 import com.nikvay.drnitingroup.utilities.Constant;
 import com.nikvay.drnitingroup.utilities.UserSession;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +41,7 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
     private Context mContext;
     private boolean isStep = false;
     int tabIndex;
+    AppSingleTone appSingleTone;
 
     public ScheduledTestsAdapter(Context context, ArrayList<TestData> itemsList, boolean isStep, UserSession userSession, int tabIndex) {
         this.itemsList = itemsList;
@@ -41,6 +49,7 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
         this.isStep = isStep;
         this.userSession = userSession;
         this.tabIndex = tabIndex;
+        appSingleTone = new AppSingleTone(context);
     }
 
 
@@ -82,7 +91,15 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
             formatter = new SimpleDateFormat("dd");
             holder.dateText.setText(formatter.format(date));
             formatter = new SimpleDateFormat("dd-MMM");
-            holder.testExpiryTest.setText("Expire On " + formatter.format(calendar.getTime()));
+            if(isActiveTest(testData, true)) {
+//                holder.cardView.setBackgroundColor(Color.parseColor("#CCCCCC"));
+                holder.testExpiryTest.setText("Expired On " + testData.getTestDate() + " " + testData.endTime);
+            }else {
+                holder.testExpiryTest.setText("Expire On " + testData.getTestDate() + " " + testData.endTime);
+            }
+            if(!isActiveTest(testData, false))
+//                holder.cardView.setBackgroundColor(Color.parseColor("#CCCCCC"));
+
             holder.testDate.setText(testData.getDuration() + " min *" + (testData.totalQuestions < 10 ? "0" + testData.totalQuestions : testData.totalQuestions) + " Questions");
 
             holder.className.setText(testData.getClassName());
@@ -120,14 +137,17 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
                 }
             });
         } else {
-
-            holder.timeTxt.setText("Time: " + testData.getTestTime());
+            holder.timeTxt.setText("Time: " + testData.getTestTime()+" - "+ testData.endTime);
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (userSession.isStudent() && tabIndex == Constant.TAB_INDEX_0) {
-                        TestIntroActivity.testData = testData;
-                        mContext.startActivity(new Intent(mContext, TestIntroActivity.class));
+                        if(isActiveTest(testData, false)) {
+                            TestIntroActivity.testData = testData;
+                            mContext.startActivity(new Intent(mContext, TestIntroActivity.class));
+                        }else if (isActiveTest(testData, true)) showToast("Test is Expired...");
+                        else showToast("Test will start on time "+testData.endTime);
+
                     } else if (userSession.isStudent() && tabIndex == Constant.TAB_INDEX_2) {
                         QuickTestResult.TEST_ID = testData.getId();
                         QuickTestResult.isQuick = false;
@@ -138,7 +158,60 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
             });
         }
     }
+    TextView customToast;
+    LayoutInflater inflater;
+    View tostLayout;
+    void showToast(String toastText){
+        inflater = ((Activity)mContext).getLayoutInflater();
+        tostLayout = inflater.inflate(R.layout.toast_layout_file,
+                (ViewGroup) ((Activity)mContext).findViewById(R.id.toast_layout_root));
+        customToast = tostLayout.findViewById(R.id.text);
+        Toast toast = new Toast(mContext);
+        customToast.setText(toastText);
+        customToast.setTypeface(ResourcesCompat.getFont(mContext, R.font.opensansregular));
+        toast.setGravity(Gravity.NO_GRAVITY, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(tostLayout);
+        toast.show();
+    }
+    boolean isActiveTest(TestData testData, boolean isExpire){
 
+        try{
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:a");
+            Date date1 = null;
+            Date date2 = null;
+            try {
+                date1 = dateFormat.parse(testData.getTestDate()+" "+testData.getTestTime());
+                date2 = dateFormat.parse(testData.getTestDate()+" "+testData.endTime);
+                Date todayDate = new Date();
+                Log.e("T ", todayDate.toString());
+                Log.e("S ", date1.toString());
+                Log.e("E ", date2.toString());
+                if (isExpire){
+                    if (date1.before(todayDate) && todayDate.after(date2)) {
+                        return true;
+                    }else return false;
+                }else {
+                    if ((date1.after(todayDate) || todayDate.after(date1)) && todayDate.before(date2)) {
+                        long diff = appSingleTone.getDiffInMin(todayDate, date1);
+                        if (diff != Constant.UNDEFINED_TIME && diff <= 5) {
+                            Log.e(testData.getTestTitle(), " Active");
+                            return true;
+                        }
+
+                    }
+                    Log.e("Diff", " " + appSingleTone.getDiffInMin(todayDate, date1));
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
     @Override
     public int getItemCount() {
         return itemsList.size();

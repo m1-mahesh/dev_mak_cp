@@ -6,14 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.nikvay.drnitingroup.AppController;
 import com.nikvay.drnitingroup.R;
 import com.nikvay.drnitingroup.SelectQuestionsActivity;
 import com.nikvay.drnitingroup.modales.Question;
+import com.nikvay.drnitingroup.utilities.Constant;
 
 import java.util.ArrayList;
 
@@ -23,8 +28,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
     boolean isView = false;
     String className = "";
     private Context mContext;
-
-
+    ImageLoader imageLoader;
     public QuestionListAdapter(Context context, ArrayList<Question> itemsList, boolean isView) {
         this.mContext = context;
         this.isView = isView;
@@ -34,13 +38,20 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
     public SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.question_list_item, null);
         SingleItemRowHolder mh = new SingleItemRowHolder(v);
+
         return mh;
     }
 
     @Override
     public void onBindViewHolder(SingleItemRowHolder holder, final int i) {
+        Question singleItem;
+        if (imageLoader==null)
+            imageLoader = AppController.getInstance().getImageLoader();
+        if (Constant.DELETE_Q_IN_PAPER)
+            singleItem = Constant.headQuestion.sectionData.get(i);
+        else
+            singleItem = SelectQuestionsActivity.chapterQuestions.get(CHAPTER_ID).get(i);
 
-        final Question singleItem = SelectQuestionsActivity.chapterQuestions.get(CHAPTER_ID).get(i);
 
         if (!this.isView) {
             holder.checkBox.setVisibility(View.VISIBLE);
@@ -68,12 +79,15 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
                 }
             });
         }
-
-
+        if (singleItem.getImageUrl()!=null&&!singleItem.getImageUrl().equals("")&&!singleItem.getImageUrl().equals("null"))
+            holder.questionImage.setImageUrl(singleItem.getImageUrl(), imageLoader);
+        else holder.questionImage.setVisibility(View.GONE);
     }
 
     @Override
     public int getItemCount() {
+        if (Constant.DELETE_Q_IN_PAPER)
+            return Constant.headQuestion.sectionData.size();
         return SelectQuestionsActivity.chapterQuestions.get(CHAPTER_ID).size();
     }
 
@@ -84,12 +98,13 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
         protected TextView devisionText;
         protected View hrView;
         protected LinearLayout divisionsView;
-
+        protected NetworkImageView questionImage;
 
         public SingleItemRowHolder(View view) {
             super(view);
             this.tvTitle = view.findViewById(R.id.tvTitle);
             this.checkBox = view.findViewById(R.id.questionCheck);
+            this.questionImage = view.findViewById(R.id.questionImage);
 
         }
 

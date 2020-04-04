@@ -135,6 +135,20 @@
                 android:textColor="#f06f6a"
                 android:textSize="14sp"
                 android:visibility="gone" />
+            <TextView
+                android:id="@+id/resendButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pin_layout"
+                android:layout_marginTop="55dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="@string/resend_text"
+                android:fontFamily="@font/opensanssemibold"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                 />
+
 
             <Button
                 android:id="@+id/submitdata"

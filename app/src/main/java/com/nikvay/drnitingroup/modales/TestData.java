@@ -14,6 +14,7 @@ public class TestData {
     int gainMarks = 0;
     String className = "";
     String classId = "";
+    public String endTime = "";
     public int totalQuestions = 0;
     public boolean isTestAttempt = false;
     public String getClassName() {

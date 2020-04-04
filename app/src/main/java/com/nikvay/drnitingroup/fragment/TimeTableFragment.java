@@ -12,6 +12,7 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -188,7 +189,7 @@ public class TimeTableFragment extends Fragment {
             userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
 
         }
-
+        String fileExt = ".png";
         @Override
         public SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.time_tible_item, null);
@@ -201,8 +202,19 @@ public class TimeTableFragment extends Fragment {
 
             final NoticeData singleItem = itemsList.get(i);
 
-            ImageLoader imageLoader = AppController.getInstance().getImageLoader();
-            holder.imageView.setImageUrl(singleItem.getMediaUrl(), imageLoader);
+            if (singleItem.getType().equalsIgnoreCase("2") || singleItem.getType().equalsIgnoreCase("3")) {
+                if (singleItem.getType().equalsIgnoreCase("2"))
+                    fileExt = "pdf";
+                else fileExt = "doc";
+
+            } else if (singleItem.getType().equalsIgnoreCase("1")) {
+                fileExt = "png";
+            }
+            if(fileExt.equals("png")){
+                ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+                holder.imageView.setImageUrl(singleItem.getMediaUrl(), imageLoader);
+            }
+
             holder.createdOnDateTxt.setText(singleItem.getClassName()+"("+singleItem.getDivisionName()+")");
             holder.createdByText.setText(singleItem.getCreatedBy());
             holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +223,12 @@ public class TimeTableFragment extends Fragment {
 
                 }
             });
-
+            holder.downloadIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    appSingleTone.downloadFile(getContext(), singleItem.getMediaUrl(), singleItem.getId()+"."+fileExt);
+                }
+            });
             if (userSession.isTeacher()) {
                 holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -248,7 +265,7 @@ public class TimeTableFragment extends Fragment {
             protected TextView createdOnDateTxt, createdByText;
             protected NetworkImageView imageView;
             protected CardView cardView;
-
+            protected ImageView downloadIcon;
 
             public SingleItemRowHolder(View view) {
                 super(view);
@@ -256,6 +273,7 @@ public class TimeTableFragment extends Fragment {
                 this.createdByText = view.findViewById(R.id.createdByText);
                 this.imageView = view.findViewById(R.id.topImage);
                 this.cardView = view.findViewById(R.id.cardView);
+                this.downloadIcon = view.findViewById(R.id.downloadIcon);
             }
 
         }

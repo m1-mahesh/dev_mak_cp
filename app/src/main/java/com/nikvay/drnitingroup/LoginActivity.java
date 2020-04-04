@@ -100,11 +100,15 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(JSONObject result) {
                         Log.d("Result", result.toString());
                         try {
-                            OtpActivity.MOBILE_NUMBER = userId.getText().toString();
-                            Intent intent = new Intent(LoginActivity.this, OtpActivity.class);
-                            LoginActivity.this.startActivity(intent);
-                            overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
-                            finish();
+                            if(result.getInt("error_code") == 200) {
+                                OtpActivity.MOBILE_NUMBER = userId.getText().toString();
+                                Intent intent = new Intent(LoginActivity.this, OtpActivity.class);
+                                LoginActivity.this.startActivity(intent);
+                                overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
+                                finish();
+                            }else if(result.getInt("error_code") == 401){
+                                showToast("Mobile Number Does Not Exist");
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

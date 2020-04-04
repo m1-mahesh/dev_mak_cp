@@ -223,6 +223,7 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
                 question.setCorrectAns(object.getString("answer_id"));
                 question.setMarks(object.getInt("questions_marks"));
                 question.setStatus(object.getString("status"));
+                question.setAnswerDescription(object.getString("answer_description"));
                 question.setImageUrl(object.getString("image"));
                 mData.add(question);
             }

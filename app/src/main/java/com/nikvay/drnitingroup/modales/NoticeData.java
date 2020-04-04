@@ -9,7 +9,13 @@ public class NoticeData {
     public String mediaUrl;
     public String type;
     public String createdBy;
+    public String examTimeHr;
+    public String examDate;
+    public String totalMarks;
+    public String subjectId;
+    public String classID;
     public String className, divisionName, subjectName;
+
 
     public String getSubjectName() {
         return subjectName;

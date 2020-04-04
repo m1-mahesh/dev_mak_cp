@@ -147,11 +147,11 @@ public class DashboardFragment extends Fragment {
 
         if (userSession.isTeacher()){
             HomeMenu menu3 = new HomeMenu();
-            menu3.setMenuId(9);
+            menu3.setMenuId(7);
             menu3.setName("Generate Paper");
             menu3.setResourceId(R.drawable.menu_paper);
             menu3.setId("paper");
-            //allClassData.add(menu3);
+            allClassData.add(menu3);
         }
 
 

@@ -35,12 +35,12 @@
             android:icon="@drawable/ic_view_week_24dp"
             android:title="Timetable"
             />
-<!--        <item-->
-<!--            android:id="@+id/paper"-->
-<!--            android:title="Board Paper"-->
-<!--            android:iconTint="@color/colorPrimaryDark"-->
-<!--            android:icon="@drawable/ic_exposure_24dp"-->
-<!--            />-->
+        <item
+            android:id="@+id/paper"
+            android:title="Board Paper"
+            android:iconTint="@color/colorPrimaryDark"
+            android:icon="@drawable/ic_exposure_24dp"
+            />
 
         <item
             android:id="@+id/logout"

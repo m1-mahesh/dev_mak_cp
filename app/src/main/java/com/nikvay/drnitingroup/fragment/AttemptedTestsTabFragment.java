@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -91,7 +92,11 @@ public class AttemptedTestsTabFragment extends Fragment {
                     try {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         Date date = dateFormat.parse(testData.getTestDate());
-                        if (date.before(new Date()))
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(new Date());
+                        String dateStr = calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH)+1)+"-"+calendar.get(Calendar.DATE);
+                        Date todayDate = dateFormat.parse(dateStr);
+                        if (date.before(todayDate))
                             allClassData.add(testData);
                     }catch (Exception e){
                         e.printStackTrace();

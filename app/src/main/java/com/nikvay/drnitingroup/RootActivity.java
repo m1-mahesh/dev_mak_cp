@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.nikvay.drnitingroup.fragment.CompactCalendarFragment;
 import com.nikvay.drnitingroup.fragment.DashboardFragment;
 import com.nikvay.drnitingroup.fragment.HomeworkFragment;
 import com.nikvay.drnitingroup.fragment.NoticeFragment;
+import com.nikvay.drnitingroup.fragment.PaperListFragment;
 import com.nikvay.drnitingroup.fragment.ProfileFragment;
 import com.nikvay.drnitingroup.fragment.SubjectFragment;
 import com.nikvay.drnitingroup.fragment.TimeTableFragment;
@@ -84,6 +86,13 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     }
      /* Initialize all widgets
      */
+     private void hideItem(){
+         if (userSession.isStudent()) {
+             NavigationView navigationView = (NavigationView) findViewById(R.id.navigationview_id);
+             Menu nav_Menu = navigationView.getMenu();
+             nav_Menu.findItem(R.id.paper).setVisible(false);
+         }
+     }
     private void initializeViews() {
         toolbar = findViewById(R.id.toolbar_id);
         toolbar.setTitle(userSession.getAttribute("orgName"));
@@ -216,12 +225,12 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
                 closeDrawer();
                 break;
-            /*case R.id.paper:
+            case R.id.paper:
                 toolbar.setTitle("Board Papers");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new PaperListFragment())
                         .commit();
                 closeDrawer();
-                break;*/
+                break;
             case R.id.profile:
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new ProfileFragment())
                         .commit();

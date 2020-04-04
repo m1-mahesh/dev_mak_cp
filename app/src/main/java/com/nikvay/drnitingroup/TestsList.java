@@ -56,6 +56,8 @@ public class TestsList extends AppCompatActivity {
         ((TextView)findViewById(R.id.tvTitle)).setText(CLASS_NAME);
         setupToolbar();
         Constant.IS_PAPER = false;
+        Constant.ADD_Q_IN_PAPER = false;
+        Constant.DELETE_Q_IN_PAPER = false;
         setupViewPager();
 
         setupCollapsingToolbar();

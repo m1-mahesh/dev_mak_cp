@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.nikvay.drnitingroup.AppController;
 import com.nikvay.drnitingroup.R;
 import com.nikvay.drnitingroup.modales.Question;
 
@@ -23,7 +26,7 @@ public class ViewQuestionListAd extends RecyclerView.Adapter<ViewQuestionListAd.
     ArrayList<Question> itemList;
     private Context mContext;
 
-
+    ImageLoader imageLoader;
     public ViewQuestionListAd(Context context, ArrayList<Question> itemsList, boolean isView) {
         this.mContext = context;
         this.itemList = itemsList;
@@ -33,12 +36,15 @@ public class ViewQuestionListAd extends RecyclerView.Adapter<ViewQuestionListAd.
     public SingleItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.question_list_item, null);
         SingleItemRowHolder mh = new SingleItemRowHolder(v);
+
         return mh;
     }
 
     @Override
     public void onBindViewHolder(SingleItemRowHolder holder, final int i) {
 
+        if (imageLoader==null)
+            imageLoader = AppController.getInstance().getImageLoader();
         final Question singleItem = itemList.get(i);
         holder.checkBox.setVisibility(View.GONE);
         holder.tvTitle.setVisibility(View.VISIBLE);
@@ -50,6 +56,9 @@ public class ViewQuestionListAd extends RecyclerView.Adapter<ViewQuestionListAd.
 
             }
         });
+        if (singleItem.getImageUrl()!=null&&!singleItem.getImageUrl().equals("")&&!singleItem.getImageUrl().equals("null"))
+            holder.questionImage.setImageUrl(singleItem.getImageUrl(), imageLoader);
+        else holder.questionImage.setVisibility(View.GONE);
 
     }
 
@@ -65,12 +74,13 @@ public class ViewQuestionListAd extends RecyclerView.Adapter<ViewQuestionListAd.
         protected TextView devisionText;
         protected View hrView;
         protected LinearLayout divisionsView;
-
+        protected NetworkImageView questionImage;
 
         public SingleItemRowHolder(View view) {
             super(view);
             this.tvTitle = view.findViewById(R.id.tvTitle);
             this.checkBox = view.findViewById(R.id.questionCheck);
+            this.questionImage = view.findViewById(R.id.questionImage);
 
         }
 
