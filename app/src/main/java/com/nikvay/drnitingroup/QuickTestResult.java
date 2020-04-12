@@ -17,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.nikvay.drnitingroup.adapter.TestResults;
 import com.nikvay.drnitingroup.modales.Question;
+import com.nikvay.drnitingroup.modales.TestData;
 import com.nikvay.drnitingroup.utilities.AppSingleTone;
 import com.nikvay.drnitingroup.utilities.ExecuteAPI;
 import com.nikvay.drnitingroup.utilities.UserSession;
@@ -39,6 +40,7 @@ public class QuickTestResult extends AppCompatActivity {
     public static ArrayList<Question> mData = new ArrayList<>();
     public static boolean isQuick = false;
     public static String TEST_ID;
+    public static TestData testData;
     AppSingleTone appSingleTone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class QuickTestResult extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         userSession = new UserSession(sharedPreferences, sharedPreferences.edit());
         if (isQuick) {
+            TestResults.testData = RunTest.testData;
             TestResults adapter1 = new TestResults(this, mData, userSession, false);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             mRecyclerView.setAdapter(adapter1);
@@ -77,10 +80,12 @@ public class QuickTestResult extends AppCompatActivity {
                 question.setQuestion(object.getString("questions"));
                 question.setCorrectAns(object.getString("correct_answer"));
                 question.setMarks(object.getInt("questions_marks"));
-                question.setAnswerDescription(object.getString("answer_description"));
+                if (object.has("answer_description"))
+                    question.setAnswerDescription(object.getString("answer_description"));
                 question.setSelectedAns(object.getString("given_answer"));
                 mData.add(question);
             }
+            TestResults.testData = testData;
             TestResults adapter1 = new TestResults(this, mData, userSession, true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             mRecyclerView.setAdapter(adapter1);

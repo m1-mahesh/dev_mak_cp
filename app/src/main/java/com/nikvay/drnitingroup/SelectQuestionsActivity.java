@@ -260,7 +260,7 @@ public class SelectQuestionsActivity extends AppCompatActivity {
     void parseTestQuestions(JSONObject jsonObject) {
         if (!chapterQuestions.containsKey(CHAPTER_ID)) {
             chapterQuestions.put(CHAPTER_ID, new ArrayList<>());
-        }
+        }else chapterQuestions.get(CHAPTER_ID).clear();
         try {
             JSONArray jsonArray = Constant.IS_PAPER?jsonObject.getJSONArray("paper_genration_question_list"):jsonObject.getJSONArray("online_test_question_list");
             for (int i = 0; i < jsonArray.length(); i++) {

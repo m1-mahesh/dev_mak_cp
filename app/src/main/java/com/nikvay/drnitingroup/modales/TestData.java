@@ -1,5 +1,7 @@
 package com.nikvay.drnitingroup.modales;
 
+import org.json.JSONArray;
+
 public class TestData {
     String testTitle = "";
     String testClass = "";
@@ -12,9 +14,12 @@ public class TestData {
     String duration = "";
     int totalMarks = 0;
     int gainMarks = 0;
+    public int wrongMarks = 0, wrongAnsCount=0;
+    public int correctMarks = 0, correctAnsCount=0;
     String className = "";
     String classId = "";
     public String endTime = "";
+    public JSONArray instructionArray = new JSONArray();
     public int totalQuestions = 0;
     public boolean isTestAttempt = false;
     public String getClassName() {

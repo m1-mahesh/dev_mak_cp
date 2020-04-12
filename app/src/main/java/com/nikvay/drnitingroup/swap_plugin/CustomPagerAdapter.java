@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager.widget.PagerAdapter;
 
@@ -16,6 +17,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.nikvay.drnitingroup.AppController;
 import com.nikvay.drnitingroup.R;
+import com.nikvay.drnitingroup.RunTest;
 import com.nikvay.drnitingroup.modales.Question;
 
 import java.util.ArrayList;
@@ -26,13 +28,11 @@ import java.util.Map;
  */
 public class CustomPagerAdapter extends PagerAdapter {
 
-    public static ArrayList<Question> mData;
     ImageLoader imageLoader;
     private Context mContext;
 
-    public CustomPagerAdapter(Context context, ArrayList<Question> mData) {
+    public CustomPagerAdapter(Context context) {
         mContext = context;
-        CustomPagerAdapter.mData = mData;
     }
 
     @Override
@@ -43,9 +43,9 @@ public class CustomPagerAdapter extends PagerAdapter {
         TextView textViewCard = view.findViewById(R.id.textViewCard);
         TextView marksTextView = view.findViewById(R.id.marksTxt);
         NetworkImageView imageView = view.findViewById(R.id.qImage);
-        Question question = mData.get(position);
+        Question question = RunTest.mData.get(position);
         textViewCard.setText(question.getQuestion());
-        marksTextView.setText("Marks: " + question.getMarks());
+        marksTextView.setText("Marks: " + RunTest.testData.correctMarks);
         RadioGroup optionView = view.findViewById(R.id.optionView);
         if (question.getImageUrl()!=null && !question.getImageUrl().equals("null") && !question.getImageUrl().equals("")){
             imageLoader = AppController.getInstance().getImageLoader();
@@ -74,8 +74,10 @@ public class CustomPagerAdapter extends PagerAdapter {
             );
             button.setButtonTintList(colorStateList);
             button.setText(value);
-            if (question.getSelectedAns() != null && question.getSelectedAns().equals(key))
+            if (RunTest.mData.get(position).getSelectedAns() != null && RunTest.mData.get(position).getSelectedAns().equals(key)) {
                 button.setSelected(true);
+                button.setBackgroundResource(R.drawable.redio_selected);
+            }
             optionView.addView(button);
         }
 
@@ -87,10 +89,11 @@ public class CustomPagerAdapter extends PagerAdapter {
                     RadioButton button = (RadioButton) group.getChildAt(i);
                     if (button.getId() == checkedId) {
                         button.setBackgroundResource(R.drawable.redio_selected);
-                        question.setSelectedAns(button.getTag().toString());
+                        RunTest.mData.get(position).setSelectedAns(button.getTag().toString());
+                        RunTest.mData.get(position).isChecked = true;
                     } else button.setBackgroundResource(R.drawable.layout_border);
                 }
-                notifyDataSetChanged();
+//                notifyDataSetChanged();
             }
         });
         collection.addView(view);
@@ -104,7 +107,7 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return mData.size();
+        return RunTest.mData.size();
     }
 
     @Override
@@ -115,7 +118,11 @@ public class CustomPagerAdapter extends PagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
 
-        return mData.get(position).getQuestion();
+        return RunTest.mData.get(position).getQuestion();
     }
 
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
 }

@@ -83,14 +83,11 @@ public class ClassListAdapter extends RecyclerView.Adapter<ClassListAdapter.Sing
                         ViewAttendanceActivity.CLASS_NAME = singleItem.getName();
                         mContext.startActivity(new Intent(mContext, ViewAttendanceActivity.class));
                         ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
-
                     }
                 });
                 holder.divisionsView.addView(textView);
             }
-            for (int j = 0; j < singleItem.getDivisions().size(); j++) {
 
-            }
         }
 
         //holder.itemImage.setImageResource(singleItem.getResourceId());

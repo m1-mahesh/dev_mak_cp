@@ -1,11 +1,13 @@
 package com.nikvay.drnitingroup.firebase;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -64,10 +66,33 @@ public class FirebaseMessageService extends FirebaseMessagingService {
         }
 
     }
+    private String createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                CharSequence name = getString(R.string.app_name);
+                String id = "mak_it_solutions_channel";
+                String description = getString(R.string.app_name);
+                int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                NotificationChannel channel = new NotificationChannel(id, name, importance);
+                channel.setDescription(description);
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(channel);
+                return id;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
     private void addNotification(JSONObject jsonObject) {
         try {
+            String chanelId = createNotificationChannel();
             NotificationCompat.Builder builder =
-                    new NotificationCompat.Builder(this, "")
+                    new NotificationCompat.Builder(this, chanelId)
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle(jsonObject.getString("title"))
                             .setContentText(jsonObject.getString("description"));

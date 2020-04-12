@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.nikvay.drnitingroup.FinaliseTest;
 import com.nikvay.drnitingroup.NewPaperActivity;
 import com.nikvay.drnitingroup.R;
 import com.nikvay.drnitingroup.modales.NoticeData;
@@ -30,11 +31,14 @@ public class InstructionsAd extends RecyclerView.Adapter<InstructionsAd.SingleIt
     TextView customToast;
     LayoutInflater inflater;
     View tostLayout;
+    boolean isTest, isShow;
 
     AppSingleTone appSingleTone;
-    public InstructionsAd(Context context, ArrayList<NoticeData> itemsList) {
+    public InstructionsAd(Context context, ArrayList<NoticeData> itemsList, boolean isTest, boolean isShow) {
         this.itemsList = itemsList;
         this.mContext = context;
+        this.isTest = isTest;
+        this.isShow = isShow;
         appSingleTone = new AppSingleTone(mContext);
     }
 
@@ -57,13 +61,21 @@ public class InstructionsAd extends RecyclerView.Adapter<InstructionsAd.SingleIt
 
         final NoticeData singleItem = itemsList.get(i);
 //        holder.tvTitle.setText(singleItem.getTitle());
-        holder.checkBox.setText(singleItem.getTitle());
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                NewPaperActivity.selectedInstructions.put(singleItem.getId(), isChecked);
-            }
-        });
+        if(!isShow) {
+            holder.checkBox.setText(singleItem.getTitle());
+            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isTest)
+                        FinaliseTest.selectedInstructions.put(singleItem.getId(), isChecked);
+                    else
+                        NewPaperActivity.selectedInstructions.put(singleItem.getId(), isChecked);
+                }
+            });
+        }else {
+            holder.checkBox.setVisibility(View.GONE);
+            holder.tvTitle.setText((i+1)+". "+singleItem.getTitle());
+        }
     }
     void showToast(String toastText){
         inflater = ((Activity)mContext).getLayoutInflater();

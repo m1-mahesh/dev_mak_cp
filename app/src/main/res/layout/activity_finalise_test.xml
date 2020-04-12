@@ -131,10 +131,11 @@
                     android:layout_gravity="center_horizontal"
                     android:inputType="number"
                     android:fontFamily="@font/opensansregular"
-                    android:hint="Total Marks"
+                    android:hint="Wrong Answer Marks"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -142,15 +143,30 @@
                 android:layout_marginBottom="8dp">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/instructionET"
+                    android:id="@+id/correct_marks_text"
                     style="@style/RegistrationEditTextStyle"
                     android:layout_gravity="center_horizontal"
-                    android:inputType="textMultiLine"
+                    android:inputType="number"
                     android:fontFamily="@font/opensansregular"
-                    android:hint="Instructions"
+                    android:hint="Correct Answer Marks"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/selectInTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/proximanovaregular"
+                android:text="Select Instructions:"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="10dp"
+                android:id="@+id/instructionList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
         </ScrollView>
         <Button

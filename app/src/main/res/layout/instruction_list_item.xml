@@ -16,10 +16,7 @@
         android:id="@+id/instructionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/checkIn"
-        android:fontFamily="sans-serif-thin"
+        android:fontFamily="@font/proximanovaregular"
         android:textColor="@color/black"
         android:textSize="10sp" />
 

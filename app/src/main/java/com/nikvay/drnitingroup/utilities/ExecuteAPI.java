@@ -50,7 +50,7 @@ public class ExecuteAPI {
     JSONObject jsonObject;
     int mStatusCode = 0;
     NetworkResponse networkresponse;
-    Map<String, String> params;
+    public Map<String, String> params;
     HashMap<String, String> headers;
 
     public ExecuteAPI(Context context, String requestUrl, JSONObject jsonObject) {
@@ -358,12 +358,6 @@ public class ExecuteAPI {
                     }catch (IOException e){
                         e.printStackTrace();
                     }
-                }else{
-                    AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogStyle));
-                    builder.setTitle("Error");
-                    builder.setMessage("Invalid File");
-                    AlertDialog alert = builder.create();
-                    alert.show();
                 }
                 return params;
             }

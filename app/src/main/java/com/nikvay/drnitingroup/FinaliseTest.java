@@ -16,9 +16,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.nikvay.drnitingroup.adapter.InstructionsAd;
+import com.nikvay.drnitingroup.modales.NoticeData;
 import com.nikvay.drnitingroup.modales.Question;
 import com.nikvay.drnitingroup.utilities.AppSingleTone;
 import com.nikvay.drnitingroup.utilities.Constant;
@@ -31,13 +35,17 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FinaliseTest extends AppCompatActivity implements View.OnClickListener {
 
-    EditText txtDate, txtTime, titleET, durationET, totalMarksET, instructionET, txtEndTime;
+    EditText txtDate, txtTime, titleET, durationET, wrongMarksET, correctMarksET, txtEndTime;
     Calendar c;
     TextView customToast;
     LayoutInflater inflater;
@@ -45,6 +53,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
     UserSession userSession;
     SharedPreferences sharedPreferences;
     AppSingleTone appSingleTone;
+    RecyclerView mRecyclerView;
     private int mYear, mMonth, mDay, mHour, mMinute;
     JSONArray jsonArray = new JSONArray();
     @Override
@@ -60,9 +69,9 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
         txtEndTime = findViewById(R.id.end_time_edit_text);
         titleET = findViewById(R.id.title_edit_text);
         durationET = findViewById(R.id.duration_text);
-        totalMarksET = findViewById(R.id.total_marks_text);
-        totalMarksET.setVisibility(View.GONE);
-        instructionET = findViewById(R.id.instructionET);
+        wrongMarksET = findViewById(R.id.total_marks_text);
+        correctMarksET = findViewById(R.id.correct_marks_text);
+        mRecyclerView = findViewById(R.id.instructionList);
         txtTime.setOnClickListener(this);
         txtEndTime.setOnClickListener(this);
         txtDate.setOnClickListener(this);
@@ -73,6 +82,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
         c = Calendar.getInstance();
         findViewById(R.id.saveButton).setOnClickListener(this);
         filterResult();
+        getInstructions();
     }
 
     void showToast(String toastText) {
@@ -92,7 +102,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
         for (int i=0;i<ViewTestQuestions.selectedQ.size(); i++){
             Question q = ViewTestQuestions.selectedQ.get(i);
             jsonArray.put(q.getQuestionId());
-            totalMarks+=q.getMarks();
+//            totalMarks+=Integer.parseInt(correctMarksET.getText().toString());
         }
     }
 
@@ -113,9 +123,21 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
             showToast("Please Enter Test Duration in Minutes");
             return false;
         }
+        if (correctMarksET.getText().toString().equals("")) {
+            showToast("Please Enter Correct Answer Marks");
+            return false;
+        }
+        if (wrongMarksET.getText().toString().equals("")) {
+            showToast("Please Enter Wrong Answer Marks");
+            return false;
+        }
+        if (durationET.getText().toString().equals("")) {
+            showToast("Please Enter Test Duration in Minutes");
+            return false;
+        }
 
-        if (instructionET.getText().toString().equals("")) {
-            showToast("Please Enter Test Instructions");
+        if (selectedInstructions.size()==0) {
+            showToast("Please Select instructions");
             return false;
         }
         return true;
@@ -251,17 +273,23 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
 
         try {
             String url = appSingleTone.createTest;
-            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
             for (Map.Entry<String, String> entry : SelectQuestionsActivity.subjectData.divisions.entrySet()) {
                 String key = entry.getKey();
-                jsonArray.put(key);
+                jsonArray1.put(key);
             }
+            JSONArray instructionArray = new JSONArray();
+            for (Map.Entry<String, Boolean> entry : selectedInstructions.entrySet()) {
+                String key = entry.getKey();
+                instructionArray.put(key);
+            }
+            totalMarks = (jsonArray.length() * Integer.parseInt(correctMarksET.getText().toString()));
             Log.e("Array:", jsonArray.toString());
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
             executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
             executeAPI.addPostParam("class_id", SelectQuestionsActivity.subjectData.getClassId());
-            executeAPI.addPostParam("division_id", jsonArray.toString());
+            executeAPI.addPostParam("division_id", jsonArray1.toString());
             executeAPI.addPostParam("teacher_id", userSession.getAttribute("user_id"));
             executeAPI.addPostParam("test_name", titleET.getText().toString());
             executeAPI.addPostParam("test_description", titleET.getText().toString());
@@ -269,7 +297,9 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
             executeAPI.addPostParam("test_date", txtDate.getText().toString());
             executeAPI.addPostParam("test_time", txtTime.getText().toString());
             executeAPI.addPostParam("test_end_time", txtEndTime.getText().toString());
-            executeAPI.addPostParam("test_instructions", instructionET.getText().toString());
+            executeAPI.addPostParam("test_instructions", instructionArray.toString());
+            executeAPI.addPostParam("wrong_ans_marks", wrongMarksET.getText().toString());
+            executeAPI.addPostParam("correct_ans_marks", correctMarksET.getText().toString());
             executeAPI.addPostParam("total_marks", ""+totalMarks);
             executeAPI.addPostParam("subject_id", SelectQuestionsActivity.subjectData.getId());
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
@@ -303,7 +333,6 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
 
         try {
             String url = appSingleTone.addTestQuestions;
-
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
             executeAPI.addPostParam("test_id", test_id);
@@ -314,7 +343,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
                     try {
                         Log.d("Result", result.toString());
                         if (result.getInt("error_code") == 200) {
-                            showToast("New Test Created");
+//                            showToast("New Test Created");
                             SelectQuestionsActivity.chapterQuestions.clear();
                             SelectQuestionsActivity.subjectData = null;
                             ViewTestQuestions.selectedQ.clear();
@@ -322,6 +351,77 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
                             finish();
                         }
                     }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError result, int mStatusCode, JSONObject errorResponse) {
+                    Log.d("Result", errorResponse.toString());
+                }
+            });
+            executeAPI.showProcessBar(true);
+            executeAPI.executeStringRequest(Request.Method.POST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Map<String, Boolean> selectedInstructions = new HashMap<>();
+    ArrayList<NoticeData> instructions = new ArrayList<>();
+    void parseInstructions(JSONArray jsonArray){
+
+        try {
+            instructions.clear();
+            for(int i = 0;i<jsonArray.length();i++){
+                JSONObject object = jsonArray.getJSONObject(i);
+                NoticeData notice = new NoticeData();
+                notice.setId(object.getString("id"));
+                notice.setTitle(object.getString("title"));
+                instructions.add(notice);
+            }
+            Collections.sort(instructions, new Comparator<NoticeData>() {
+                @Override
+                public int compare(NoticeData o1, NoticeData o2) {
+                    try {
+                        return o1.getTitle().compareTo(o2.getTitle());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    return 0;
+                }
+            });
+            InstructionsAd adapter1 = new InstructionsAd(this, instructions, true, false);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+            mRecyclerView.setAdapter(adapter1);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void getInstructions() {
+
+        try {
+            String url = appSingleTone.getInstructionList;
+
+            ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
+            executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
+            executeAPI.addPostParam("org_id", userSession.getAttribute("org_id"));
+            executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
+                @Override
+                public void onResponse(JSONObject result) {
+                    Log.d("Result", result.toString());
+                    try {
+                        if (result.getInt("error_code") == 200) {
+                            JSONArray object = result.getJSONArray("instruction_list");
+                            parseInstructions(object);
+                        } else {
+                            showToast("Something went wrong, Please try again later");
+                        }
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
 

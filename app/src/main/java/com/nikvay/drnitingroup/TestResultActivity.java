@@ -24,6 +24,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.nikvay.drnitingroup.adapter.StudentResultAd;
 import com.nikvay.drnitingroup.modales.StudentData;
+import com.nikvay.drnitingroup.modales.TestData;
 import com.nikvay.drnitingroup.utilities.AppSingleTone;
 import com.nikvay.drnitingroup.utilities.ExecuteAPI;
 import com.nikvay.drnitingroup.utilities.UserSession;
@@ -53,6 +54,7 @@ public class TestResultActivity extends AppCompatActivity {
     public static String CLASS_ID = "";
     public static String DIVISION = "";
     public static String TEST_TITLE = "Results";
+    public static TestData testData;
 
 
     /**
@@ -233,6 +235,8 @@ public class TestResultActivity extends AppCompatActivity {
                 studentData.setTestName(object.getString("test_name"));
                 studentData.setTotalMarks(object.getString("total_marks"));
                 studentData.setMarksGain(object.getString("total_marks_recived"));
+                studentData.correctAnsCount = object.getInt("correct_answer_count");
+                studentData.wrongAnsCount = object.getInt("wrong_answer_count");
                 students.add(studentData);
             }
             StudentResultAd adapter1 = new StudentResultAd(this,students);

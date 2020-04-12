@@ -429,9 +429,6 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
             }else if(!picturePath.equals("")){
                 bitmaps = new Bitmap[1];
                 bitmaps[0] = MediaStore.Images.Media.getBitmap(FinaliseNotice.this.getContentResolver() , fileUri);
-            }else {
-                showToast("Select Attachment");
-                return;
             }
 
             String url = appSingleTone.submitNotice;
@@ -447,6 +444,7 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
             executeAPI.addPostParam("class_id", CLASS_ID);
             executeAPI.addPostParam("division_id_array", divisionIdArray.toString());
             executeAPI.addPostParam("student_id_array", studentIdArray.toString());
+
             executeAPI.executeCallback(new ExecuteAPI.OnTaskCompleted() {
                 @Override
                 public void onResponse(JSONObject result) {
@@ -478,6 +476,8 @@ public class FinaliseNotice extends AppCompatActivity implements View.OnClickLis
             }else if(bitmaps!=null) {
                 executeAPI.setContentType(Constant.CONTENT_TYPE_IMAGE);
                 executeAPI.executeMultiPartRequest(Request.Method.POST, bitmaps, "media_base64", null);
+            }else{
+                executeAPI.executeMultiPartRequest(Request.Method.POST, null, "media_attachment", null);
             }
         } catch (Exception e) {
             e.printStackTrace();

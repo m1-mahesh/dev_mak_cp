@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +61,8 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     public static boolean hasPermissionToDelete= false;
     public static boolean isTeacher= false;
     public static boolean isStudent= false;
-    public static int defaultMenu= 0;
+    public static int defaultMenu = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,10 +81,12 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             }, 2000);
 
         }
+//        appSingleTone.createMyPdf();
         initializeViews();
         toggleDrawer();
         initializeDefaultFragment(savedInstanceState,defaultMenu);
         initiatePermissions();
+
 //        appSingleTone.createMyPdf(FileUtils.getAppPath(this) + "medata.pdf");
     }
      /* Initialize all widgets
@@ -245,6 +250,12 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 userSession.userLogout();
                 startActivity(new Intent(RootActivity.this, LoginActivity.class));
                 overridePendingTransition(R.anim.leftside_out, R.anim.leftside_in);
+                break;
+            case R.id.nav_log_version:
+                String url = "https://www.nikvay.com";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
                 break;
 
         }

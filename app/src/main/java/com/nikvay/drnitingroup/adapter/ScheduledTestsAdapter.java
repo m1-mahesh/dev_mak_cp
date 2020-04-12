@@ -97,19 +97,31 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
             }else {
                 holder.testExpiryTest.setText("Expire On " + testData.getTestDate() + " " + testData.endTime);
             }
-            if(!isActiveTest(testData, false))
+            if(!isActiveTest(testData, false)) {
 //                holder.cardView.setBackgroundColor(Color.parseColor("#CCCCCC"));
+            }
 
             holder.testDate.setText(testData.getDuration() + " min *" + (testData.totalQuestions < 10 ? "0" + testData.totalQuestions : testData.totalQuestions) + " Questions");
 
             holder.className.setText(testData.getClassName());
             if (tabIndex==2 && userSession.isStudent()) {
                 String totalMarks = ""+testData.getGainMarks(), noOfQ = ""+testData.getTotalMarks();
+                int gMarks = 0;
                 if (testData.getGainMarks() < 10)
                     totalMarks = "0" + testData.getGainMarks();
                 if (testData.getTotalMarks() < 10)
                     noOfQ = "0" + testData.getTotalMarks();
-
+                if(testData.correctAnsCount>0 && testData.correctMarks>0){
+                     gMarks = (testData.correctAnsCount * testData.correctMarks);
+                }
+                if(testData.wrongAnsCount>0){
+                    int wCount = testData.wrongAnsCount;
+                    while(wCount!=0){
+                        gMarks -= testData.wrongMarks;
+                        wCount --;
+                    }
+                }
+                totalMarks = ""+ (gMarks<10&&gMarks>0? "0"+gMarks:gMarks);
                 holder.tvTitle.setText("Result: " + totalMarks + "/" + noOfQ);
             }
 
@@ -124,9 +136,11 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
                     if (userSession.isStudent()) {
                         QuickTestResult.TEST_ID = testData.getId();
                         QuickTestResult.isQuick = false;
+                        QuickTestResult.testData = testData;
                         mContext.startActivity(new Intent(mContext, QuickTestResult.class));
                     } else if(tabIndex == Constant.TAB_INDEX_2){
                         TestResultActivity.TEST_ID = testData.getId();
+                        TestResultActivity.testData = testData;
                         mContext.startActivity(new Intent(mContext, TestResultActivity.class));
                     }else if(tabIndex != Constant.TAB_INDEX_2 && userSession.isTeacher()){
                         ViewTestQuestions.TEST_ID = testData.getId();
@@ -146,11 +160,12 @@ public class ScheduledTestsAdapter extends RecyclerView.Adapter<ScheduledTestsAd
                             TestIntroActivity.testData = testData;
                             mContext.startActivity(new Intent(mContext, TestIntroActivity.class));
                         }else if (isActiveTest(testData, true)) showToast("Test is Expired...");
-                        else showToast("Test will start on time "+testData.endTime);
+                        else showToast("Test will start on time "+testData.getTestTime());
 
                     } else if (userSession.isStudent() && tabIndex == Constant.TAB_INDEX_2) {
                         QuickTestResult.TEST_ID = testData.getId();
                         QuickTestResult.isQuick = false;
+                        QuickTestResult.testData = testData;
                         mContext.startActivity(new Intent(mContext, QuickTestResult.class));
                     }
                     ((Activity) mContext).overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);

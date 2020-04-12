@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.nikvay.drnitingroup.R;
 import com.nikvay.drnitingroup.modales.Question;
+import com.nikvay.drnitingroup.modales.TestData;
 import com.nikvay.drnitingroup.utilities.UserSession;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class TestResults extends RecyclerView.Adapter<TestResults.SingleItemRowH
     private ArrayList<Question> itemsList;
     private Context mContext;
     UserSession userSession;
+    public static TestData testData;
 
     public TestResults(Context context, ArrayList<Question> itemsList, UserSession userSession, boolean isAttemptedTest) {
         this.itemsList = itemsList;
@@ -47,16 +49,29 @@ public class TestResults extends RecyclerView.Adapter<TestResults.SingleItemRowH
 
         final Question question = itemsList.get(i);
         holder.tvTitle.setText(question.getQuestion());
-        holder.marksTxt.setText("" + question.getMarks());
+        holder.marksTxt.setText("");
         holder.textDescription.setText(question.getAnswerDescription());
         if (question.getSelectedAns() != null && question.getSelectedAns().equals(question.getCorrectAns())) {
             holder.correctAnsView.setVisibility(View.GONE);
             holder.wrongAnsView.setVisibility(View.VISIBLE);
             holder.statusImg.setImageResource(R.drawable.ic_correct_ans_24dp);
-        } else {
+            if (testData!=null){
+                holder.marksTxt.setText("" + testData.correctMarks);
+            }
+        } else if (question.getSelectedAns() != null && !question.getSelectedAns().equals("null")) {
             holder.statusImg.setImageResource(R.drawable.ic_wrong_ans_24dp);
             holder.correctAnsView.setVisibility(View.VISIBLE);
             holder.wrongAnsView.setVisibility(View.VISIBLE);
+            if (testData!=null){
+                holder.marksTxt.setText("-" + testData.wrongMarks);
+            }
+        }else {
+            holder.statusImg.setImageResource(R.drawable.ic_not_24dp);
+            holder.correctAnsView.setVisibility(View.VISIBLE);
+            holder.wrongAnsView.setVisibility(View.GONE);
+            if (testData!=null){
+                holder.marksTxt.setText("0");
+            }
         }
         if (!isAttemptedTest) {
 

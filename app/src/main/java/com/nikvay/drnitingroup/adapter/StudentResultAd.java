@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nikvay.drnitingroup.R;
+import com.nikvay.drnitingroup.TestResultActivity;
 import com.nikvay.drnitingroup.modales.StudentData;
 
 import java.util.ArrayList;
@@ -34,10 +35,22 @@ public class StudentResultAd extends RecyclerView.Adapter<StudentResultAd.Single
     @Override
     public void onBindViewHolder(SingleItemRowHolder holder, int i) {
 
-        final StudentData singleItem = itemsList.get(i);
+        final StudentData testData = itemsList.get(i);
 
-        holder.tvTitle.setText(singleItem.getName());
-        holder.marksTxt.setText("Marks: "+singleItem.getMarksGain()+"/"+singleItem.getTotalMarks());
+        holder.tvTitle.setText(testData.getName());
+        int gMarks = 0;
+        if(testData.correctAnsCount>0 && TestResultActivity.testData.correctMarks>0){
+            gMarks = (testData.correctAnsCount * TestResultActivity.testData.correctMarks);
+        }
+        if(testData.wrongAnsCount>0){
+            int wCount = testData.wrongAnsCount;
+            while(wCount!=0){
+                gMarks -= TestResultActivity.testData.wrongMarks;
+                wCount --;
+            }
+        }
+        String totalMarks = ""+ (gMarks<10&&gMarks>0? "0"+gMarks:gMarks);
+        holder.marksTxt.setText("Marks: "+totalMarks+"/"+testData.getTotalMarks());
 
     }
 

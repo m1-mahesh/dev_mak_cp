@@ -17,7 +17,7 @@
         android:layout_height="@dimen/image_header_dimen"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/image_header_top_margin"
-        android:src="@drawable/student" />
+        android:src="@mipmap/ic_launcher" />
 
     <RelativeLayout
         android:id="@+id/login_container"

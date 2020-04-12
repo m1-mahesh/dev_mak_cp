@@ -10,7 +10,8 @@ public class StudentData {
     public String totalMarks;
     public String testName;
     public String marksGain;
-
+    public int wrongMarks = 0, wrongAnsCount=0;
+    public int correctMarks = 0, correctAnsCount=0;
     int attendanceStatus = 0;
 
     public int getAttendanceStatus() {

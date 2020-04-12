@@ -138,7 +138,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_below="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -185,13 +185,19 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="20dp"
                     android:layout_below="@+id/instructionT"
-                    android:text="INSTRUCTION"
+                    android:text="INSTRUCTIONS"
                     android:textSize="15sp"
                     android:fontFamily="@font/proximanovaregular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <Button
             android:id="@+id/saveButton"

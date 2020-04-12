@@ -43,7 +43,7 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
 
     public static TestData testData;
     static int step = 0;
-    static ArrayList<Question> mData = new ArrayList<>();
+    public static ArrayList<Question> mData = new ArrayList<>();
     TextView customToast, questionCount;
     LayoutInflater inflater;
     View tostLayout;
@@ -85,8 +85,9 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
             setContentView(R.layout.activity_run_test);
             countDownText = findViewById(R.id.countDownText);
             viewPager = findViewById(R.id.viewPager);
-            viewPager.setAdapter(new CustomPagerAdapter(this, mData));
+            viewPager.setAdapter(new CustomPagerAdapter(this));
             viewPager.setPagingEnabled(false);
+
             mButtonLeft = findViewById(R.id.buttonSwipeLeft);
             mButtonRight = findViewById(R.id.buttonSwipeRight);
             questionCount = findViewById(R.id.questionCount);
@@ -115,7 +116,7 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
 
             public void onFinish() {
                 countDownText.setText("TIME'S UP!!"); //On finish change timer text
-                FinishTestActivity.mData = CustomPagerAdapter.mData;
+                FinishTestActivity.mData = RunTest.mData;
                 startActivity(new Intent(RunTest.this, FinishTestActivity.class));
                 overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 showToast("Test Completed...");
@@ -139,6 +140,7 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
             viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 
         }
+        viewPager.getAdapter().notifyDataSetChanged();
         questionCount.setText((viewPager.getCurrentItem() + 1) + "/" + mData.size());
     }
 
@@ -151,7 +153,7 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
                 .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        FinishTestActivity.mData = CustomPagerAdapter.mData;
+                        FinishTestActivity.mData = RunTest.mData;
                         startActivity(new Intent(RunTest.this, FinishTestActivity.class));
                         overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                         timerCD.cancel();
@@ -223,7 +225,8 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
                 question.setCorrectAns(object.getString("answer_id"));
                 question.setMarks(object.getInt("questions_marks"));
                 question.setStatus(object.getString("status"));
-                question.setAnswerDescription(object.getString("answer_description"));
+                if (object.has("answer_description"))
+                    question.setAnswerDescription(object.getString("answer_description"));
                 question.setImageUrl(object.getString("image"));
                 mData.add(question);
             }

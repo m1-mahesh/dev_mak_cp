@@ -258,6 +258,7 @@ public class NewPaperActivity extends AppCompatActivity implements View.OnClickL
     void parseInstructions(JSONArray jsonArray){
 
         try {
+            selectedInstructions.clear();
             instructions.clear();
             for(int i = 0;i<jsonArray.length();i++){
                 JSONObject object = jsonArray.getJSONObject(i);
@@ -277,7 +278,7 @@ public class NewPaperActivity extends AppCompatActivity implements View.OnClickL
                     return 0;
                 }
             });
-            InstructionsAd adapter1 = new InstructionsAd(this, instructions);
+            InstructionsAd adapter1 = new InstructionsAd(this, instructions, false, false);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
             mRecyclerView.setAdapter(adapter1);
 
@@ -435,7 +436,7 @@ public class NewPaperActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (selectedInstructions.size()==0) {
-            showToast("Please Paper instructions");
+            showToast("Please Select instructions");
             return false;
         }
         return true;

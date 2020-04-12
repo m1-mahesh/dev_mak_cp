@@ -58,7 +58,7 @@ public class ProfileFragment extends Fragment {
         addressTxt = rootView.findViewById(R.id.addressTxt);
         if (RootActivity.isTeacher) {
             scoreView.setVisibility(View.GONE);
-            teacherView.setVisibility(View.VISIBLE);
+//            teacherView.setVisibility(View.VISIBLE);
             userType.setText("Teacher");
             nameTxt.setText(userSession.getAttribute("name"));
             emailTxt.setText(userSession.getAttribute("email"));
@@ -66,7 +66,7 @@ public class ProfileFragment extends Fragment {
         }
         else if (RootActivity.isStudent) {
             teacherView.setVisibility(View.GONE);
-            scoreView.setVisibility(View.VISIBLE);
+//            scoreView.setVisibility(View.VISIBLE);
             userType.setText("Student");
             nameTxt.setText(userSession.getAttribute("name"));
             emailTxt.setText(userSession.getAttribute("email"));

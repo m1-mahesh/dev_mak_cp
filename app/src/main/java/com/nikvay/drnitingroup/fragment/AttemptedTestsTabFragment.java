@@ -73,7 +73,12 @@ public class AttemptedTestsTabFragment extends Fragment {
                 testData.setTestTitle(object.getString("test_name"));
                 testData.setTestDate(object.getString("test_date"));
                 testData.setTestTime(object.getString("test_time"));
-                testData.setInstruction(object.getString("test_instructions"));
+                try {
+                    testData.wrongMarks = object.getInt("wrong_ans_marks");
+                    testData.correctMarks = object.getInt("correct_ans_marks");
+                }catch (Exception e){e.printStackTrace();}
+                if(object.has("instruction_array"))
+                    testData.instructionArray = object.getJSONArray("instruction_array");
                 testData.setDescription(object.getString("test_description"));
                 testData.setDuration(object.getString("test_time_in_mints"));
                 testData.setClassName(object.getString("class_name"));
@@ -83,6 +88,13 @@ public class AttemptedTestsTabFragment extends Fragment {
                     testData.setTotalMarks(object.getInt("total_marks"));
                 if (object.has("result_data")&&!object.getJSONObject("result_data").getString("total_marks_recived").equals("null"))
                     testData.setGainMarks(object.getJSONObject("result_data").getInt("total_marks_recived"));
+                if (object.has("result_data")){
+                    try {
+                        testData.correctAnsCount = object.getJSONObject("result_data").getInt("correct_answer_count");
+                        testData.wrongAnsCount = object.getJSONObject("result_data").getInt("wrong_answer_count");
+                    }catch (Exception e){e.printStackTrace();}
+
+                }
                 testData.setTestStatus("Pending");
                 if (userSession.isStudent()) {
                     testData.isTestAttempt = object.getBoolean("isTestAttempt");

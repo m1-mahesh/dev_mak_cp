@@ -74,8 +74,12 @@ public class FinishTestActivity extends AppCompatActivity {
                     totalAttemptedQ++;
                     if (question.getSelectedAns()!=null&&question.getSelectedAns().equals(question.getCorrectAns())){
                        totalMarks += question.getMarks();
+                    }else {
+                        totalMarks -= RunTest.testData.wrongMarks;
                     }
                     resultObject.put(question.getQuestionId(), question.getSelectedAns());
+                }else {
+                    resultObject.put(question.getQuestionId(), "");
                 }
             }
         }catch (JSONException e){

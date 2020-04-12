@@ -641,9 +641,6 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             }else if(!picturePath.equals("")){
                 bitmaps = new Bitmap[1];
                 bitmaps[0] = MediaStore.Images.Media.getBitmap(NewHomeworkActivity.this.getContentResolver() , fileUri);
-            }else {
-                showToast("Select Attachment");
-                return;
             }
 
             JSONArray jsonArray = new JSONArray();
@@ -651,7 +648,6 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
                 String key = entry.getKey();
                 jsonArray.put(key);
             }
-
             final String URL = appSingleTone.submitHomework;
             ExecuteAPI executeAPI = new ExecuteAPI(this, URL, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));
@@ -696,6 +692,8 @@ public class NewHomeworkActivity extends AppCompatActivity implements View.OnCli
             }else if(bitmaps!=null) {
                 executeAPI.setContentType(Constant.CONTENT_TYPE_IMAGE);
                 executeAPI.executeMultiPartRequest(Request.Method.POST, bitmaps, "media_attachment", null);
+            }else{
+                executeAPI.executeMultiPartRequest(Request.Method.POST, null, "media_attachment", null);
             }
         } catch (Exception e) {
             e.printStackTrace();

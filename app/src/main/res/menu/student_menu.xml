@@ -51,5 +51,12 @@
             />
 
     </group>
+    <group
+        android:id="@+id/nav_footer">
+        <item
+            android:title=""
+            android:id="@+id/nav_log_version"
+            app:actionLayout="@layout/menu_footer" />
+    </group>
 
 </menu>
