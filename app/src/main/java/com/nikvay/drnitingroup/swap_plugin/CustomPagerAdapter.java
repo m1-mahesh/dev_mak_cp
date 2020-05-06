@@ -20,6 +20,8 @@ import com.nikvay.drnitingroup.R;
 import com.nikvay.drnitingroup.RunTest;
 import com.nikvay.drnitingroup.modales.Question;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -51,34 +53,36 @@ public class CustomPagerAdapter extends PagerAdapter {
             imageLoader = AppController.getInstance().getImageLoader();
             imageView.setImageUrl(question.getImageUrl(), imageLoader);
         }else imageView.setVisibility(View.GONE);
-        for (Map.Entry<String, String> entry : question.getOptions().entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            RadioButton button = new RadioButton(mContext);
-            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-            button.setTypeface(ResourcesCompat.getFont(mContext, R.font.opensanssemibold));
-            params.setMargins(0, 15, 0, 0);
-            button.setPadding(5, 5, 5, 5);
-            button.setBackgroundResource(R.drawable.layout_border);
-            button.setTag(key);
-            button.setLayoutParams(params);
-            ColorStateList colorStateList = new ColorStateList(
-                    new int[][]{
-                            new int[]{-android.R.attr.state_checked}, // unchecked
-                            new int[]{android.R.attr.state_checked}  // checked
-                    },
-                    new int[]{
-                            R.color.colorAccent,
-                            R.color.colorPrimary
-                    }
-            );
-            button.setButtonTintList(colorStateList);
-            button.setText(value);
-            if (RunTest.mData.get(position).getSelectedAns() != null && RunTest.mData.get(position).getSelectedAns().equals(key)) {
-                button.setSelected(true);
-                button.setBackgroundResource(R.drawable.redio_selected);
-            }
-            optionView.addView(button);
+        for (int i=0;i< question.getOptions().length();i++) {
+            try {
+                String key = question.getOptions().getJSONObject(i).getString("option_id");
+                String value = question.getOptions().getJSONObject(i).getString("option_value");
+                RadioButton button = new RadioButton(mContext);
+                RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+                button.setTypeface(ResourcesCompat.getFont(mContext, R.font.opensanssemibold));
+                params.setMargins(0, 15, 0, 0);
+                button.setPadding(5, 5, 5, 5);
+                button.setBackgroundResource(R.drawable.layout_border);
+                button.setTag(key);
+                button.setLayoutParams(params);
+                ColorStateList colorStateList = new ColorStateList(
+                        new int[][]{
+                                new int[]{-android.R.attr.state_checked}, // unchecked
+                                new int[]{android.R.attr.state_checked}  // checked
+                        },
+                        new int[]{
+                                R.color.colorAccent,
+                                R.color.colorPrimary
+                        }
+                );
+                button.setButtonTintList(colorStateList);
+                button.setText(value);
+                if (RunTest.mData.get(position).getSelectedAns() != null && RunTest.mData.get(position).getSelectedAns().equals(key)) {
+                    button.setSelected(true);
+                    button.setBackgroundResource(R.drawable.redio_selected);
+                }
+                optionView.addView(button);
+            }catch (JSONException e){e.printStackTrace();}
         }
 
         RadioGroup optionGroup = view.findViewById(R.id.optionView);

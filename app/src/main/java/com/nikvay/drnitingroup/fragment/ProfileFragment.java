@@ -23,7 +23,7 @@ public class ProfileFragment extends Fragment {
 
 
     LinearLayout personalinfo, experience, review;
-    TextView nameTxt, roleTxt, specificationTxt, mobileTxt, emailTxt, addressTxt, marksTxt, testCountTxt;
+    TextView nameTxt, roleTxt, specificationTxt, mobileTxt, emailTxt, addressTxt, marksTxt, testCountTxt, className;
     UserSession userSession;
     SharedPreferences sharedPreferences;
 
@@ -50,6 +50,7 @@ public class ProfileFragment extends Fragment {
         LinearLayout teacherView = rootView.findViewById(R.id.qualificationView);
         nameTxt = rootView.findViewById(R.id.nameTxt);
         roleTxt = rootView.findViewById(R.id.userType);
+        className = rootView.findViewById(R.id.className);
         specificationTxt = rootView.findViewById(R.id.specificationTxt);
         marksTxt = rootView.findViewById(R.id.marksTxt);
         testCountTxt = rootView.findViewById(R.id.testCountTxt);
@@ -60,6 +61,7 @@ public class ProfileFragment extends Fragment {
             scoreView.setVisibility(View.GONE);
 //            teacherView.setVisibility(View.VISIBLE);
             userType.setText("Teacher");
+            className.setVisibility(View.GONE);
             nameTxt.setText(userSession.getAttribute("name"));
             emailTxt.setText(userSession.getAttribute("email"));
             mobileTxt.setText(userSession.getAttribute("mobile"));
@@ -68,6 +70,7 @@ public class ProfileFragment extends Fragment {
             teacherView.setVisibility(View.GONE);
 //            scoreView.setVisibility(View.VISIBLE);
             userType.setText("Student");
+            className.setText(userSession.getAttribute("class_name")+" ("+userSession.getAttribute("division")+")");
             nameTxt.setText(userSession.getAttribute("name"));
             emailTxt.setText(userSession.getAttribute("email"));
             mobileTxt.setText(userSession.getAttribute("mobile"));

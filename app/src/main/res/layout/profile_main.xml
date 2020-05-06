@@ -76,6 +76,17 @@
                         android:text="Student"
                         android:textSize="14sp" />
 
+                    <TextView
+                        android:id="@+id/className"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/proximanovaregular"
+                        android:text="Student"
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 

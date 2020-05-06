@@ -50,11 +50,23 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
+            <TextView
+                android:layout_below="@+id/entercode_txt"
+                android:id="@+id/countDownText"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:text=""
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-condensed"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"/>
+
             <LinearLayout
                 android:id="@+id/pin_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/entercode_txt"
+                android:layout_below="@+id/countDownText"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15dp"
                 android:gravity="center_horizontal"
@@ -137,6 +149,7 @@
                 android:visibility="gone" />
             <TextView
                 android:id="@+id/resendButton"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/pin_layout"

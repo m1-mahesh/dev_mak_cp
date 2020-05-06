@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
@@ -20,9 +22,11 @@ import com.nikvay.drnitingroup.RootActivity;
 import com.nikvay.drnitingroup.utilities.AppSingleTone;
 import com.nikvay.drnitingroup.utilities.UserSession;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
+import java.util.Random;
 
 import static com.nikvay.drnitingroup.AppController.TAG;
 
@@ -58,8 +62,9 @@ public class FirebaseMessageService extends FirebaseMessagingService {
                     json.put(entry.getKey(), entry.getValue());
                 }
 
-                addNotification(json);
+//                addNotification(json);
 //                handleDataMessage(json);
+                showNotification(json);
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e.getMessage());
             }
@@ -112,6 +117,39 @@ public class FirebaseMessageService extends FirebaseMessagingService {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+    void showNotification(JSONObject jsonObject){
+        int icon = R.mipmap.ic_launcher;
+
+        //if message and image url
+        int count=0;
+        String chanelId = createNotificationChannel();
+        Intent intent = new Intent(this, RootActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
+                PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = null;
+        try {
+            notificationBuilder = new NotificationCompat.Builder(this, chanelId)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(jsonObject.getString("description"))
+                    .setContentText(jsonObject.getString("description"))
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(true)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)).setStyle(new NotificationCompat.BigTextStyle().bigText(jsonObject.getString("title")))
+                    .setContentIntent(pendingIntent);
+            notificationBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Random random = new Random();
+        int randomNumber = random.nextInt(9999 - 1000) + 1000;
+        if (notificationManager!=null && notificationBuilder!=null)
+            notificationManager.notify(randomNumber, notificationBuilder.build());
+
     }
 
     @Override

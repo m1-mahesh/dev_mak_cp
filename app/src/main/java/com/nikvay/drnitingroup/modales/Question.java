@@ -1,5 +1,9 @@
 package com.nikvay.drnitingroup.modales;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,20 +18,14 @@ public class Question {
     public String selectedAns = null;
     public String answerDescription = null;
     public boolean isChecked;
+    public int level = -1;
     public ArrayList<Question> sectionData = new ArrayList<>();
-    public Map<String,String> options = new HashMap<>();
-
+//    public Map<String,String> options = new HashMap<>();
+    public JSONArray options;
     public String getCorrectAns() {
         return correctAns;
     }
 
-    public int getMarks() {
-        return marks;
-    }
-
-    public void setMarks(int marks) {
-        this.marks = marks;
-    }
 
     public String getStatus() {
         return status;
@@ -53,11 +51,30 @@ public class Question {
         this.imageUrl = imageUrl;
     }
 
-    public Map<String, String> getOptions() {
+    public JSONArray getOptions() {
         return options;
     }
 
-
+    public boolean icContainKey(String option){
+        try{
+            for(int i=0;i<options.length();i++){
+                JSONObject object = options.getJSONObject(i);
+                if(object.getString("option_id").equals(option))
+                    return true;
+            }
+        }catch (JSONException e){e.printStackTrace();}
+        return false;
+    }
+    public String getOptionOfId(String id){
+        try{
+            for(int i=0;i<options.length();i++){
+                JSONObject object = options.getJSONObject(i);
+                if(object.getString("option_id").equals(id))
+                    return object.getString("option_value");
+            }
+        }catch (JSONException e){e.printStackTrace();}
+        return "";
+    }
     public void setCorrectAns(String correctAns) {
         this.correctAns = correctAns;
     }

@@ -21,6 +21,7 @@
 
             <TextView
                 android:id="@+id/tvTitle"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/opensanssemibold"
@@ -30,18 +31,19 @@
 
             <TextView
                 android:id="@+id/subjectNameTxt"
+                android:layout_below="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/tvTitle"
                 android:fontFamily="sans-serif-thin"
                 android:text="(English)"
                 android:textSize="15sp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/subjectNameTxt"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -56,7 +58,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_toRightOf="@+id/addQ"
                     android:src="@drawable/ic_remove_red_eye_black_24dp" />
             </LinearLayout>
 

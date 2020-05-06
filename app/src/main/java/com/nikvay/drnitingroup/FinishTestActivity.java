@@ -28,7 +28,7 @@ import java.util.Date;
 public class FinishTestActivity extends AppCompatActivity {
 
     public static ArrayList<Question> mData = new ArrayList<>();
-    TextView testTitle, attemptedQ, durationText;
+    TextView testTitle, attemptedQ, durationText, testResult;
     int totalQ = 0, totalAttemptedQ = 0;
     JSONObject resultObject;
     AppSingleTone appSingleTone;
@@ -44,8 +44,8 @@ public class FinishTestActivity extends AppCompatActivity {
         testTitle = findViewById(R.id.testTitle);
         attemptedQ = findViewById(R.id.attemptedQ);
         durationText = findViewById(R.id.testDuration);
+        testResult = findViewById(R.id.testResult);
 
-        Log.e("Recoreded ", "" + mData.size());
         findViewById(R.id.finishButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,26 +54,27 @@ public class FinishTestActivity extends AppCompatActivity {
                 startActivity(new Intent(FinishTestActivity.this, QuickTestResult.class));
                 overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);
                 finish();
-                finish();
             }
+
         });
-        calculateTime();
         filterResult();
+        calculateTime();
         initialiseValue();
         postTestData();
     }
 
-    int totalMarks = 0;
+    int totalMarks = 0, testTotalMarks = 0;
     void filterResult() {
         try {
             resultObject = new JSONObject();
             totalQ = mData.size();
             for (int i = 0; i < mData.size(); i++) {
                 Question question = mData.get(i);
+                testTotalMarks += RunTest.testData.correctMarks;
                 if (question.getSelectedAns() != null) {
                     totalAttemptedQ++;
                     if (question.getSelectedAns()!=null&&question.getSelectedAns().equals(question.getCorrectAns())){
-                       totalMarks += question.getMarks();
+                       totalMarks += RunTest.testData.correctMarks;
                     }else {
                         totalMarks -= RunTest.testData.wrongMarks;
                     }
@@ -117,6 +118,10 @@ public class FinishTestActivity extends AppCompatActivity {
         SimpleDateFormat sdf=new SimpleDateFormat("HH:mm:ss");
         startTimeStr=sdf.format(Constant.startTime.getTime());
         endTimeStr=sdf.format(endTime.getTime());
+        String result = totalMarks<10&&totalMarks>0?"0"+totalMarks:""+totalMarks;
+        result += "/";
+        result += testTotalMarks<10&&testTotalMarks>0?"0"+testTotalMarks:""+testTotalMarks;
+        testResult.setText("Result: "+result);
     }
     public void postTestData() {
 

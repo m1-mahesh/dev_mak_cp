@@ -29,6 +29,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,8 +76,10 @@ public class AttemptedTestsTabFragment extends Fragment {
                 testData.setTestDate(object.getString("test_date"));
                 testData.setTestTime(object.getString("test_time"));
                 try {
-                    testData.wrongMarks = object.getInt("wrong_ans_marks");
-                    testData.correctMarks = object.getInt("correct_ans_marks");
+                    if(!object.getString("wrong_ans_marks").equals("null"))
+                        testData.wrongMarks = object.getInt("wrong_ans_marks");
+                    if(!object.getString("correct_ans_marks").equals("null"))
+                        testData.correctMarks = object.getInt("correct_ans_marks");
                 }catch (Exception e){e.printStackTrace();}
                 if(object.has("instruction_array"))
                     testData.instructionArray = object.getJSONArray("instruction_array");
@@ -84,6 +88,7 @@ public class AttemptedTestsTabFragment extends Fragment {
                 testData.setClassName(object.getString("class_name"));
                 testData.setClassId(object.getString("class_id"));
                 testData.totalQuestions = object.getInt("num_of_question");
+                testData.endTime = object.getString("test_end_time");
                 if (object.has("total_marks")&&!object.getString("total_marks").equals("null"))
                     testData.setTotalMarks(object.getInt("total_marks"));
                 if (object.has("result_data")&&!object.getJSONObject("result_data").getString("total_marks_recived").equals("null"))
@@ -108,7 +113,7 @@ public class AttemptedTestsTabFragment extends Fragment {
                         calendar.setTime(new Date());
                         String dateStr = calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH)+1)+"-"+calendar.get(Calendar.DATE);
                         Date todayDate = dateFormat.parse(dateStr);
-                        if (date.before(todayDate))
+                        if (date.before(todayDate)||isActiveTest(testData, true))
                             allClassData.add(testData);
                     }catch (Exception e){
                         e.printStackTrace();
@@ -126,6 +131,44 @@ public class AttemptedTestsTabFragment extends Fragment {
             e.printStackTrace();
         }
 
+    }
+    private boolean isActiveTest(TestData testData, boolean isExpire){
+
+        try{
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:a");
+            Date date1 = null;
+            Date date2 = null;
+            try {
+                date1 = dateFormat.parse(testData.getTestDate()+" "+testData.getTestTime());
+                date2 = dateFormat.parse(testData.getTestDate()+" "+testData.endTime);
+                Date todayDate = new Date();
+                Log.e("T ", todayDate.toString());
+                Log.e("S ", date1.toString());
+                Log.e("E ", date2.toString());
+                if (isExpire){
+                    if (date1.before(todayDate) && todayDate.after(date2)) {
+                        return true;
+                    }else return false;
+                }else {
+                    if ((date1.after(todayDate) || todayDate.after(date1)) && todayDate.before(date2)) {
+                        long diff = appSingleTone.getDiffInMin(todayDate, date1);
+                        if (diff != Constant.UNDEFINED_TIME && diff <= 5) {
+                            Log.e(testData.getTestTitle(), " Active");
+                            return true;
+                        }
+
+                    }
+                    Log.e("Diff", " " + appSingleTone.getDiffInMin(todayDate, date1));
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
     @Override
     public void onResume() {

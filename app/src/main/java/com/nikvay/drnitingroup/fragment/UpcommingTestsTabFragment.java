@@ -74,8 +74,10 @@ public class UpcommingTestsTabFragment extends Fragment {
                 testData.setTestDate(object.getString("test_date"));
                 testData.setTestTime(object.getString("test_time"));
                 try {
-                    testData.wrongMarks = object.getInt("wrong_ans_marks");
-                    testData.correctMarks = object.getInt("correct_ans_marks");
+                    if(!object.getString("wrong_ans_marks").equals("null"))
+                        testData.wrongMarks = object.getInt("wrong_ans_marks");
+                    if(!object.getString("correct_ans_marks").equals("null"))
+                        testData.correctMarks = object.getInt("correct_ans_marks");
                 }catch (Exception e){e.printStackTrace();}
                 if(object.has("instruction_array"))
                     testData.instructionArray = object.getJSONArray("instruction_array");
@@ -84,7 +86,7 @@ public class UpcommingTestsTabFragment extends Fragment {
                 testData.setClassName(object.getString("class_name"));
                 testData.setClassId(object.getString("class_id"));
                 testData.totalQuestions = object.getInt("num_of_question");
-
+                testData.endTime = object.getString("test_end_time");
                 testData.setTestStatus("Pending");
                 if (userSession.isStudent()) {
                     if (object.has("total_marks") && !object.getString("total_marks").equals("null"))

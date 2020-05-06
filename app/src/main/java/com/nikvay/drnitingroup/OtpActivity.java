@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,6 +40,8 @@ import com.nikvay.drnitingroup.utilities.UserSession;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class OtpActivity extends AppCompatActivity implements View.OnFocusChangeListener, View.OnKeyListener, TextWatcher {
@@ -136,7 +139,7 @@ public class OtpActivity extends AppCompatActivity implements View.OnFocusChange
                 findViewById(R.id.toast_layout_root));
         text = layout.findViewById(R.id.text);
         error_message = getResources().getString(R.string.error_message);
-
+        countDownText = findViewById(R.id.countDownText);
         submitdata.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,6 +156,7 @@ public class OtpActivity extends AppCompatActivity implements View.OnFocusChange
 
         init();
         setPINListeners();
+        startTimer(TimeUnit.MINUTES.toMillis(1));
     }
 
     @Override
@@ -438,6 +442,7 @@ public class OtpActivity extends AppCompatActivity implements View.OnFocusChange
                         Log.d("Result", result.toString());
                         try {
                             if (result.has("user_details")) {
+                                timerCD.cancel();
                                 showToast("Authenticated Successfully");
                                 JSONObject object = result.getJSONArray("user_details").getJSONObject(0);
                                 userSession.setAttribute("auth_token", object.getString("auth_code"));
@@ -527,5 +532,23 @@ public class OtpActivity extends AppCompatActivity implements View.OnFocusChange
         } else if (userSession.getAttribute("firebaseToken").equals("")) {
             showToast("Your device could not connected to our server, Please try again later.");
         }
+    }
+    CountDownTimer timerCD;
+    TextView countDownText;
+    private void startTimer(long noOfMinutes) {
+
+        timerCD = new CountDownTimer(noOfMinutes, 1000) {
+            public void onTick(long millisUntilFinished) {
+                long millis = millisUntilFinished;
+                //Convert milliseconds into hour,minute and seconds
+                String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis), TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+                countDownText.setText("Resend in "+hms);//set text
+            }
+
+            public void onFinish() {
+                countDownText.setText(""); //On finish change timer text
+                resendButtonText.setVisibility(View.VISIBLE);
+            }
+        }.start();
     }
 }

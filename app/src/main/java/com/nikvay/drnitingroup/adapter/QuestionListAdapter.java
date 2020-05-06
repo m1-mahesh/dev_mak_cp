@@ -79,9 +79,10 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
                 }
             });
         }
-        if (singleItem.getImageUrl()!=null&&!singleItem.getImageUrl().equals("")&&!singleItem.getImageUrl().equals("null"))
+        if (singleItem.getImageUrl()!=null&&!singleItem.getImageUrl().equals("")&&!singleItem.getImageUrl().equals("null")) {
+            holder.questionImage.setVisibility(View.VISIBLE);
             holder.questionImage.setImageUrl(singleItem.getImageUrl(), imageLoader);
-        else holder.questionImage.setVisibility(View.GONE);
+        }else holder.questionImage.setVisibility(View.GONE);
     }
 
     @Override

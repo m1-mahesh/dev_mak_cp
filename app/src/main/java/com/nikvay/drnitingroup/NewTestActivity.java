@@ -199,6 +199,7 @@ public class NewTestActivity extends AppCompatActivity {
         else if(selectedSubject.equals(""))
             showToast("Please Select Subject");
         else {
+            SelectQuestionsActivity.chapterQuestions.clear();
             SelectQuestionsActivity.selectedQ.clear();
             startActivity(new Intent(this, SelectQuestionsActivity.class));
             overridePendingTransition(R.anim.leftside_in, R.anim.leftside_out);

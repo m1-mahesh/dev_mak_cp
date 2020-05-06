@@ -64,6 +64,7 @@ public class FinalisePaperActivity extends AppCompatActivity {
         titleText = findViewById(R.id.title_edit_text);
         totalMarks = findViewById(R.id.total_marks_text);
         if (IS_UPDATE){
+            ((TextView)findViewById(R.id.tvTitle)).setText("Update Section");
             titleText.setText(paperData.getQuestion());
             totalMarks.setText(paperData.getAnswerDescription());
         }

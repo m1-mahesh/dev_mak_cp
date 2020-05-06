@@ -231,7 +231,6 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 closeDrawer();
                 break;
             case R.id.paper:
-                toolbar.setTitle("Board Papers");
                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_id, new PaperListFragment())
                         .commit();
                 closeDrawer();

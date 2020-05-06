@@ -1,5 +1,6 @@
 package com.nikvay.drnitingroup.utilities;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -11,7 +12,7 @@ import java.util.Map;
 public class InputStreamVolleyRequest extends Request<byte[]> {
     private final Response.Listener<byte[]> mListener;
     //create a static map for directly accessing headers
-    public Map<String, String> responseHeaders;
+    public Map<String, String> responseHeaders =  new HashMap<>();
     private Map<String, String> mParams;
 
     public InputStreamVolleyRequest(int method, String mUrl, Response.Listener<byte[]> listener,
@@ -23,6 +24,11 @@ public class InputStreamVolleyRequest extends Request<byte[]> {
         setShouldCache(false);
         mListener = listener;
         mParams = params;
+    }
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        return this.responseHeaders;
     }
 
     @Override

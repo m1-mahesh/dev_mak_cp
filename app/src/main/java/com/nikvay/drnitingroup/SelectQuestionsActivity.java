@@ -269,13 +269,15 @@ public class SelectQuestionsActivity extends AppCompatActivity {
                 question.setQuestionId(object.getString("id"));
                 question.setQuestion(object.getString("questions"));
                 JSONArray options = object.getJSONArray("options");
-                for(int k=0;k<options.length();k++){
+                question.options = options;
+                /*for(int k=0;k<options.length();k++){
                     JSONObject op = options.getJSONObject(k);
                     question.options.put(op.getString("option_id"),op.getString("option_value"));
-                }
+                }*/
+                if (object.has("level_of_question"))
+                    question.level = object.getInt("level_of_question");
                 if (object.has("answer_id"))
                     question.setCorrectAns(object.getString("answer_id"));
-                question.setMarks(object.getInt("questions_marks"));
                 question.setStatus(object.getString("status"));
                 question.setImageUrl(object.getString("image"));
                 chapterQuestions.get(CHAPTER_ID).add(question);

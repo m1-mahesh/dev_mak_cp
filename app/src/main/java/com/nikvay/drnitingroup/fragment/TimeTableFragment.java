@@ -215,8 +215,9 @@ public class TimeTableFragment extends Fragment {
                 holder.imageView.setImageUrl(singleItem.getMediaUrl(), imageLoader);
             }
 
-            holder.createdOnDateTxt.setText(singleItem.getClassName()+"("+singleItem.getDivisionName()+")");
+            holder.tableTitle.setText(singleItem.getClassName()+"("+singleItem.getDivisionName()+")");
             holder.createdByText.setText(singleItem.getCreatedBy());
+            holder.createdOnDateTxt.setText(singleItem.getTitle());
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -262,7 +263,7 @@ public class TimeTableFragment extends Fragment {
 
         public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
-            protected TextView createdOnDateTxt, createdByText;
+            protected TextView createdOnDateTxt, createdByText, tableTitle;
             protected NetworkImageView imageView;
             protected CardView cardView;
             protected ImageView downloadIcon;
@@ -270,6 +271,7 @@ public class TimeTableFragment extends Fragment {
             public SingleItemRowHolder(View view) {
                 super(view);
                 this.createdOnDateTxt = view.findViewById(R.id.createdOnDateTxt);
+                this.tableTitle = view.findViewById(R.id.tableTitle);
                 this.createdByText = view.findViewById(R.id.createdByText);
                 this.imageView = view.findViewById(R.id.topImage);
                 this.cardView = view.findViewById(R.id.cardView);

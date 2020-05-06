@@ -405,7 +405,7 @@ public class FinaliseTest extends AppCompatActivity implements View.OnClickListe
     public void getInstructions() {
 
         try {
-            String url = appSingleTone.getInstructionList;
+            String url = appSingleTone.getTestInstructionList;
 
             ExecuteAPI executeAPI = new ExecuteAPI(this, url, null);
             executeAPI.addHeader("Token", userSession.getAttribute("auth_token"));

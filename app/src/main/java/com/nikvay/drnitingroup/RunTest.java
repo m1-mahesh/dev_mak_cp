@@ -218,12 +218,12 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
                 question.setQuestionId(object.getString("id"));
                 question.setQuestion(object.getString("questions"));
                 JSONArray options = object.getJSONArray("options");
-                for(int k=0;k<options.length();k++){
+                question.options = options;
+                /*for(int k=0;k<options.length();k++){
                    JSONObject op = options.getJSONObject(k);
                     question.options.put(op.getString("option_id"),op.getString("option_value"));
-                }
+                }*/
                 question.setCorrectAns(object.getString("answer_id"));
-                question.setMarks(object.getInt("questions_marks"));
                 question.setStatus(object.getString("status"));
                 if (object.has("answer_description"))
                     question.setAnswerDescription(object.getString("answer_description"));

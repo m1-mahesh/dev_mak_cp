@@ -79,7 +79,7 @@ public class QuickTestResult extends AppCompatActivity {
                 question.setQuestionId(object.getString("id"));
                 question.setQuestion(object.getString("questions"));
                 question.setCorrectAns(object.getString("correct_answer"));
-                question.setMarks(object.getInt("questions_marks"));
+
                 if (object.has("answer_description"))
                     question.setAnswerDescription(object.getString("answer_description"));
                 question.setSelectedAns(object.getString("given_answer"));

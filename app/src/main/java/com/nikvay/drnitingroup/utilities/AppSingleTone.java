@@ -113,6 +113,7 @@ public class AppSingleTone {
     public String getTopicVideos = "http://nikvay.com/demo/schoolApp/ws-topic-list";
     public String getBanners = "http://nikvay.com/demo/schoolApp/ws-slider-list";
     public String getInstructionList = "http://nikvay.com/demo/schoolApp/ws-instruction-list";
+    public String getTestInstructionList = "http://nikvay.com/demo/schoolApp/ws-online-test-instruction-list";
     public String createNewPaper = "http://nikvay.com/demo/schoolApp/ws-submit-paper-info";
     public String addPaperQuestions = "http://nikvay.com/demo/schoolApp/ws-submit-paper-questions";
     public String paperListForTeacher = "http://nikvay.com/demo/schoolApp/ws-teacher-paper-list";
@@ -380,8 +381,8 @@ public class AppSingleTone {
                     /**
                      * How to USE FONT....
                      */
-                    BaseFont urName = BaseFont.createFont("res/font/opensanssemibold.ttf", "UTF-8", BaseFont.EMBEDDED);
-                    BaseFont title = BaseFont.createFont("res/font/proximanovaregular.otf", "UTF-8", BaseFont.EMBEDDED);
+                    BaseFont urName = BaseFont.createFont("res/font/opensanssemibold.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    BaseFont title = BaseFont.createFont("res/font/proximanovaregular.otf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                     // LINE SEPARATOR
                     LineSeparator lineSeparator = new LineSeparator();
                     lineSeparator.setLineColor(new BaseColor(0, 0, 0, 68));
@@ -396,7 +397,7 @@ public class AppSingleTone {
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                         Image i = Image.getInstance(stream.toByteArray());
                         i.setAlignment(Element.ALIGN_CENTER);
-                        i.scaleToFit(500f, 300f);
+                        i.scaleToFit(500f, 310f);
                         top.add(i);
                         document.add(top);
                     }catch (Exception e){
@@ -405,8 +406,8 @@ public class AppSingleTone {
                     PdfPTable table = new PdfPTable(3);
                     table.setSpacingBefore(20);
 
-                    Font headFont = new Font(urName, 20.0f, Font.NORMAL, BaseColor.BLACK);
-                    Font centerHeadFont = new Font(urName, 25.0f, Font.NORMAL, BaseColor.BLACK);
+                    Font headFont = new Font(urName, 15.0f, Font.NORMAL, BaseColor.BLACK);
+                    Font centerHeadFont = new Font(urName, 18.0f, Font.NORMAL, BaseColor.BLACK);
 
                     table.setWidthPercentage(100);
                     table.addCell(getCell(paperInfo.getString("exam_date"), PdfPCell.ALIGN_LEFT, headFont));

@@ -5,43 +5,50 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     app:cardCornerRadius="1dp"
-    app:cardUseCompatPadding="true"
-    >
+    app:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20dp"
         android:background="?android:selectableItemBackground"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="20dp">
 
-        <CheckBox
-            android:id="@+id/questionCheck"
+        <RelativeLayout
+            android:id="@+id/questionView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="@font/opensansregular"
-            android:text="Sample title"
-            android:textColor="@android:color/black"
-            android:textSize="15sp" />
-        <TextView
-            android:id="@+id/tvTitle"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="@font/opensansregular"
-            android:text="Sample title"
-            android:textColor="@android:color/black"
-            android:textSize="15sp" />
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/questionCheck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/opensansregular"
+                android:text="Sample title"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/opensansregular"
+                android:text="Sample title"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:visibility="gone" />
+        </RelativeLayout>
+
         <com.android.volley.toolbox.NetworkImageView
-            android:layout_below="@+id/questionCheck"
-            android:layout_marginTop="5dp"
             android:id="@+id/questionImage"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
             android:layout_width="match_parent"
-            android:layout_height="150dp" />
-        
+            android:layout_height="150dp"
+            android:layout_below="@+id/questionView"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp" />
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

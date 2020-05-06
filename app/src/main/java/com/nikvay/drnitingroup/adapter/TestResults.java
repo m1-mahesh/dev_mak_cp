@@ -75,14 +75,14 @@ public class TestResults extends RecyclerView.Adapter<TestResults.SingleItemRowH
         }
         if (!isAttemptedTest) {
 
-            if (question.getOptions().containsKey(question.getCorrectAns()))
-                holder.correctAnsVTxt.setText(question.getOptions().get(question.getCorrectAns()));
+            if (question.icContainKey(question.getCorrectAns()))
+                holder.correctAnsVTxt.setText(question.getOptionOfId(question.getCorrectAns()));
             else
                 holder.correctAnsVTxt.setText("Unknown");
             if (question.getSelectedAns() == null)
                 holder.yourAnsVTxt.setText("None");
             else
-                holder.yourAnsVTxt.setText(question.getOptions().get(question.getSelectedAns()));
+                holder.yourAnsVTxt.setText(question.getOptionOfId(question.getSelectedAns()));
         }else {
             if (question.getCorrectAns()!=null && !question.getCorrectAns().equals("null"))
                 holder.correctAnsVTxt.setText(question.getCorrectAns());

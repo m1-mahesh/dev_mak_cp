@@ -48,6 +48,7 @@
         android:layout_height="wrap_content"/>
     <com.nikvay.drnitingroup.swap_plugin.CustomViewPager
         android:layout_below="@+id/questionCount"
+        android:layout_above="@id/buttonSwipeLeft"
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

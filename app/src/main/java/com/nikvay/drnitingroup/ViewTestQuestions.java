@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -42,6 +43,8 @@ public class ViewTestQuestions extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     public static String TEST_ID;
     AppSingleTone appSingleTone;
+    RelativeLayout levelOfQuestionView;
+    TextView questionLevelText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +66,8 @@ public class ViewTestQuestions extends AppCompatActivity {
             });
         }else {
             setContentView(R.layout.activity_select_questions);
+            levelOfQuestionView = findViewById(R.id.levelOfQuestionView);
+            questionLevelText = findViewById(R.id.questionLevelText);
             findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -78,16 +83,30 @@ public class ViewTestQuestions extends AppCompatActivity {
             });
             ((TextView) findViewById(R.id.tvTitle)).setText(R.string.final_q);
             mRecyclerView1 = findViewById(R.id.questionList);
+            parseQuestionLevelWise();
+            questionLevelText.setText(" Easy: "+easyCount+" Medium: "+mediumCount+" Hard: "+hardCount);
             mRecyclerView1.setHasFixedSize(true);
             ViewQuestionListAd adapter1 = new ViewQuestionListAd(this, selectedQ, true);
             mRecyclerView1.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-
+            levelOfQuestionView.setVisibility(View.VISIBLE);
             mRecyclerView1.setAdapter(adapter1);
             ((Button) findViewById(R.id.saveButton)).setText("Proceed");
             overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
         }
     }
+    int mediumCount = 0, hardCount = 0, easyCount = 0;
+    void parseQuestionLevelWise(){
 
+        for (int i=0;i<selectedQ.size();i++){
+            Question question = selectedQ.get(i);
+            if (question.level == 1)
+                easyCount ++;
+            else if (question.level == 2)
+                mediumCount ++;
+            else if (question.level == 3)
+                hardCount ++;
+        }
+    }
     void parseTestQuestions(JSONObject jsonObject) {
         try {
             selectedQ.clear();
@@ -98,12 +117,12 @@ public class ViewTestQuestions extends AppCompatActivity {
                 question.setQuestionId(object.getString("id"));
                 question.setQuestion(object.getString("questions"));
                 JSONArray options = object.getJSONArray("options");
-                for(int k=0;k<options.length();k++){
+                question.options = options;
+                /*for(int k=0;k<options.length();k++){
                     JSONObject op = options.getJSONObject(k);
                     question.options.put(op.getString("option_id"),op.getString("option_value"));
-                }
+                }*/
                 question.setCorrectAns(object.getString("answer_id"));
-                question.setMarks(object.getInt("questions_marks"));
                 question.setStatus(object.getString("status"));
                 question.setImageUrl(object.getString("image"));
                 selectedQ.add(question);
