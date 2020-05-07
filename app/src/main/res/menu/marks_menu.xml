@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mark1"
+        android:checkable="true"
+        android:checked="true"
+        android:orderInCategory="4"
+        android:title="01"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mark2"
+        android:checkable="true"
+        android:checked="true"
+        android:orderInCategory="5"
+        android:title="02"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mark3"
+        android:checkable="true"
+        android:checked="true"
+        android:orderInCategory="6"
+        android:title="03"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mark4"
+        android:checkable="true"
+        android:checked="true"
+        android:orderInCategory="6"
+        android:title="04"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mark5"
+        android:checkable="true"
+        android:checked="true"
+        android:orderInCategory="6"
+        android:title="05"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mark6"
+        android:checkable="true"
+        android:checked="true"
+        android:orderInCategory="6"
+        android:title="06"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mark7"
+        android:checkable="true"
+        android:checked="true"
+        android:orderInCategory="6"
+        android:title="07"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mark8"
+        android:checkable="true"
+        android:checked="true"
+        android:orderInCategory="6"
+        android:title="08"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mark9"
+        android:checkable="true"
+        android:checked="true"
+        android:orderInCategory="6"
+        android:title="09"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mark10"
+        android:checkable="true"
+        android:checked="true"
+        android:orderInCategory="6"
+        android:title="10"
+        app:showAsAction="never" />
+
+
+</menu>

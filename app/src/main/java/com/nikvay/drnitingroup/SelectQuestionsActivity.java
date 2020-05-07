@@ -381,8 +381,10 @@ public class SelectQuestionsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 // Inflate the menu; this adds items to the action bar if it is present.
-        if(!Constant.DELETE_Q_IN_PAPER)
+        if(!Constant.DELETE_Q_IN_PAPER &&!Constant.IS_PAPER)
             getMenuInflater().inflate(R.menu.level_menu, menu);
+        else if (!Constant.DELETE_Q_IN_PAPER  && Constant.IS_PAPER)
+            getMenuInflater().inflate(R.menu.marks_menu, menu);
         return true;
     }
 
@@ -404,6 +406,46 @@ public class SelectQuestionsActivity extends AppCompatActivity {
                 return true;
             case R.id.hard:
                 levels.put("3", item.isChecked());
+                getChapterQuestions();
+                return true;
+            case R.id.mark1:
+                levels.put("1", item.isChecked());
+                getChapterQuestions();
+                return true;
+            case R.id.mark2:
+                levels.put("2", item.isChecked());
+                getChapterQuestions();
+                return true;
+            case R.id.mark3:
+                levels.put("3", item.isChecked());
+                getChapterQuestions();
+                return true;
+            case R.id.mark4:
+                levels.put("4", item.isChecked());
+                getChapterQuestions();
+                return true;
+            case R.id.mark5:
+                levels.put("5", item.isChecked());
+                getChapterQuestions();
+                return true;
+            case R.id.mark6:
+                levels.put("6", item.isChecked());
+                getChapterQuestions();
+                return true;
+            case R.id.mark7:
+                levels.put("7", item.isChecked());
+                getChapterQuestions();
+                return true;
+            case R.id.mark8:
+                levels.put("8", item.isChecked());
+                getChapterQuestions();
+                return true;
+            case R.id.mark9:
+                levels.put("9", item.isChecked());
+                getChapterQuestions();
+                return true;
+            case R.id.mark10:
+                levels.put("10", item.isChecked());
                 getChapterQuestions();
                 return true;
         }

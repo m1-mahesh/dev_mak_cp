@@ -137,6 +137,9 @@ public class RunTest extends AppCompatActivity implements View.OnClickListener {
             }else if (mData.size() == viewPager.getCurrentItem() ){
                 mSkipButton.setVisibility(View.GONE);
             }
+            if (v.equals(mSkipButton)){
+                mData.get(viewPager.getCurrentItem()).setSelectedAns(null);
+            }
             viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 
         }

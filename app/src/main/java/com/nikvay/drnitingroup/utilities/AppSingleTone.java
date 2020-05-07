@@ -243,9 +243,22 @@ public class AppSingleTone {
                 .show();
     }
 
-    public PdfPCell getCell(String text, int alignment, Font font) {
-        PdfPCell cell = new PdfPCell(new Phrase(text, font));
-        cell.setPadding(10);
+    public PdfPCell getCell(String text, int alignment, Font font, boolean isMargin, int colSpan) {
+        Paragraph p = new Paragraph(text, font);
+        if(isMargin)
+            p.setIndentationLeft(30);
+        if (alignment == PdfPCell.ALIGN_RIGHT)
+            p.setAlignment(Element.ALIGN_RIGHT);
+        else if(alignment == PdfPCell.ALIGN_CENTER)
+            p.setAlignment(Element.ALIGN_CENTER);
+        PdfPCell cell = new PdfPCell();
+
+        if(colSpan>0) {
+            p.setAlignment(Element.ALIGN_CENTER);
+            cell.setColspan(colSpan);
+        }
+        cell.addElement(p);
+        cell.setPadding(5);
         cell.setHorizontalAlignment(alignment);
         cell.setBorder(PdfPCell.NO_BORDER);
         return cell;
@@ -381,7 +394,7 @@ public class AppSingleTone {
                     /**
                      * How to USE FONT....
                      */
-                    BaseFont urName = BaseFont.createFont("res/font/opensanssemibold.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    BaseFont urName = BaseFont.createFont("res/font/playfairdisplayregular.otf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                     BaseFont title = BaseFont.createFont("res/font/proximanovaregular.otf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                     // LINE SEPARATOR
                     LineSeparator lineSeparator = new LineSeparator();
@@ -410,32 +423,30 @@ public class AppSingleTone {
                     Font centerHeadFont = new Font(urName, 18.0f, Font.NORMAL, BaseColor.BLACK);
 
                     table.setWidthPercentage(100);
-                    table.addCell(getCell(paperInfo.getString("exam_date"), PdfPCell.ALIGN_LEFT, headFont));
-                    table.addCell(getCell(paperInfo.getString("subject_name"), PdfPCell.ALIGN_CENTER, centerHeadFont));
-                    table.addCell(getCell(paperInfo.getString("class_name"), PdfPCell.ALIGN_RIGHT, headFont));
+                    table.addCell(getCell(paperInfo.getString("exam_date"), PdfPCell.ALIGN_LEFT, headFont, false,0));
+                    table.addCell(getCell(paperInfo.getString("subject_name"), PdfPCell.ALIGN_CENTER, centerHeadFont, false,0));
+                    table.addCell(getCell(paperInfo.getString("class_name"), PdfPCell.ALIGN_RIGHT, headFont, false, 0));
 
-                    table.addCell(getCell("", PdfPCell.ALIGN_LEFT, headFont));
-                    table.addCell(getCell(paperInfo.getString("title"), PdfPCell.ALIGN_CENTER, centerHeadFont));
-                    table.addCell(getCell("", PdfPCell.ALIGN_RIGHT, headFont));
+                    table.addCell(getCell(paperInfo.getString("title"), PdfPCell.ALIGN_CENTER, centerHeadFont, false,3));
 
-                    table.addCell(getCell("Time: "+paperInfo.getString("exam_time_hr")+" Hr", PdfPCell.ALIGN_LEFT, headFont));
-                    table.addCell(getCell("", PdfPCell.ALIGN_CENTER, centerHeadFont));
-                    table.addCell(getCell(paperInfo.getString("total_marks"), PdfPCell.ALIGN_RIGHT, headFont));
-                    table.setSpacingAfter(20);
+                    table.addCell(getCell("Time: "+paperInfo.getString("exam_time_hr")+" Hr", PdfPCell.ALIGN_LEFT, headFont, false, 0));
+                    table.addCell(getCell("", PdfPCell.ALIGN_CENTER, centerHeadFont, false, 0));
+                    table.addCell(getCell(paperInfo.getString("total_marks"), PdfPCell.ALIGN_RIGHT, headFont, false, 0));
                     document.add(table);
                     document.add(new Chunk(lineSeparator));
                     Paragraph instructions = new Paragraph(new Chunk("Instructions:", headFont));
                     instructions.setSpacingBefore(10);
                     document.add(instructions);
+                    com.itextpdf.text.List orderedList = new com.itextpdf.text.List(com.itextpdf.text.List.ORDERED);
+                    orderedList.setIndentationLeft(20);
                     for(int k=0;k<instructionArray.length();k++){
                         JSONObject inJsonObject = instructionArray.getJSONObject(k);
                         Font optionFont = new Font(urName, 14.0f, Font.NORMAL, BaseColor.BLACK);
-                        Paragraph in = new Paragraph(new Chunk((k+1)+". "+inJsonObject.getString("title"), optionFont));
-                        in.setIndentationLeft(20);
-                        in.setSpacingBefore(10);
-                        document.add(in);
+                        ListItem item=new ListItem(inJsonObject.getString("title"));
+                        item.setFont(optionFont);
+                        orderedList.add(item);
                     }
-
+                    document.add(orderedList);
                     Font marks = new Font(urName, mHeadingFontSize, Font.BOLD, BaseColor.BLACK);
                     Chunk marksChunk = new Chunk("", marks); // For Section
                     Paragraph marksIdParagraph = new Paragraph(marksChunk);
@@ -443,13 +454,20 @@ public class AppSingleTone {
                     marksIdParagraph.setSpacingBefore(20);
                     document.add(marksIdParagraph);
 
+                    int sectionChar = 65;
                     for(int j=0;j<paperDataArray.length();j++){
                         JSONObject jsonObject = paperDataArray.getJSONObject(j);
                         Chunk glue = new Chunk(new VerticalPositionMark());
+                        Paragraph p1 = new Paragraph("Section-"+((char)sectionChar), marks);
+                        sectionChar ++;
+                        p1.setAlignment(Element.ALIGN_CENTER);
+                        p1.setFont(marks);
+                        p1.setSpacingBefore(20);
+                        document.add(p1);
                         Paragraph p = new Paragraph("Q."+(j+1)+" "+jsonObject.getString("question_heading"), marks);
                         p.setFont(marks);
                         p.add(new Chunk(glue));
-                        p.add(jsonObject.getString("marks"));
+                        p.add(jsonObject.getString("marks")+"M");
                         p.setSpacingBefore(20);
                         p.setSpacingAfter(20);
                         document.add(p);
@@ -459,11 +477,14 @@ public class AppSingleTone {
                             Chunk mOrderDateValueChunk = new Chunk((i+1)+". "+questions.getString("questions"), mOrderDateValueFont);
                             Paragraph mOrderDateValueParagraph = new Paragraph(mOrderDateValueChunk);
                             mOrderDateValueParagraph.setSpacingBefore(15);
+                            mOrderDateValueParagraph.setIndentationLeft(20);
                             document.add(mOrderDateValueParagraph);
                             String imageUrl = questions.getString("image");
                             if(imageUrl!=null && !imageUrl.equals("null") && !imageUrl.equals("")) {
                                 try {
                                     Image image = Image.getInstance(new URL(imageUrl));
+                                    image.setSpacingBefore(15);
+                                    image.setAlignment(Element.ALIGN_CENTER);
                                     image.scaleToFit(200f, 200f);
                                     document.add(image);
 
@@ -473,21 +494,24 @@ public class AppSingleTone {
                             }
                             JSONArray options = questions.getJSONArray("options");
                             if (options.length()>0) {
-                                PdfPTable optionTable = new PdfPTable(options.length());
+                                PdfPTable optionTable = new PdfPTable(2);
                                 optionTable.setSpacingBefore(10);
-
                                 Font optionFont = new Font(urName, 14.0f, Font.NORMAL, BaseColor.BLACK);
 
                                 optionTable.setWidthPercentage(100);
                                 for (int o = 0; o < options.length(); o++) {
                                     JSONObject option = options.getJSONObject(o);
-                                    optionTable.addCell(getCell((o + 1) + ". " + option.getString("option_value"), PdfPCell.UNDEFINED, optionFont));
+                                    optionTable.addCell(getCell((o + 1) + ". " + option.getString("option_value"), PdfPCell.UNDEFINED, optionFont, true, 0));
                                 }
                                 document.add(optionTable);
                             }
                         }
                     }
-
+                    document.add(new Chunk(lineSeparator));
+                    Paragraph last = new Paragraph("* All The Best *");
+                    last.setFont(centerHeadFont);
+                    last.setAlignment(Element.ALIGN_CENTER);
+                    document.add(last);
 
 
 
